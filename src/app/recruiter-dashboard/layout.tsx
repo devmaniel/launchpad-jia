@@ -110,7 +110,7 @@ export default function Layout({ children }) {
         <div
           className="main-content bg-white"
           id="panel"
-          style={{ marginLeft: "260px", height: "100vh", overflowY: "scroll" }}
+          style={{ marginTop: "32px", height: "100vh", border: "1px solid #EAECF5", borderTopLeftRadius: "24px", borderTopRightRadius: "24px", overflowY: "scroll" }}
         >
           {children}
         </div>

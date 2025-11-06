@@ -14,7 +14,7 @@ if (!uri) {
 
 if (!dbName) {
   throw new Error(
-    "Please define the MONGODB_URI environment variable inside .env.local"
+    "Please define the dbName variable or set a default value"
   );
 }
 
@@ -23,7 +23,12 @@ export default async function connectMongoDB() {
     return { client: cachedClient, db: cachedDb };
   }
 
-  const client = await MongoClient.connect(uri, {});
+  const client = await MongoClient.connect(uri, {
+    tls: true,
+    tlsInsecure: true, // Allow insecure TLS for local development
+    retryWrites: true,
+    maxPoolSize: 10,
+  });
 
   const db = client.db(dbName);
 
