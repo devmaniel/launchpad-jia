@@ -11,6 +11,12 @@ import { deleteCareer, candidateActionToast, errorToast } from "@/lib/Utils";
 import CustomDropdown from "../Dropdown/CustomDropdown";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { Tooltip } from "react-tooltip";
+import { 
+  getOrganizationPlanInfo, 
+  canCreateNewCareer, 
+  getPlanStatusMessage,
+  type OrganizationPlanResult 
+} from "@/lib/utils/organizationPlanUtils";
 
 const tableHeaderStyle: any = {
   fontSize: "12px",
@@ -87,23 +93,76 @@ export default function CareersV2Table() {
     },
   };
   const [activeOrg, setActiveOrg] = useLocalStorage("activeOrg", null);
-  const [availableJobSlots, setAvailableJobSlots] = useState(0);
+  const [planInfo, setPlanInfo] = useState<OrganizationPlanResult>({
+    totalJobSlots: 0,
+    activeJobs: 0,
+    hasValidPlan: false,
+    planType: null
+  });
   const [totalActiveCareers, setTotalActiveCareers] = useState(0);
+  const [planStatusMessage, setPlanStatusMessage] = useState<string>("");
 
   useEffect(() => {
     const fetchOrgDetails = async () => {
       try {
+        console.log("Fetching org details for:", activeOrg);
         const orgDetails = await axios.post("/api/feth-org-details", {
           orgID: activeOrg._id,
         });
-        setAvailableJobSlots((orgDetails.data?.plan?.jobLimit || 3) + (orgDetails.data?.extraJobSlots || 0));
+        console.log("Org details response:", orgDetails.data);
+        
+        // Use the new utility function to process plan data
+        const planResult = getOrganizationPlanInfo(orgDetails.data);
+        setPlanInfo(planResult);
+        setPlanStatusMessage(getPlanStatusMessage(planResult));
+        
+        console.log("Processed plan info:", planResult);
       } catch (error) {
         console.error("Error fetching org details:", error);
-        errorToast("Error fetching organization details", 1500);
+        console.error("ActiveOrg data:", activeOrg);
+        
+        // Fallback: Try to extract plan info from cached activeOrg data
+        if (activeOrg) {
+          const fallbackPlanResult = getOrganizationPlanInfo(activeOrg);
+          setPlanInfo(fallbackPlanResult);
+          setPlanStatusMessage("Using cached organization data - " + getPlanStatusMessage(fallbackPlanResult));
+          console.log("Using fallback plan info:", fallbackPlanResult);
+        } else {
+          // Last resort: No plan available
+          const noPlanResult = {
+            totalJobSlots: 0,
+            activeJobs: 0,
+            hasValidPlan: false,
+            planType: null,
+            errorMessage: "Unable to load organization details"
+          };
+          setPlanInfo(noPlanResult);
+          setPlanStatusMessage("Unable to load organization details");
+        }
+        
+        errorToast("Error loading organization details", 2000);
       }
     }
-      if (activeOrg) {
-        fetchOrgDetails();
+    
+    if (activeOrg && activeOrg._id) {
+      fetchOrgDetails();
+    } else if (activeOrg) {
+      // Try to use activeOrg data directly if no _id
+      console.warn("No activeOrg._id found, using activeOrg data directly");
+      const directPlanResult = getOrganizationPlanInfo(activeOrg);
+      setPlanInfo(directPlanResult);
+      setPlanStatusMessage(getPlanStatusMessage(directPlanResult));
+    } else {
+      console.warn("No activeOrg found");
+      const noPlanResult = {
+        totalJobSlots: 0,
+        activeJobs: 0,
+        hasValidPlan: false,
+        planType: null,
+        errorMessage: "No organization selected"
+      };
+      setPlanInfo(noPlanResult);
+      setPlanStatusMessage("No organization selected");
     }
   }, [activeOrg]);
 
@@ -155,21 +214,27 @@ export default function CareersV2Table() {
     </div>
 
     <div style={{ display: "flex", flexDirection: "row", gap: 8, alignItems: "center" }}>
-    <a 
-    href="/recruiter-dashboard/careers/new-career"
-    data-tooltip-id="add-career-tooltip"
-    data-tooltip-html={`You have reached the maximum number of jobs for your plan. Please upgrade your plan to add more jobs.`}
-    >
-    <button className="button-primary-v2"
-    disabled={totalActiveCareers >= availableJobSlots}
-    style={{ 
-      opacity: totalActiveCareers >= availableJobSlots ? 0.5 : 1, 
-      cursor: totalActiveCareers >= availableJobSlots ? "not-allowed" : "pointer"
-    }}
-    >
-      <i className="la la-plus" /> Add new career
-    </button>
-    </a>
+    {(() => {
+      const canCreate = canCreateNewCareer(planInfo.totalJobSlots, totalActiveCareers, planInfo.hasValidPlan);
+      return (
+        <a 
+        href={canCreate.canCreate ? "/recruiter-dashboard/careers/new-career" : "#"}
+        data-tooltip-id="add-career-tooltip"
+        data-tooltip-html={canCreate.reason || planStatusMessage}
+        style={{ pointerEvents: canCreate.canCreate ? "auto" : "none" }}
+        >
+        <button className="button-primary-v2"
+        disabled={!canCreate.canCreate}
+        style={{ 
+          opacity: canCreate.canCreate ? 1 : 0.5, 
+          cursor: canCreate.canCreate ? "pointer" : "not-allowed"
+        }}
+        >
+          <i className="la la-plus" /> Add new career
+        </button>
+        </a>
+      );
+    })()}
     <div className="table-search-bar" style={{ minWidth: "300px" }}>
       <div className="icon mr-2">
           <i className="la la-search"></i>
@@ -443,7 +508,7 @@ export default function CareersV2Table() {
         </div>
       </div>
     </div>
-    {totalActiveCareers >= availableJobSlots && <Tooltip className="career-fit-tooltip fade-in" id="add-career-tooltip"/>}
+    {!canCreateNewCareer(planInfo.totalJobSlots, totalActiveCareers, planInfo.hasValidPlan).canCreate && <Tooltip className="career-fit-tooltip fade-in" id="add-career-tooltip"/>}
     </>
   );
 }

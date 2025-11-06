@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import connectMongoDB from "@/lib/mongoDB/mongoDB";
 import { guid } from "@/lib/Utils";
 import { ObjectId } from "mongodb";
+import { getOrganizationPlanInfo, canCreateNewCareer } from "@/lib/utils/organizationPlanUtils";
 
 export async function POST(request: Request) {
   try {
@@ -74,8 +75,27 @@ export async function POST(request: Request) {
 
     const totalActiveCareers = await db.collection("careers").countDocuments({ orgID, status: "active" });
 
-    if (totalActiveCareers >= (orgDetails[0].plan.jobLimit + (orgDetails[0].extraJobSlots || 0))) {
-      return NextResponse.json({ error: "You have reached the maximum number of jobs for your plan" }, { status: 400 });
+    // Use the new utility function to get plan information
+    const planInfo = getOrganizationPlanInfo(orgDetails[0]);
+    const canCreate = canCreateNewCareer(planInfo.totalJobSlots, totalActiveCareers, planInfo.hasValidPlan);
+
+    console.log("add-career: Plan validation:", {
+      orgID,
+      planInfo,
+      totalActiveCareers,
+      canCreate
+    });
+
+    if (!canCreate.canCreate) {
+      return NextResponse.json({ 
+        error: canCreate.reason || "Cannot create new career",
+        planInfo: {
+          totalJobSlots: planInfo.totalJobSlots,
+          activeJobs: totalActiveCareers,
+          hasValidPlan: planInfo.hasValidPlan,
+          planType: planInfo.planType
+        }
+      }, { status: 400 });
     }
 
     const career = {
