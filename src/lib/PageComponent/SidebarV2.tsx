@@ -21,137 +21,137 @@ export default function SidebarV2(props: any) {
         <AddOrgModal onClose={() => setShowAddOrgModal(false)} />
       )}
       <aside className="sidebar-v2">
-        {/* Header */}
         <div className="sidebar-header">
-          <div>
-            <div className="sidebar-subheader">
-              <img src="/jia-dashboard-logo.png" alt="Logo" />
-            </div>
-            {isAdmin ? (
-              <div
-                style={{
-                  border: "1px solid #E0E0E0",
-                  borderRadius: "10px",
-                  padding: "8px 16px",
-                  backgroundColor: "#FFFFFF",
-                  color: "#181D27",
-                  fontSize: 14,
-                  fontWeight: 700,
-                  textAlign: "center",
-                  margin: "20px",
-                }}
-              >
-                <span>Admin Portal</span>
-              </div>
-            ) : (
-              <OrgDropdownV2 />
-            )}
-
-            {/* Navigation */}
-            <nav className="nav-section">
-              <span
-                style={{
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: "#AFB5D9",
-                  marginBottom: 8,
-                }}
-              >
-                GENERAL
-              </span>
-              {navItems.map((item, idx) => (
-                <Link href={item.href} key={item.label}>
-                  <div
-                    className={`nav-item ${
-                      activeLink === item.label ? "active" : ""
-                    }`}
-                  >
-                    <span>
-                      <i
-                        className={item.icon}
-                        style={{ color: "#414651", fontSize: 24 }}
-                      ></i>
-                    </span>
-                    <span>{item.label}</span>
-                  </div>
-                </Link>
-              ))}
-            </nav>
-
-            <div className="nav-divider" />
-            <nav className="nav-section">
-              <span
-                style={{
-                  fontSize: 12,
-                  fontWeight: 500,
-                  color: "#AFB5D9",
-                  marginBottom: 8,
-                }}
-              >
-                OTHERS
-              </span>
-              {footerNavItems.map((item) => (
-                <Link href={item.href} key={item.label}>
-                  <div
-                    className={`nav-item ${
-                      activeLink === item.label ? "active" : ""
-                    }`}
-                  >
-                    <span>
-                      <i
-                        className={item.icon}
-                        style={{ color: "#414651", fontSize: 24 }}
-                      ></i>
-                    </span>
-                    <span>{item.label}</span>
-                  </div>
-                </Link>
-              ))}
-            </nav>
-
-            {superAdminNavItems && superAdminNavItems.length > 0 && (
-              <SuperAdminFeature>
-                <nav className="nav-section">
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 500,
-                      color: "#AFB5D9",
-                      marginBottom: 8,
-                    }}
-                  >
-                    ADMIN MENU
-                  </span>
-                  {superAdminNavItems.map((item) => (
-                    <Link href={item.href} key={item.label}>
-                      <div
-                        className={`nav-item ${
-                          activeLink === item.label ? "active" : ""
-                        }`}
-                      >
-                        <span>
-                          <i
-                            className={item.icon}
-                            style={{ color: "#414651", fontSize: 24 }}
-                          ></i>
-                        </span>
-                        <span>{item.label}</span>
-                      </div>
-                    </Link>
-                  ))}
-                </nav>
-              </SuperAdminFeature>
-            )}
-
-            {/* Footer */}
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <div>
+              <div className="sidebar-subheader">
+                <img src="/jia-dashboard-logo.png" alt="Logo" />
+              </div>
+              {isAdmin ? (
+                <div
+                  style={{
+                    border: "1px solid #E0E0E0",
+                    borderRadius: "10px",
+                    padding: "8px 16px",
+                    backgroundColor: "#FFFFFF",
+                    color: "#181D27",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    textAlign: "center",
+                    margin: "20px",
+                  }}
+                >
+                  <span>Admin Portal</span>
+                </div>
+              ) : (
+                <OrgDropdownV2 />
+              )}
+
+              {/* Navigation */}
+              <nav className="nav-section">
+                <span
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: "#AFB5D9",
+                    marginBottom: 8,
+                  }}
+                >
+                  GENERAL
+                </span>
+                {navItems.map((item, idx) => (
+                  <Link href={item.href} key={item.label}>
+                    <div
+                      className={`nav-item ${
+                        activeLink === item.label ? "active" : ""
+                      }`}
+                    >
+                      <span>
+                        <i
+                          className={item.icon}
+                          style={{ color: "#414651", fontSize: 24 }}
+                        ></i>
+                      </span>
+                      <span>{item.label}</span>
+                    </div>
+                  </Link>
+                ))}
+              </nav>
+
+              <div className="nav-divider" />
+              <nav className="nav-section">
+                <span
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: "#AFB5D9",
+                    marginBottom: 8,
+                  }}
+                >
+                  OTHERS
+                </span>
+                {footerNavItems.map((item) => (
+                  <Link href={item.href} key={item.label}>
+                    <div
+                      className={`nav-item ${
+                        activeLink === item.label ? "active" : ""
+                      }`}
+                    >
+                      <span>
+                        <i
+                          className={item.icon}
+                          style={{ color: "#414651", fontSize: 24 }}
+                        ></i>
+                      </span>
+                      <span>{item.label}</span>
+                    </div>
+                  </Link>
+                ))}
+              </nav>
+
+              {superAdminNavItems && superAdminNavItems.length > 0 && (
+                <SuperAdminFeature>
+                  <nav className="nav-section">
+                    <span
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 500,
+                        color: "#AFB5D9",
+                        marginBottom: 8,
+                      }}
+                    >
+                      ADMIN MENU
+                    </span>
+                    {superAdminNavItems.map((item) => (
+                      <Link href={item.href} key={item.label}>
+                        <div
+                          className={`nav-item ${
+                            activeLink === item.label ? "active" : ""
+                          }`}
+                        >
+                          <span>
+                            <i
+                              className={item.icon}
+                              style={{ color: "#414651", fontSize: 24 }}
+                            ></i>
+                          </span>
+                          <span>{item.label}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </nav>
+                </SuperAdminFeature>
+              )}
+            </div>
+
+            {/* Footer - Always at the bottom */}
+            <div style={{ marginTop: 'auto', marginBottom: '20px' }}>
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   gap: 4,
-                  marginBottom: "20px",
                 }}
               >
                 <span
