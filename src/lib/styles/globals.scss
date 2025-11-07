@@ -209,18 +209,73 @@ td {
 }
 
 .form-control {
-  border: 2px solid #9c99a4 !important;
-  border-radius: 5px !important;
+  border: 1px solid #E9EAEB !important;
+  border-radius: 8px !important;
   color: #333 !important;
   font-size: 1rem !important;
 
   &::placeholder {
-    color: #333333af !important;
+    color: #717680 !important;
   }
 
   &:focus {
     border: 2px solid #5e39d6 !important;
     box-shadow: none !important;
+  }
+}
+
+/* Hide up/down arrows on number inputs */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+  display: none;
+}
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+}
+
+/* Additional Firefox/Waterfox specific rules */
+input[type="number"]::-moz-number-spin-box {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  display: none;
+}
+
+input[type="number"]::-moz-number-spin-up,
+input[type="number"]::-moz-number-spin-down {
+  -moz-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+/* Salary input specific - no spinners */
+.salary-input {
+  -moz-appearance: textfield !important;
+  -webkit-appearance: textfield !important;
+  appearance: textfield !important;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+    display: none !important;
+  }
+
+  &::-moz-number-spin-box {
+    -moz-appearance: textfield !important;
+    display: none !important;
+  }
+
+  &::-moz-number-spin-up,
+  &::-moz-number-spin-down {
+    -moz-appearance: none !important;
+    display: none !important;
   }
 }
 
@@ -237,6 +292,32 @@ select.form-control {
     border: 2px solid #5e39d6 !important;
     box-shadow: none !important;
   }
+}
+
+.dropdown-btn {
+  border: 1px solid #E9EAEB !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 12px !important;
+  font-size: 1rem !important;
+  color: #333 !important;
+  
+  &:focus {
+    border: 2px solid #5e39d6 !important;
+    box-shadow: none !important;
+  }
+  
+  &:hover {
+    border-color: #ddd !important;
+  }
+}
+
+.dropdown-btn {
+  color: #717680 !important;
 }
 
 textarea {
@@ -922,15 +1003,14 @@ $gifURL: "/gr-1.gif";
   width: 100%;
   background: #f8f9fc;
   display: block;
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   max-width: 260px;
-  height: 100%;
+  height: 100vh;
   overflow-y: auto;
   flex-direction: column;
   justify-content: space-between;
-  border-right: 1px solid #e9eaeb;
 
   .sidebar-header {
     display: flex;
@@ -1207,13 +1287,6 @@ $gifURL: "/gr-1.gif";
     transform: none !important;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
     background: #fff;
-  }
-  .main-content,
-  #panel {
-    margin-left: 260px !important;
-    width: calc(100vw - 260px) !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
   }
 }
 @media (max-width: 899px) {
@@ -2092,7 +2165,7 @@ $gifURL: "/gr-1.gif";
 .layered-card-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   width: 100%;
   background-color: #fff;
   border-radius: 20px;
@@ -2380,14 +2453,9 @@ input:checked + .slider:before {
     #fccec0 100%
   );
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-/* Lazy Load Animation Styles */
-.lazy-load-fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  color: transparent;
 }
 
 .lazy-load-fade-in.visible {
@@ -2490,4 +2558,14 @@ html {
 
 .bg-green-100 {
   background-color: #e6f9f0 !important;
+}
+
+// Editor tooltip styles
+.editor-tooltip-focused {
+  background-color: #333 !important;
+  color: white !important;
+  border-left: 1px solid rgb(59, 30, 246) !important;
+  border-right: 1px solid rgb(59, 30, 246) !important;
+  border-bottom: 1px solid rgb(59, 30, 246) !important;
+  border-top: none !important;
 }

@@ -99,7 +99,10 @@ export default function Layout({ children }) {
   return (
     <>
       <AuthGuard />
-      <div className="g-sidenav-show g-sidenav-pinned">
+      <div
+        className="g-sidenav-show g-sidenav-pinned"
+        style={{ display: "flex" }}
+      >
         <title>Jia - WhiteCloak Technologies</title>
         <SidebarV2
           activeLink={activeLink}
@@ -110,7 +113,16 @@ export default function Layout({ children }) {
         <div
           className="main-content bg-white"
           id="panel"
-          style={{ marginTop: "32px", height: "100vh", border: "1px solid #EAECF5", borderTopLeftRadius: "24px", borderTopRightRadius: "24px", overflowY: "scroll" }}
+          style={{
+            marginTop: "22px",
+            marginLeft: "6px",
+            marginRight: "20px",
+            marginBottom: "22px",
+            width: "calc(100vw - 238px)",
+            minHeight: "calc(100vh - 44px)",
+            border: "2px solid #EAECF5",
+            borderRadius: "24px",
+          }}
         >
           {children}
         </div>

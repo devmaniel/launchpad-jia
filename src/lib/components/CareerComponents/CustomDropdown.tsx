@@ -2,19 +2,24 @@
 import { useState } from "react";
 
 export default function CustomDropdown(props) {
-    const { onSelectSetting, screeningSetting, settingList, placeholder } = props;
+    const { onSelectSetting, screeningSetting, settingList, placeholder, containerStyle, hasError } = props;
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-        <div className="dropdown w-100">
+        <div className="dropdown w-100" style={{ ...containerStyle, position: "relative" }}>
           <button
             disabled={settingList.length === 0}
             className="dropdown-btn fade-in-bottom"
-            style={{ width: "100%", textTransform: "capitalize" }}
+            style={{ 
+              width: "100%", 
+              textTransform: "capitalize",
+              border: hasError ? "1px solid #FDA29B !important" : undefined,
+              borderColor: hasError ? "#FDA29B !important" : undefined,
+            } as React.CSSProperties}
             type="button"
             onClick={() => setDropdownOpen((v) => !v)}
           >
-            <span>
+            <span style={{ color: screeningSetting ? "#333" : "#717680" }}>
               <i
                 className={
                   settingList.find(
@@ -24,7 +29,7 @@ export default function CustomDropdown(props) {
               ></i>{" "}
               {screeningSetting?.replace("_", " ") || placeholder}
             </span>
-            <i className="la la-angle-down ml-10"></i>
+            <i className="la la-angle-down"></i>
           </button>
           <div
             className={`dropdown-menu w-100 mt-1 org-dropdown-anim${
@@ -70,9 +75,9 @@ export default function CustomDropdown(props) {
                                 style={{
                                     fontSize: "20px",
                                     background: "linear-gradient(180deg, #9FCAED 0%, #CEB6DA 33%, #EBACC9 66%, #FCCEC0 100%)",
+                                    backgroundClip: "text",
                                     WebkitBackgroundClip: "text",
                                     WebkitTextFillColor: "transparent",
-                                    backgroundClip: "text",
                                     color: "transparent"
                                 }}
                             ></i>
