@@ -16,7 +16,9 @@ export default function CopyPipeLineButton({ onClick, disabled }: Props) {
       style={{
         display: "flex",
         alignItems: "center",
+        justifyContent: "center",
         gap: 8,
+        width: 263,
         padding: "8px 14px",
         background: "#fff",
         color: "#414651",
@@ -26,7 +28,6 @@ export default function CopyPipeLineButton({ onClick, disabled }: Props) {
         whiteSpace: "nowrap",
       }}
     >
-      <img src="/icons/file-check.svg" alt="Copy" width={16} height={16} />
       <span style={{ fontSize: 14, fontWeight: 500 }}>Copy pipeline from existing job</span>
       <img src="/icons/chevron.svg" alt="More" width={16} height={16} style={{ marginLeft: 2 }} />
     </button>

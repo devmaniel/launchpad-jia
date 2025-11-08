@@ -44,7 +44,7 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
               display: "flex",
               flexDirection: "column",
               alignItems: "flex-start",
-              flex: 1,
+              flex: index === steps.length - 1 ? "none" : 1,
               minWidth: 0,
             }}
           >
@@ -62,7 +62,8 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
                 const hasError = !!errorsByStep?.[step.id]?.hasError;
                 const isComplete = p >= 1 && !hasError;
                 const isInProgress = p > 0 && p < 1;
-                const showBorder = !hasError && !isComplete; // remove border when complete
+                const isLast = index === steps.length - 1;
+                const showBorder = !hasError && (!isComplete || isLast); // keep border on last step even if complete
                 return (
                   <div
                     title={hasError ? ((errorsByStep?.[step.id]?.messages || []).join("\n") || "This step has errors") : undefined}
@@ -93,13 +94,24 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
                       />
                     )}
                     {!hasError && isComplete && (
-                      <img
-                        src="/icons/step-progress-check.svg"
-                        alt="Step complete"
-                        width={20}
-                        height={20}
-                        style={{ display: "block" }}
-                      />
+                      isLast ? (
+                        <div
+                          style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            backgroundColor: step.id === currentStep ? "#181D27" : "#D5D7DA",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src="/icons/step-progress-check.svg"
+                          alt="Step complete"
+                          width={20}
+                          height={20}
+                          style={{ display: "block" }}
+                        />
+                      )
                     )}
                     {!hasError && !isComplete && isInProgress && step.id === currentStep && (
                       <div
@@ -108,16 +120,6 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
                           height: 6,
                           borderRadius: "50%",
                           backgroundColor: "#181D27",
-                        }}
-                      />
-                    )}
-                    {!hasError && !isComplete && (!isInProgress || step.id !== currentStep) && (
-                      <div
-                        style={{
-                          width: 6,
-                          height: 6,
-                          borderRadius: "50%",
-                          backgroundColor: "#D5D7DA",
                         }}
                       />
                     )}

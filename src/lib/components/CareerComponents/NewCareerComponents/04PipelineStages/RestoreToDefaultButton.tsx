@@ -17,6 +17,7 @@ export default function RestoreToDefaultButton({ onClick, disabled }: Props) {
         display: "flex",
         alignItems: "center",
         gap: 8,
+        width: 175,
         padding: "8px 14px",
         background: "#fff",
         color: "#414651",
@@ -26,7 +27,7 @@ export default function RestoreToDefaultButton({ onClick, disabled }: Props) {
         whiteSpace: "nowrap",
       }}
     >
-      <img src="/icons/rotate-ccw.svg" alt="Restore" width={16} height={16} />
+      <img src="/temp/restore.svg" alt="Restore" width={20} height={20} />
       <span style={{ fontSize: 14, fontWeight: 500 }}>Restore to default</span>
     </button>
   );

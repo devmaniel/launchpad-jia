@@ -502,7 +502,7 @@ export default function CareerFormV2({
         }}
       />
 
-      <div style={{ width: "100%", maxWidth: "1560px", margin: '0 auto', marginTop: 30, marginBottom: 8 }}>
+      <div style={{ width: "100%", marginTop: 30, marginBottom: 8 }}>
         <Stepper
           currentStep={activeStep}
           progressByStep={{ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 }}
@@ -616,7 +616,17 @@ export default function CareerFormV2({
       )}
 
       {activeStep === 5 && (
-        <Step5 />
+        <Step5
+          screeningSetting={screeningSetting}
+          secretPrompt={secretPrompt}
+          preScreeningQuestions={preScreeningQuestions as any}
+          minimumSalary={minimumSalary}
+          maximumSalary={maximumSalary}
+          minimumSalaryCurrency={minimumSalaryCurrency}
+          maximumSalaryCurrency={maximumSalaryCurrency}
+          salaryNegotiable={salaryNegotiable}
+          onEditClick={() => setActiveStep(2)}
+        />
       )}
 
       {showSaveModal && (
