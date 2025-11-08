@@ -1,11 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import { SalaryInputProps } from "./types";
-import { currencyOptions } from "./constants";
-import Image from "next/image";
 
-export default function SalaryInput({
+export type AskingSalaryInputProps = {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  currency: string;
+  onCurrencyChange: (currency: string) => void;
+  hasError?: boolean;
+  onBlur?: () => void;
+  disabled?: boolean;
+};
+
+const currencyOptions = [
+  { value: "PHP", label: "PHP" },
+  { value: "USD", label: "USD" },
+  { value: "EUR", label: "EUR" },
+];
+
+const AskingSalaryInput: React.FC<AskingSalaryInputProps> = ({
   label,
   value,
   onChange,
@@ -14,11 +28,10 @@ export default function SalaryInput({
   hasError,
   onBlur,
   disabled = false,
-}: SalaryInputProps) {
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // Get the selected currency label
-  const selectedCurrencyLabel = currencyOptions.find(option => option.value === currency)?.label || "PHP";
+  const selectedCurrencyLabel =
+    currencyOptions.find((o) => o.value === currency)?.label || "PHP";
 
   return (
     <div>
@@ -26,7 +39,7 @@ export default function SalaryInput({
       <div
         style={{
           display: "flex",
-          gap: "0px",
+          gap: 0,
           marginTop: 6,
           position: "relative",
         }}
@@ -35,11 +48,11 @@ export default function SalaryInput({
           <span
             style={{
               position: "absolute",
-              left: "12px",
+              left: 12,
               top: "50%",
               transform: "translateY(-50%)",
               color: "#717680",
-              fontSize: "16px",
+              fontSize: 16,
               pointerEvents: "none",
               zIndex: 1,
             }}
@@ -49,64 +62,44 @@ export default function SalaryInput({
           <input
             type="number"
             className={`form-control salary-input${hasError && !disabled ? " error-input" : ""}`}
-            style={
-              {
-                paddingLeft: "28px",
-                paddingRight: hasError && !disabled ? "120px" : "100px",
-                appearance: "textfield",
-                MozAppearance: "textfield",
-                WebkitAppearance: "none",
-                backgroundColor: disabled ? "#FAFAFA" : "inherit",
-                border: disabled ? "1px solid #E9EAEB" : (hasError && !disabled ? "1px solid #FDA29B" : "inherit"),
-                color: disabled ? "#717680" : "inherit",
-              } as React.CSSProperties
-            }
+            style={{
+              paddingLeft: 28,
+              paddingRight: hasError && !disabled ? 120 : 100,
+              appearance: "textfield" as any,
+              MozAppearance: "textfield",
+              WebkitAppearance: "none",
+              backgroundColor: disabled ? "#FAFAFA" : "inherit",
+              border: disabled
+                ? "1px solid #E9EAEB"
+                : hasError && !disabled
+                ? "1px solid #FDA29B"
+                : ("inherit" as any),
+              color: disabled ? "#717680" : ("inherit" as any),
+            } as React.CSSProperties}
             placeholder="0"
             min={0}
             value={value}
             onChange={(e) => {
-              if (!disabled) {
-                const v = e.target.value;
-                if (v === "") { onChange(""); return; }
-                onChange(Number(v) < 0 ? "0" : v);
-              }
+              if (!disabled) onChange(e.target.value || "");
             }}
             onBlur={onBlur}
             onWheel={(e) => e.currentTarget.blur()}
             onKeyDown={(e) => {
-              if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-                e.preventDefault();
-              }
-              if (e.key === "-") e.preventDefault();
+              if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault();
             }}
             disabled={disabled}
           />
-          {hasError && !disabled && (
-            <Image
-              src="/icons/alert-circle.svg"
-              alt="Error"
-              width={20}
-              height={20}
-              style={{
-                position: "absolute",
-                right: "90px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 1,
-              }}
-            />
-          )}
-          <div 
+
+          <div
             style={{
               position: "absolute",
-              right: "1px",
-              top: "1px",
-              bottom: "1px",
-              width: "80px",
+              right: 1,
+              top: 1,
+              bottom: 1,
+              width: 80,
               height: "calc(100% - 2px)",
             }}
           >
-            {/* Custom Dropdown Button */}
             <button
               type="button"
               style={{
@@ -114,36 +107,35 @@ export default function SalaryInput({
                 height: "100%",
                 backgroundColor: "transparent",
                 border: "none",
-                borderRadius: "0",
+                borderRadius: 0,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "0 8px",
-                fontSize: "14px",
+                fontSize: 14,
                 color: "#333",
                 cursor: "pointer",
                 outline: "none",
                 boxShadow: "none",
               }}
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              onClick={() => setIsDropdownOpen((v) => !v)}
             >
               <span>{selectedCurrencyLabel}</span>
-              <i className="la la-angle-down" style={{ fontSize: "16px" }}></i>
+              <i className="la la-angle-down" style={{ fontSize: 16 }}></i>
             </button>
-            
-            {/* Dropdown Menu */}
+
             {isDropdownOpen && (
-              <div 
+              <div
                 style={{
                   position: "absolute",
                   top: "100%",
-                  right: "0",
+                  right: 0,
                   width: "100%",
                   backgroundColor: "#fff",
                   border: "none",
                   borderRadius: "0 0 7px 7px",
                   zIndex: 1000,
-                  maxHeight: "200px",
+                  maxHeight: 200,
                   overflowY: "auto",
                   boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
                 }}
@@ -152,11 +144,12 @@ export default function SalaryInput({
                   <div
                     key={option.value}
                     style={{
-                      padding: "10px",
+                      padding: 10,
                       cursor: "pointer",
                       borderBottom: "none",
-                      backgroundColor: currency === option.value ? "#F8F9FC" : "transparent",
-                      fontWeight: currency === option.value ? "600" : "normal",
+                      backgroundColor:
+                        currency === option.value ? "#F8F9FC" : "transparent",
+                      fontWeight: currency === option.value ? 600 : 400,
                     }}
                     onClick={() => {
                       onCurrencyChange(option.value);
@@ -177,23 +170,10 @@ export default function SalaryInput({
           border: 1px solid #FDA29B !important;
           box-shadow: none !important;
         }
-        
-        input:disabled::placeholder {
-          color: #717680 !important;
-        }
-        input[type='number']::-webkit-outer-spin-button,
-        input[type='number']::-webkit-inner-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-        input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
-        input[type='number']::-moz-number-spin-box,
-        input[type='number']::-moz-number-spin-up,
-        input[type='number']::-moz-number-spin-down,
-        input[type='number']::-moz-number-spin-text {
-          display: none;
-        }
+        input:disabled::placeholder { color: #717680 !important; }
       `}</style>
     </div>
   );
-}
+};
+
+export default AskingSalaryInput;

@@ -216,16 +216,10 @@ export default function RichTextEditor({setText, text, error = false, errorMessa
           <Tooltip 
             id="editor-tooltip"
             className={isActive ? "editor-tooltip-focused" : ""}
-            style={isActive ? {
+            style={{
               backgroundColor: '#333',
               color: 'white',
-              borderLeft: '1px solid rgb(59, 30, 246)',
-              borderRight: '1px solid rgb(59, 30, 246)',
-              borderBottom: '1px solid rgb(59, 30, 246)',
-              borderTop: 'none',
-            } : {
-              backgroundColor: '#333',
-              color: 'white',
+              border: isActive ? '1px solid rgb(59, 30, 246)' : 'none',
             }}
             place="top"
             delayShow={100}

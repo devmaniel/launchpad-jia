@@ -125,54 +125,56 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
                 );
               })()}
 
-              <div
-                style={{
-                  flex: 1,
-                  height: 3,
-                  backgroundColor: "#EAECF5",
-                  marginLeft: 8,
-                  marginRight: 8,
-                  borderRadius: 999,
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-              >
-                {(() => {
-                  const isAllowed = step.id <= furthestUnlocked;
-                  const p = isAllowed ? Math.max(0, Math.min(1, (progressByStep?.[step.id] ?? 0))) : 0;
-                  const hasError = !!errorsByStep?.[step.id]?.hasError;
-                  const isComplete = p >= 1 && !hasError;
-                  if (isComplete) {
-                    return (
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: 0,
-                          top: 0,
-                          bottom: 0,
-                          width: "100%",
-                          background: "linear-gradient(90deg, #9fcaed 0%, #ceb6da 33%, #ebacc9 66%, #fccec0 100%)",
-                        }}
-                      />
-                    );
-                  }
-                  if (p > 0) {
-                    return (
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: 0,
-                          top: 0,
-                          bottom: 0,
-                          width: `${p * 100}%`,
-                          background: "linear-gradient(90deg, #9fcaed 0%, #ceb6da 33%, #ebacc9 66%, #fccec0 100%)",
-                        }}
-                      />
-                    );
-                  }
-                  return null;
-                })()}
-              </div>
+              {index < steps.length - 1 && (
+                <div
+                  style={{
+                    flex: 1,
+                    height: 3,
+                    backgroundColor: "#EAECF5",
+                    marginLeft: 8,
+                    marginRight: 8,
+                    borderRadius: 999,
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  {(() => {
+                    const isAllowed = step.id <= furthestUnlocked;
+                    const p = isAllowed ? Math.max(0, Math.min(1, (progressByStep?.[step.id] ?? 0))) : 0;
+                    const hasError = !!errorsByStep?.[step.id]?.hasError;
+                    const isComplete = p >= 1 && !hasError;
+                    if (isComplete) {
+                      return (
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            top: 0,
+                            bottom: 0,
+                            width: "100%",
+                            background: "linear-gradient(90deg, #9fcaed 0%, #ceb6da 33%, #ebacc9 66%, #fccec0 100%)",
+                          }}
+                        />
+                      );
+                    }
+                    if (p > 0) {
+                      return (
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            top: 0,
+                            bottom: 0,
+                            width: `${p * 100}%`,
+                            background: "linear-gradient(90deg, #9fcaed 0%, #ceb6da 33%, #ebacc9 66%, #fccec0 100%)",
+                          }}
+                        />
+                      );
+                    }
+                    return null;
+                  })()}
+                </div>
+              )}
             </div>
 
             {/* Labels Row */}

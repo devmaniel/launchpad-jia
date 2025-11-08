@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import CareerInformation from "./01Careerinformation/CareerInformation";
 import JobDescription from "./02JobDescription/JobDescription";

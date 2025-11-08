@@ -11,6 +11,7 @@ import FormHeader from "./NewCareerComponents/FormHeader";
 import Step1 from "./NewCareerComponents/01CareerDetails&TeamAccess/Step1";
 import Stepper from "./NewCareerComponents/Stepper";
 import Step2 from "./NewCareerComponents/02CVReview&Pre-screening/Step2";
+import Step3 from "./NewCareerComponents/03AISetupInterview/Step3";
 
 export default function CareerFormV2({
   career,
@@ -56,6 +57,10 @@ export default function CareerFormV2({
   const [maximumSalaryCurrency, setMaximumSalaryCurrency] = useState(
     career?.maximumSalaryCurrency || "PHP"
   );
+  const [secretPrompt, setSecretPrompt] = useState(career?.secretPrompt || "");
+  const [preScreeningQuestions, setPreScreeningQuestions] = useState<any[]>(
+    Array.isArray(career?.preScreeningQuestions) ? career?.preScreeningQuestions : []
+  );
   const [country, setCountry] = useState(career?.country || "Philippines");
   const [province, setProvince] = useState(career?.province || "");
   const [city, setCity] = useState(career?.location || "");
@@ -69,6 +74,7 @@ export default function CareerFormV2({
       ? ([{ name: user.name, email: user.email, role: "Job Owner", isOwner: true, avatar: user.image }] as any[])
       : ([] as any[])
   );
+  const [aiQuestionsCount, setAiQuestionsCount] = useState<number>(0);
 
   // Ensure current user is present as Job Owner once user context is ready
   useEffect(() => {
@@ -118,6 +124,8 @@ export default function CareerFormV2({
         if (typeof data.province === 'string') setProvince(data.province);
         if (typeof data.city === 'string') setCity(data.city);
         if (Array.isArray(data.teamMembers)) setTeamMembers(data.teamMembers);
+        if (typeof data.secretPrompt === 'string') setSecretPrompt(data.secretPrompt);
+        if (Array.isArray(data.preScreeningQuestions)) setPreScreeningQuestions(data.preScreeningQuestions);
         if (typeof data.descriptionTouched === 'boolean') setDescriptionTouched(data.descriptionTouched);
         if (typeof data.careerInfoTouched === 'boolean') setCareerInfoTouched(data.careerInfoTouched);
         if (typeof data.teamAccessTouched === 'boolean') setTeamAccessTouched(data.teamAccessTouched);
@@ -140,6 +148,16 @@ export default function CareerFormV2({
         if (!city) setCity('Makati City');
         if (salaryNegotiable !== true) setSalaryNegotiable(true);
         if (!description) setDescription('We are looking for a Software Engineer to build and maintain web applications.');
+        // Step 2: sensible defaults
+        if (!secretPrompt) setSecretPrompt('Assess candidates based on the job description with emphasis on practical experience, communication, and problem-solving.');
+        if (!Array.isArray(preScreeningQuestions) || preScreeningQuestions.length === 0) {
+          // Match Step2 expected Question shape and built-in IDs so components render
+          setPreScreeningQuestions([
+            { id: 'notice-period', title: 'Notice Period', description: 'How long is your notice period?' },
+            { id: 'work-setup', title: 'Work Setup', description: 'How often are you willing to report to the office each week?' },
+            { id: 'asking-salary', title: 'Asking Salary', description: 'What is your expected monthly salary?' },
+          ] as any[]);
+        }
         // Ensure at least one collaborator beyond the owner
         setTeamMembers((prev: any[]) => {
           const hasNonOwner = Array.isArray(prev) && prev.some((m) => !m?.isOwner);
@@ -200,6 +218,8 @@ export default function CareerFormV2({
       province,
       location: city,
       employmentType,
+      secretPrompt,
+      preScreeningQuestions,
     };
     try {
       setIsSavingCareer(true);
@@ -286,6 +306,8 @@ export default function CareerFormV2({
         location: city,
         status,
         employmentType,
+        secretPrompt,
+        preScreeningQuestions,
       };
 
       try {
@@ -376,7 +398,7 @@ export default function CareerFormV2({
 
   const jobDescriptionValid = descriptionStripped.length > 0;
   // Team Access is valid only when there is at least one collaborator beyond the owner
-  const teamAccessValid = Array.isArray(teamMembers) && teamMembers.some((m: any) => !m?.isOwner);
+  const teamAccessValid = Array.isArray(teamMembers) && teamMembers.some((m: any) => m?.isOwner);
 
   // Compute granular progress across individual inputs
   let totalChecks = 0;
@@ -411,9 +433,15 @@ export default function CareerFormV2({
     }
   }
   if (descriptionTouched && !jobDescriptionValid) step1Messages.push("Description is required");
-  if (teamAccessTouched && !teamAccessValid) step1Messages.push("Add at least one collaborator");
+  if (teamAccessTouched && !teamAccessValid) step1Messages.push("Add a Job Owner");
 
   const step1HasError = step1Messages.length > 0;
+
+  // Step 2 progress and errors (auto-complete when CriteriaDropdown has initial value)
+  const step2HasInitial = (screeningSetting || '').trim().length > 0;
+  const step2Progress = step2HasInitial ? 1 : 0;
+
+  const step3Progress = aiQuestionsCount >= 5 ? 1 : 0.5;
 
   useEffect(() => {
     try {
@@ -435,6 +463,8 @@ export default function CareerFormV2({
         province,
         city,
         teamMembers,
+        secretPrompt,
+        preScreeningQuestions,
         descriptionTouched,
         careerInfoTouched,
         teamAccessTouched,
@@ -442,7 +472,7 @@ export default function CareerFormV2({
       } as any;
       sessionStorage.setItem(storageKey, JSON.stringify(data));
     } catch {}
-  }, [jobTitle, description, workSetup, workSetupRemarks, screeningSetting, employmentType, requireVideo, salaryNegotiable, minimumSalary, maximumSalary, minimumSalaryCurrency, maximumSalaryCurrency, country, province, city, teamMembers, descriptionTouched, careerInfoTouched, teamAccessTouched, activeStep, storageKey]);
+  }, [jobTitle, description, workSetup, workSetupRemarks, screeningSetting, employmentType, requireVideo, salaryNegotiable, minimumSalary, maximumSalary, minimumSalaryCurrency, maximumSalaryCurrency, country, province, city, teamMembers, secretPrompt, preScreeningQuestions, descriptionTouched, careerInfoTouched, teamAccessTouched, activeStep, storageKey]);
 
   return (
     <div className="col" style={{ marginBottom: "35px" }}>
@@ -472,8 +502,8 @@ export default function CareerFormV2({
       <div style={{ width: "100%", maxWidth: "1560px", margin: '0 auto', marginTop: 30, marginBottom: 8 }}>
         <Stepper
           currentStep={activeStep}
-          progressByStep={{ 1: step1Progress }}
-          errorsByStep={{ 1: { hasError: step1HasError, messages: step1Messages } }}
+          progressByStep={{ 1: step1Progress, 2: step2Progress, 3: step3Progress }}
+          errorsByStep={{ 1: { hasError: step1HasError, messages: step1Messages }, 2: { hasError: false }, 3: { hasError: false } }}
           onStepClick={(id) => setActiveStep(id)}
         />
       </div>
@@ -564,7 +594,18 @@ export default function CareerFormV2({
       )}
 
       {activeStep === 2 && (
-        <Step2 />
+        <Step2
+          screeningSetting={screeningSetting}
+          setScreeningSetting={setScreeningSetting}
+          secretPrompt={secretPrompt}
+          setSecretPrompt={setSecretPrompt}
+          preScreeningQuestions={preScreeningQuestions}
+          setPreScreeningQuestions={setPreScreeningQuestions}
+        />
+      )}
+
+      {activeStep === 3 && (
+        <Step3 onQuestionsCountChange={(n: number) => setAiQuestionsCount(n)} />
       )}
 
       {showSaveModal && (
