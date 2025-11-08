@@ -12,6 +12,8 @@ import Step1 from "./NewCareerComponents/01CareerDetails&TeamAccess/Step1";
 import Stepper from "./NewCareerComponents/Stepper";
 import Step2 from "./NewCareerComponents/02CVReview&Pre-screening/Step2";
 import Step3 from "./NewCareerComponents/03AISetupInterview/Step3";
+import Step4 from "./NewCareerComponents/04PipelineStages/Step4";
+import Step5 from "./NewCareerComponents/05ReviewCareer/Step5";
 
 export default function CareerFormV2({
   career,
@@ -442,6 +444,7 @@ export default function CareerFormV2({
   const step2Progress = step2HasInitial ? 1 : 0;
 
   const step3Progress = aiQuestionsCount >= 5 ? 1 : 0.5;
+  const step4Progress = 0; // pipeline setup progress (static for now)
 
   useEffect(() => {
     try {
@@ -502,8 +505,8 @@ export default function CareerFormV2({
       <div style={{ width: "100%", maxWidth: "1560px", margin: '0 auto', marginTop: 30, marginBottom: 8 }}>
         <Stepper
           currentStep={activeStep}
-          progressByStep={{ 1: step1Progress, 2: step2Progress, 3: step3Progress }}
-          errorsByStep={{ 1: { hasError: step1HasError, messages: step1Messages }, 2: { hasError: false }, 3: { hasError: false } }}
+          progressByStep={{ 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 }}
+          errorsByStep={{ 1: { hasError: false }, 2: { hasError: false }, 3: { hasError: false }, 4: { hasError: false }, 5: { hasError: false } }}
           onStepClick={(id) => setActiveStep(id)}
         />
       </div>
@@ -606,6 +609,14 @@ export default function CareerFormV2({
 
       {activeStep === 3 && (
         <Step3 onQuestionsCountChange={(n: number) => setAiQuestionsCount(n)} />
+      )}
+
+      {activeStep === 4 && (
+        <Step4 />
+      )}
+
+      {activeStep === 5 && (
+        <Step5 />
       )}
 
       {showSaveModal && (
