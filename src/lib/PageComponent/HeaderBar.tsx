@@ -94,7 +94,7 @@ export default function HeaderBar(props: { activeLink: string, currentPage: stri
                     style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}
                     onClick={() => setShowAuthUserOptions(!showAuthUserOptions)}
                     >
-                    <AvatarImage src={user?.image} alt="Avatar" />
+                    <AvatarImage src={user?.image} alt="Avatar" isActive />
                     <div style={{ display: "flex", flexDirection: "column",alignItems: "flex-start" }}>
                       <span style={{ fontWeight: 600, fontSize: 14, color: '#414651' }}>{user?.name}</span>
                       <span style={{ fontWeight: 400, fontSize: 14, color: '#717680', textTransform: "capitalize" }}>{role?.replace("_", " ")}</span>
@@ -115,7 +115,7 @@ export default function HeaderBar(props: { activeLink: string, currentPage: stri
                   >
                     <div 
                     style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10, borderBottom: "1px solid #E9EAEB", padding: "10px" }}>
-                      <AvatarImage src={user?.image} alt="Avatar" />
+                      <AvatarImage src={user?.image} alt="Avatar" isActive />
                       <div style={{ display: "flex", flexDirection: "column",alignItems: "flex-start" }}>
                         <span style={{ fontWeight: 700, fontSize: 14, color: '#414651' }}>{user?.name}</span>
                         <span style={{ fontWeight: 500, fontSize: 14, color: '#717680' }}>{user?.email}</span>
