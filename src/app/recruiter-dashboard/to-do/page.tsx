@@ -7,7 +7,7 @@ import { useAppContext } from "@/lib/context/AppContext";
 import axios from "axios";
 import { errorToast } from "@/lib/Utils";
 import ToDoTable from "@/lib/components/DataTables/ToDoTable";
-
+import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 
 export default function () {
     const searchParams = useSearchParams();
@@ -57,7 +57,11 @@ export default function () {
 
     return (
         <>
-        <HeaderBar activeLink="To Do" currentPage="Overview" icon="la la-cogs" />
+        <HeaderBar 
+          activeLink={headerConfig.toDo.activeLink} 
+          currentPage={headerConfig.toDo.pages.overview.currentPage} 
+          iconPath={headerConfig.toDo.iconPath} 
+        />
         <div className="container-fluid mt--7" style={{ paddingTop: "6rem" }}>
             <div className="row">
             <div className="col">

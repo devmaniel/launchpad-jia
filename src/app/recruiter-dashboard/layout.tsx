@@ -118,10 +118,12 @@ export default function Layout({ children }) {
             marginLeft: "6px",
             marginRight: "20px",
             marginBottom: "22px",
-            width: "calc(100vw - 238px)",
+            width: "calc(100vw - 286px)",
             minHeight: "calc(100vh - 44px)",
             border: "2px solid #EAECF5",
             borderRadius: "24px",
+            position: "relative",
+            zIndex: 1,
           }}
         >
           {children}

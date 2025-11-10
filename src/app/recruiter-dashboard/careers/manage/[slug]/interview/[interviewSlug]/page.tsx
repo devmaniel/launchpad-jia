@@ -6,6 +6,7 @@ import CardTypingLoader from "@/lib/components/AnalysisComponents/CardTypingLoad
 import HeaderBar from "@/lib/PageComponent/HeaderBar";
 import { useParams } from "next/navigation";
 import Swal from "sweetalert2";
+import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 
 export default function InterviewTranscript() {
     const { interviewSlug } = useParams();
@@ -83,7 +84,11 @@ export default function InterviewTranscript() {
     
     return (
         <>
-        <HeaderBar activeLink="Careers" currentPage={interview?.name} icon="la la-microphone" />
+        <HeaderBar 
+          activeLink={headerConfig.careers.activeLink} 
+          currentPage={interview?.name} 
+          iconPath={headerConfig.careers.iconPath} 
+        />
             <div className="container-fluid mt--7" style={{ paddingTop: "6rem" }}>
               <div className="row">
                 <div className="col">

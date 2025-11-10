@@ -17,6 +17,7 @@ import CareerStatus from "@/lib/components/CareerComponents/CareerStatus";
 import CandidateActionModal from "@/lib/components/CandidateComponents/CandidateActionModal";
 import { candidateActionToast, errorToast, getStage } from "@/lib/Utils";
 import { Tooltip } from "react-tooltip";
+import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 
 export default function ManageCareerPage() {
     const { slug } = useParams();
@@ -673,7 +674,11 @@ export default function ManageCareerPage() {
     return (
         <>
             {/* Header */}
-            <HeaderBar activeLink="Careers" currentPage={formData.jobTitle} icon="la la-suitcase" />
+            <HeaderBar 
+              activeLink={headerConfig.careers.activeLink} 
+              currentPage={formData.jobTitle} 
+              iconPath={headerConfig.careers.iconPath} 
+            />
             <div className="container-fluid mt--7" style={{ paddingTop: "6rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 {isEditing ? 

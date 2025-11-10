@@ -3,12 +3,17 @@
 import React from "react";
 import HeaderBar from "@/lib/PageComponent/HeaderBar";
 import RecruiterDashboard from "../../lib/components/DashboardComponents/RecruiterDashboard";
+import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 
 export default function () {
   
   return (
     <>
-      <HeaderBar activeLink="Dashboard" currentPage="Overview" icon="la la-chart-area" />
+      <HeaderBar 
+        activeLink={headerConfig.dashboard.activeLink} 
+        currentPage={headerConfig.dashboard.pages.overview.currentPage} 
+        iconPath={headerConfig.dashboard.iconPath} 
+      />
       <div className="container-fluid mt--7" style={{ paddingTop: "6rem", paddingBottom: "6rem" }}>
         <div className="row">
           <div className="col">

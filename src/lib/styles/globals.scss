@@ -1012,6 +1012,7 @@ $gifURL: "/gr-1.gif";
   overflow-y: auto;
   flex-direction: column;
   justify-content: space-between;
+  z-index: 10;
 
   .sidebar-header {
     display: flex;

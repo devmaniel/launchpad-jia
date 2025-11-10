@@ -7,6 +7,7 @@ import { useAppContext } from "@/lib/context/AppContext";
 import { errorToast } from "@/lib/Utils";
 import EmailModule from "@/lib/components/EmailComponents/EmailModule";
 import SuperAdminFeature from "@/lib/components/SuperAdminFeature";
+import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 
 export default function () {
   const searchParams = useSearchParams();
@@ -23,9 +24,9 @@ export default function () {
   return (
     <>
       <HeaderBar
-        activeLink="Inbox"
-        currentPage="Overview"
-        icon="la la-envelope"
+        activeLink={headerConfig.inbox.activeLink}
+        currentPage={headerConfig.inbox.pages.overview.currentPage}
+        iconPath={headerConfig.inbox.iconPath}
       />
       <div className="container-fluid mt--7" style={{ paddingTop: "6rem" }}>
         <div className="row">

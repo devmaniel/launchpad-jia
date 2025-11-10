@@ -17,6 +17,7 @@ import CandidateActionModal from "@/lib/components/CandidateComponents/Candidate
 import LoadingAnimation from "@/lib/components/Loaders/LoadingAnimation";
 import RetakeInterviewRequestV2 from "@/lib/components/CandidateComponents/RetakeInterviewRequestV2";
 import { Tooltip } from "react-tooltip";
+import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 
 const breakdownColorScheme = ["#9FCAED", "#CEB6DA", "#EBACC9", "#FCCEC0"];
 
@@ -485,7 +486,11 @@ export default function InterviewAnalysis() {
 
     return (
       <>
-      <HeaderBar activeLink="Careers" currentPage="Interview Analysis" icon="la la-suitcase" />
+      <HeaderBar 
+        activeLink={headerConfig.careers.activeLink} 
+        currentPage="Interview Analysis" 
+        iconPath={headerConfig.careers.iconPath} 
+      />
         <div style={{padding: "16px 20px"}}>
              <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                 {interview && <div style={{ display: "flex", flexDirection: "column", marginBottom: "35px" }}>

@@ -3,11 +3,16 @@
 import React from "react";
 import MembersV2Table from "@/lib/components/DataTables/MembersTableV2";
 import HeaderBar from "@/lib/PageComponent/HeaderBar";
+import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 
 export default function () {
   return (
     <>
-      <HeaderBar activeLink="Members" currentPage="Overview" icon="la la-users" />
+      <HeaderBar 
+        activeLink={headerConfig.members.activeLink} 
+        currentPage={headerConfig.members.pages.overview.currentPage} 
+        iconPath={headerConfig.members.iconPath} 
+      />
       <div className="container-fluid mt--7" style={{ paddingTop: "6rem" }}>
         <div className="row">
           <div className="col">

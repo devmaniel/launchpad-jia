@@ -186,10 +186,11 @@ export default function OrgDropdownV2() {
           overflowY: "scroll",
           maxHeight: "300px",
           zIndex: 1000,
-          display: "flex",
+          display: showOrgDropdown ? "flex" : "none",
           flexDirection: "column",
           gap: 5,
-          overflow: "auto"
+          overflow: "auto",
+          pointerEvents: showOrgDropdown ? "auto" : "none"
         }}
       >
         {loading ? (
@@ -208,7 +209,7 @@ export default function OrgDropdownV2() {
                 key={org._id}
                 className={`dropdown-item-option ${selectedOrg._id === org._id ? "active" : ""}`}
                 onClick={() => handleSelect(org)}
-                style={{width:100}}
+                style={{width: "100% !important", maxWidth: "100% !important", margin: "0 !important"}}
               >
               <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10 }}>
                 <img

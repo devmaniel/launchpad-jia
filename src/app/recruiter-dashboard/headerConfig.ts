@@ -1,9 +1,18 @@
 // Header configuration for recruiter dashboard pages
 
 export const headerConfig = {
+  dashboard: {
+    activeLink: "Dashboard",
+    iconPath: "/temp/sidebar/space_dashboard.svg",
+    pages: {
+      overview: {
+        currentPage: "Overview"
+      }
+    }
+  },
   careers: {
     activeLink: "Careers",
-    iconPath: "/temp/work_outline.svg",
+    iconPath: "/temp/sidebar/careers-icon.svg",
     pages: {
       overview: {
         currentPage: "Overview"
@@ -18,34 +27,43 @@ export const headerConfig = {
   },
   candidates: {
     activeLink: "Candidates",
-    iconPath: "/temp/user-temp.svg",
+    iconPath: "/temp/sidebar/candidates.svg",
     pages: {
       overview: {
         currentPage: "Overview"
       }
     }
   },
-  inbox: {
-    activeLink: "Inbox",
-    iconPath: "/temp/interpreter_mode.svg",
-    pages: {
-      overview: {
-        currentPage: "Messages"
-      }
-    }
-  },
   toDo: {
     activeLink: "To Do",
-    iconPath: "/temp/zap-icon.svg",
+    iconPath: "/temp/sidebar/todo.svg",
     pages: {
       overview: {
         currentPage: "Tasks"
       }
     }
   },
+  inbox: {
+    activeLink: "Inbox",
+    iconPath: "/temp/sidebar/mail_outline.svg",
+    pages: {
+      overview: {
+        currentPage: "Messages"
+      }
+    }
+  },
+  emailAutomation: {
+    activeLink: "Email Automation [Beta]",
+    iconPath: "/temp/sidebar/mail_outline.svg",
+    pages: {
+      overview: {
+        currentPage: "Campaigns"
+      }
+    }
+  },
   feedback: {
     activeLink: "Feedback",
-    iconPath: "/temp/help-icon-thin.svg",
+    iconPath: "/temp/sidebar/feedbacks.svg",
     pages: {
       overview: {
         currentPage: "Reviews"
@@ -54,25 +72,16 @@ export const headerConfig = {
   },
   members: {
     activeLink: "Members",
-    iconPath: "/temp/personality-test.svg",
+    iconPath: "/temp/sidebar/members.svg",
     pages: {
       overview: {
         currentPage: "Team"
       }
     }
   },
-  emailAutomation: {
-    activeLink: "Email Automation",
-    iconPath: "/temp/mic.svg",
-    pages: {
-      overview: {
-        currentPage: "Campaigns"
-      }
-    }
-  },
   settings: {
     activeLink: "Settings",
-    iconPath: "/temp/settingsV2.svg",
+    iconPath: "/temp/sidebar/settings.svg",
     pages: {
       overview: {
         currentPage: "Preferences"

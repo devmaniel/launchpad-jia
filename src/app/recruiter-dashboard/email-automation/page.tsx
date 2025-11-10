@@ -8,6 +8,7 @@ import { errorToast, successToast } from "@/lib/Utils";
 import Fuse from "fuse.js";
 import axios from "axios";
 import moment from "moment";
+import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 
 interface AutomationData {
   _id: string;
@@ -412,9 +413,9 @@ export default function EmailAutomation() {
   return (
     <>
       <HeaderBar
-        activeLink="Email Automation [Beta]"
-        currentPage="Overview"
-        icon="la la-cubes"
+        activeLink={headerConfig.emailAutomation.activeLink}
+        currentPage={headerConfig.emailAutomation.pages.overview.currentPage}
+        iconPath={headerConfig.emailAutomation.iconPath}
       />
       <div className="container-fluid mt--7" style={{ paddingTop: "6rem" }}>
         <div className="row">
