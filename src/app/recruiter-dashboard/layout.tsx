@@ -124,6 +124,7 @@ export default function Layout({ children }) {
             borderRadius: "24px",
             position: "relative",
             zIndex: 1,
+            overflow: "hidden",
           }}
         >
           {children}

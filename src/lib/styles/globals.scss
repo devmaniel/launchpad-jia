@@ -937,8 +937,10 @@ $gifURL: "/gr-1.gif";
   display: flex;
   gap: 16px;
   justify-content: flex-start;
-  overflow-x: scroll;
-  padding: 0 32px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 0px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .career-stage-column {
@@ -2407,6 +2409,7 @@ input:checked + .slider:before {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
+  position: relative;
 
   .career-tab-content {
     display: flex;
@@ -2422,23 +2425,30 @@ input:checked + .slider:before {
       font-size: 16px;
       font-weight: 700;
       color: #717680;
+      padding: 0 10px;
       border-bottom: none;
       cursor: pointer;
+      position: relative;
 
       &.active {
         color: #252b37;
-        border-bottom: 2px solid transparent;
-        background-image: linear-gradient(
-          90deg,
-          #9fcaed 0%,
-          #ceb6da 33%,
-          #ebacc9 66%,
-          #fccec0 100%
-        );
-        background-repeat: no-repeat;
-        background-position: bottom left;
-        background-size: 100% 2px;
         padding: 0 10px;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background-image: linear-gradient(
+            90deg,
+            #9fcaed 0%,
+            #ceb6da 33%,
+            #ebacc9 66%,
+            #fccec0 100%
+          );
+        }
       }
     }
   }

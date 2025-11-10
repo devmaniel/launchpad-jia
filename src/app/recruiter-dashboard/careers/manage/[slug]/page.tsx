@@ -3,8 +3,8 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "@/lib/context/AppContext";
 import axios from "axios";
-import CareerStageColumn from "@/lib/components/CareerComponents/CareerStage";
-import JobDescription from "@/lib/components/CareerComponents/JobDescription";
+import CareerStageColumnV2 from "@/lib/components/CareerComponents/ApplicationTimeline/CareerStageV2";
+import JobDescriptionV2 from "@/lib/components/CareerComponents/CareerDescription/JobDescriptionV2";
 import HeaderBar from "@/lib/PageComponent/HeaderBar";
 import CandidateMenu from "@/lib/components/CareerComponents/CandidateMenu";
 import CandidateCV from "@/lib/components/CareerComponents/CandidateCV";
@@ -18,7 +18,7 @@ import CandidateActionModal from "@/lib/components/CandidateComponents/Candidate
 import { candidateActionToast, errorToast, getStage } from "@/lib/Utils";
 import { Tooltip } from "react-tooltip";
 import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
-
+import { mockCandidates } from "@/lib/components/CareerComponents/ApplicationTimeline/mock-data";
 export default function ManageCareerPage() {
     const { slug } = useParams();
     const searchParams = useSearchParams();
@@ -26,130 +26,79 @@ export default function ManageCareerPage() {
     const { orgID, user } = useAppContext();
     const [career, setCareer] = useState<any>(null);
     const { timelineStages, interviewsInProgress, dropped, hired, setAndSortCandidates } = useCareerApplicants({
-        "CV Review": {
+        "CV Screening": {
             candidates: [],
             droppedCandidates: [],
             color: "#6941C6",
             nextStage: {
-                name: "Pending AI Interview",
+                name: "AI Interview",
                 step: "AI Interview",
                 status: "For Interview"
             },
             currentStage: {
-                name: "CV Review",
+                name: "CV Screening",
                 step: "CV Screening",
                 status: "For CV Screening"
             }
         },
-        "Pending AI Interview": {
+        "AI Interview": {
             candidates: [],
             droppedCandidates: [],
-            // Orange
             color: "#D97706",
             nextStage: {
-                name: "AI Interview Review",
-                step: "AI Interview",
-                status: "For AI Interview Review"
+                name: "Human Interview",
+                step: "Human Interview",
+                status: "For Schedule"
             },
             currentStage: {
-                name: "Pending AI Interview",
-                step: "CV Screening",
+                name: "AI Interview",
+                step: "AI Interview",
                 status: "For AI Interview"
             }
         },
-        "AI Interview Review": {
-            candidates: [],
-            droppedCandidates: [],
-            // Light Blue
-            color: "#00CEC8",
-            nextStage: {
-                name: "For Human Interview",
-                step: "Human Interview",
-                status: "For Human Interview"
-            },
-            currentStage: {
-                name: "AI Interview Review",
-                step: "AI Interview",
-                status: "For AI Interview Review"
-            }
-        },
-        "For Human Interview": {
+        "Human Interview": {
             candidates: [],
             droppedCandidates: [],
             color: "#B42318",
             nextStage: {
-                name: "Human Interview Review",
-                step: "Human Interview",
-                status: "For Human Interview Review"
+                name: "Coding Test",
+                step: "Coding Test",
+                status: "For Coding Test"
             },
             currentStage: {
-                name: "For Human Interview",
+                name: "Human Interview",
                 step: "Human Interview",
                 status: "For Human Interview"
             }
         },
-        "Human Interview Review": {
+        "Coding Test": {
             candidates: [],
             droppedCandidates: [],
-            // Violet
-            color: "#7E3AF2",
-            nextStage: {
-                name: "Pending Job Interview",
-                step: "Job Interview",
-                status: "For Interview"
-            },
-            currentStage: {
-                name: "Human Interview Review",
-                step: "Human Interview",
-                status: "For Human Interview Review"
-            }
-        },
-        "Pending Job Interview": {
-            candidates: [],
-            droppedCandidates: [],
-            // Blue
             color: "#1849D5",
             nextStage: {
-                name: "Job Offered",
-                step: "Job Offered",
-                status: "Accepted"
+                name: "Job Offer",
+                step: "Job Offer",
+                status: "For Final Review"
             },
             currentStage: {
-                name: "Pending Job Interview",
-                step: "Job Interview",
-                status: "For Interview"
+                name: "Coding Test",
+                step: "Coding Test",
+                status: "For Coding Test"
             }
         },
-        "Job Offered": {
+        "Job Offer": {
             candidates: [],
             droppedCandidates: [],
-            // Brown
-            color: "#854D0E",
-            nextStage: {
-                name: "Contract Signed",
-                step: "Contract Signed",
-                status: "Accepted"
-            },
-            currentStage: {
-                name: "Job Offered",
-                step: "Job Offered",
-                status: "Accepted"
-            }
-        },
-        "Contract Signed": {
-            candidates: [],
-            droppedCandidates: [],
-            // Light Green
-            color: "#80EF80",
+            color: "#059669",
             nextStage: {
                 name: "Hired",
                 step: "Hired",
-                status: "Accepted"
+                status: "Hired"
             },
             currentStage: {
-                name: "Contract Signed",
-                step: "Contract Signed",
-                status: "Accepted"
+                name: "Job Offer",
+                step: "Job Offer",
+                status: "For Final Review"
             }
         },
     });
@@ -170,6 +119,34 @@ export default function ManageCareerPage() {
         screeningSetting: "",
         requireVideo: false,
         directInterviewLink: "",
+        createdBy: {},
+        minimumSalary: "",
+        maximumSalary: "",
+        province: "",
+        location: "",
+        salaryNegotiable: false,
+        workSetup: "",
+        workSetupRemarks: "",
+        createdAt: "",
+        updatedAt: "",
+        lastEditedBy: {},
+        employmentType: "Full-time",
+        orgID: "",
+        secretPrompt: "",
+        preScreeningQuestions: [],
+        customQuestions: [],
+        askingMinSalary: "",
+        askingMaxSalary: "",
+        askingMinCurrency: "PHP",
+        askingMaxCurrency: "PHP",
+        teamMembers: [],
+        aiInterviewSecretPrompt: "",
+        aiInterviewScreeningSetting: "",
+        aiInterviewRequireVideo: false,
+        aiInterviewQuestions: [],
+        pipelineStages: [],
+        minimumSalaryCurrency: "PHP",
+        maximumSalaryCurrency: "PHP",
     });
     const [showCandidateHistory, setShowCandidateHistory] = useState(false);
     const [selectedCandidateHistory, setSelectedCandidateHistory] = useState<any>({});
@@ -194,7 +171,48 @@ export default function ManageCareerPage() {
       },
     ];
     
-      useEffect(() => {
+      // Load mock data on component mount for testing
+    useEffect(() => {
+      let newTimelineStages = { ...timelineStages };
+      
+      for (const candidate of mockCandidates) {
+        const isDropped = candidate.applicationStatus === "Dropped" || candidate.applicationStatus === "Cancelled";
+        
+        // CV Screening stage
+        if (candidate.currentStep === "CV Screening") {
+          isDropped ? newTimelineStages["CV Screening"].droppedCandidates.push(candidate) : newTimelineStages["CV Screening"].candidates.push(candidate);
+          continue;
+        }
+
+        // AI Interview stage
+        if (candidate.currentStep === "AI Interview") {
+          isDropped ? newTimelineStages["AI Interview"].droppedCandidates.push(candidate) : newTimelineStages["AI Interview"].candidates.push(candidate);
+          continue;
+        }
+
+        // Human Interview stage
+        if (candidate.currentStep === "Human Interview") {
+          isDropped ? newTimelineStages["Human Interview"].droppedCandidates.push(candidate) : newTimelineStages["Human Interview"].candidates.push(candidate);
+          continue;
+        }
+
+        // Coding Test stage
+        if (candidate.currentStep === "Coding Test") {
+          isDropped ? newTimelineStages["Coding Test"].droppedCandidates.push(candidate) : newTimelineStages["Coding Test"].candidates.push(candidate);
+          continue;
+        }
+
+        // Job Offer stage
+        if (candidate.currentStep === "Job Offer") {
+          isDropped ? newTimelineStages["Job Offer"].droppedCandidates.push(candidate) : newTimelineStages["Job Offer"].candidates.push(candidate);
+          continue;
+        }
+      }
+
+      setAndSortCandidates(newTimelineStages);
+    }, []);
+
+    useEffect(() => {
         const fetchInterviews = async () => {
           if (!career?.id) return;
 
@@ -204,44 +222,34 @@ export default function ManageCareerPage() {
             for (const interview of response.data) {
 
                 const isDropped = interview.applicationStatus === "Dropped" || interview.applicationStatus === "Cancelled";
-                if (interview.currentStep === "AI Interview" || !interview.currentStep || (interview.currentStep === "CV Screening" && interview.status === "For AI Interview")) {
-                    if (interview.status === "For Interview" || interview.status === "For AI Interview") {
-                        isDropped ? newTimelineStages["Pending AI Interview"].droppedCandidates.push(interview) : newTimelineStages["Pending AI Interview"].candidates.push(interview);
-                        continue;
-                    }
-
-                    isDropped ? newTimelineStages["AI Interview Review"].droppedCandidates.push(interview) : newTimelineStages["AI Interview Review"].candidates.push(interview);
-                    continue;
-                }
                 
+                // CV Screening stage
                 if (interview.currentStep === "CV Screening") {
-                    isDropped ? newTimelineStages["CV Review"].droppedCandidates.push(interview) : newTimelineStages["CV Review"].candidates.push(interview);
+                    isDropped ? newTimelineStages["CV Screening"].droppedCandidates.push(interview) : newTimelineStages["CV Screening"].candidates.push(interview);
                     continue;
                 }
 
-                if (interview.currentStep === "Human Interview") {
-                    if (interview.status === "For Human Interview") {
-                        isDropped ? newTimelineStages["For Human Interview"].droppedCandidates.push(interview) : newTimelineStages["For Human Interview"].candidates.push(interview);
-                        continue;
-                    }
-                    if (interview.status === "For Human Interview Review") {
-                        isDropped ? newTimelineStages["Human Interview Review"].droppedCandidates.push(interview) : newTimelineStages["Human Interview Review"].candidates.push(interview);
-                        continue;
-                    }
+                // AI Interview stage
+                if (interview.currentStep === "AI Interview") {
+                    isDropped ? newTimelineStages["AI Interview"].droppedCandidates.push(interview) : newTimelineStages["AI Interview"].candidates.push(interview);
+                    continue;
                 }
 
-                if (interview.currentStep === "Job Interview") {
-                   isDropped ? newTimelineStages["Pending Job Interview"].droppedCandidates.push(interview) : newTimelineStages["Pending Job Interview"].candidates.push(interview);
+                // Human Interview stage
+                if (interview.currentStep === "Human Interview") {
+                    isDropped ? newTimelineStages["Human Interview"].droppedCandidates.push(interview) : newTimelineStages["Human Interview"].candidates.push(interview);
+                    continue;
+                }
+
+                // Coding Test stage
+                if (interview.currentStep === "Coding Test") {
+                   isDropped ? newTimelineStages["Coding Test"].droppedCandidates.push(interview) : newTimelineStages["Coding Test"].candidates.push(interview);
                    continue;
                 }
 
-                if (interview.currentStep === "Job Offered") {
-                    isDropped ? newTimelineStages["Job Offered"].droppedCandidates.push(interview) : newTimelineStages["Job Offered"].candidates.push(interview);
-                    continue;
-                }
-
-                if (interview.currentStep === "Contract Signed") {
-                    isDropped ? newTimelineStages["Contract Signed"].droppedCandidates.push(interview) : newTimelineStages["Contract Signed"].candidates.push(interview);
+                // Job Offer stage
+                if (interview.currentStep === "Job Offer") {
+                    isDropped ? newTimelineStages["Job Offer"].droppedCandidates.push(interview) : newTimelineStages["Job Offer"].candidates.push(interview);
                     continue;
                 }
             }
@@ -286,6 +294,21 @@ export default function ManageCareerPage() {
                     lastEditedBy: response.data?.lastEditedBy || {},
                     employmentType: response.data?.employmentType || "Full-time",
                     orgID: response.data?.orgID || "",
+                    secretPrompt: response.data?.secretPrompt || "",
+                    preScreeningQuestions: response.data?.preScreeningQuestions || [],
+                    customQuestions: response.data?.customQuestions || [],
+                    askingMinSalary: response.data?.askingMinSalary || "",
+                    askingMaxSalary: response.data?.askingMaxSalary || "",
+                    askingMinCurrency: response.data?.askingMinCurrency || "PHP",
+                    askingMaxCurrency: response.data?.askingMaxCurrency || "PHP",
+                    teamMembers: response.data?.teamMembers || [],
+                    aiInterviewSecretPrompt: response.data?.aiInterviewSecretPrompt || "",
+                    aiInterviewScreeningSetting: response.data?.aiInterviewScreeningSetting || "",
+                    aiInterviewRequireVideo: response.data?.aiInterviewRequireVideo === null || response.data?.aiInterviewRequireVideo === undefined ? true : response.data?.aiInterviewRequireVideo,
+                    aiInterviewQuestions: response.data?.aiInterviewQuestions || [],
+                    pipelineStages: response.data?.pipelineStages || [],
+                    minimumSalaryCurrency: response.data?.minimumSalaryCurrency || "PHP",
+                    maximumSalaryCurrency: response.data?.maximumSalaryCurrency || "PHP",
                 });
                 if (tab === "edit") {
                     setActiveTab("job-description");
@@ -346,6 +369,35 @@ export default function ManageCareerPage() {
             status: career?.status || "",
             screeningSetting: career?.screeningSetting || "",
             requireVideo: career?.requireVideo === null || career?.requireVideo === undefined ? true : career?.requireVideo,
+            directInterviewLink: career?.directInterviewLink || "",
+            createdBy: career?.createdBy || {},
+            minimumSalary: career?.minimumSalary || "",
+            maximumSalary: career?.maximumSalary || "",
+            province: career?.province || "",
+            location: career?.location || "",
+            salaryNegotiable: career?.salaryNegotiable || false,
+            workSetup: career?.workSetup || "",
+            workSetupRemarks: career?.workSetupRemarks || "",
+            createdAt: career?.createdAt || "",
+            updatedAt: career?.updatedAt || "",
+            lastEditedBy: career?.lastEditedBy || {},
+            employmentType: career?.employmentType || "Full-time",
+            orgID: career?.orgID || "",
+            secretPrompt: career?.secretPrompt || "",
+            preScreeningQuestions: career?.preScreeningQuestions || [],
+            customQuestions: career?.customQuestions || [],
+            askingMinSalary: career?.askingMinSalary || "",
+            askingMaxSalary: career?.askingMaxSalary || "",
+            askingMinCurrency: career?.askingMinCurrency || "PHP",
+            askingMaxCurrency: career?.askingMaxCurrency || "PHP",
+            teamMembers: career?.teamMembers || [],
+            aiInterviewSecretPrompt: career?.aiInterviewSecretPrompt || "",
+            aiInterviewScreeningSetting: career?.aiInterviewScreeningSetting || "",
+            aiInterviewRequireVideo: career?.aiInterviewRequireVideo === null || career?.aiInterviewRequireVideo === undefined ? true : career?.aiInterviewRequireVideo,
+            aiInterviewQuestions: career?.aiInterviewQuestions || [],
+            pipelineStages: career?.pipelineStages || [],
+            minimumSalaryCurrency: career?.minimumSalaryCurrency || "PHP",
+            maximumSalaryCurrency: career?.maximumSalaryCurrency || "PHP",
         });
         setIsEditing(false);
     }
@@ -690,7 +742,12 @@ export default function ManageCareerPage() {
                     /> 
                 : <div style={{ maxWidth: "70%" }}>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10 }}>
-                    <h1 style={{ color: "#030217", fontWeight: 550, fontSize: 30 }}>{formData.jobTitle}</h1>
+                    <h1 style={{ color: "#030217", fontWeight: 550, fontSize: 30 }}>
+                        {formData.status !== "active" && (
+                            <span style={{ color: "#717680", marginRight: 8 }}>[Draft]</span>
+                        )}
+                        {formData.jobTitle}
+                    </h1>
                     <CareerStatus status={formData.status} />
                 </div>
                 </div>}
@@ -712,15 +769,16 @@ export default function ManageCareerPage() {
                 </div> */}
 
                 {/* Export candidates button */}
-                {interviewsInProgress > 0 && <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                {formData.status === "active" && <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
                     <button 
                     style={{
-                        background: "white",
-                        border: "1px solid #E9EAEB",
-                        borderRadius: 60,
-                        padding: "8px 16px",
+                        background: "#fff",
+                        border: "1px solid #D5D7DA",
+                        borderRadius: 999,
+                        padding: "10px 16px",
                         fontSize: 14,
-                        fontWeight: 700,
+                        fontWeight: 500,
+                        color: "#414651",
                         display: "flex",
                         alignItems: "center",
                         cursor: "pointer",
@@ -763,9 +821,10 @@ export default function ManageCareerPage() {
                     </button>
                 </div>}
             </div>
-            <div style={{ padding: "16px 0 48px", background: "#FDFDFD", minHeight: "100vh" }}>
+            </div>
+            
             {/* Tabs */}
-            <div className="career-tab-container">
+            <div className="career-tab-container" style={{ maxWidth: "1560px", margin: "20px auto 0", paddingRight: "15px" }}>
                 <div className="career-tab-content">
                     {tabs.map((tab) => (
                     <div 
@@ -778,20 +837,38 @@ export default function ManageCareerPage() {
                     ))}
                 </div>
             </div>
+
             {/* Career Tab Information */}
-            {activeTab === "application-timeline" && <CareerStageColumn 
-            timelineStages={timelineStages} 
-            handleCandidateMenuOpen={handleCandidateMenuOpen} 
-            handleCandidateCVOpen={handleCandidateCVOpen} 
-            handleDroppedCandidatesOpen={handleDroppedCandidatesOpen} 
-            handleEndorseCandidate={handleEndorseCandidate} 
-            handleDropCandidate={handleDropCandidate} 
-            dragEndorsedCandidate={dragEndorsedCandidate} 
-            handleCandidateHistoryOpen={handleCandidateHistoryOpen} 
-            handleRetakeInterview={handleRetakeInterview}
-            />}
-            {activeTab === "all-applicants" && <CareerApplicantsTable slug={career?.id} />}
-            {activeTab === "job-description" && <JobDescription formData={formData} setFormData={setFormData} editModal={tab === "edit"} isEditing={isEditing} setIsEditing={setIsEditing} handleCancelEdit={handleCancelEdit} />}
+            {/* Application Timeline - Full width for canvas scaling */}
+            {activeTab === "application-timeline" && (
+              <div style={{ width: "100%", padding: "20px 20px", marginBottom: 10 }}>
+                <CareerStageColumnV2 
+                  timelineStages={timelineStages} 
+                  handleCandidateMenuOpen={handleCandidateMenuOpen} 
+                  handleCandidateCVOpen={handleCandidateCVOpen} 
+                  handleDroppedCandidatesOpen={handleDroppedCandidatesOpen} 
+                  handleEndorseCandidate={handleEndorseCandidate} 
+                  handleDropCandidate={handleDropCandidate} 
+                  dragEndorsedCandidate={dragEndorsedCandidate} 
+                  handleCandidateHistoryOpen={handleCandidateHistoryOpen} 
+                  handleRetakeInterview={handleRetakeInterview}
+                />
+              </div>
+            )}
+
+            {/* All Applicants - Centered with max-width */}
+            {activeTab === "all-applicants" && (
+              <div style={{ maxWidth: "1560px", margin: "25px auto 0" }}>
+                <CareerApplicantsTable slug={career?.id} />
+              </div>
+            )}
+
+            {/* Job Description - Centered with max-width */}
+            {activeTab === "job-description" && (
+              <div style={{ maxWidth: "1560px", margin: "25px auto 0" }}>
+                <JobDescriptionV2 formData={formData} setFormData={setFormData} isEditing={isEditing} setIsEditing={setIsEditing} handleCancelEdit={handleCancelEdit} />
+              </div>
+            )}
             {candidateMenuOpen && <CandidateMenu 
             handleCandidateMenuOpen={handleCandidateMenuOpen} 
             candidate={selectedCandidate} 
@@ -806,8 +883,6 @@ export default function ManageCareerPage() {
             {showCandidateHistory && <CandidateHistory candidate={selectedCandidateHistory} setShowCandidateHistory={setShowCandidateHistory} />}
             {showCandidateActionModal && <CandidateActionModal candidate={selectedCandidate} onAction={handleCandidateAction} action={showCandidateActionModal} />}
             <Tooltip className="career-fit-tooltip fade-in" id="career-fit-tooltip"/>
-        </div>
-        </div>
     </>
     )
 }

@@ -57,7 +57,7 @@ export default function SearchBar({
             transition: "border-color 0.2s ease",
           }}
           onFocus={(e) => {
-            e.currentTarget.style.border = "1px solid #9400FF"
+            e.currentTarget.style.borderColor = "#9400FF"
           }}
           onBlur={(e) => {
             e.currentTarget.style.borderColor = "#E5E7EB";
