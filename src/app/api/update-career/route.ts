@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectMongoDB from "@/lib/mongoDB/mongoDB";
 import { ObjectId } from "mongodb";
+import { sanitizeHtml, sanitizeText, sanitizeInput } from "@/lib/utils/sanitize";
 
 export async function POST(request: Request) {
   try {
@@ -58,40 +59,70 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Career not found" }, { status: 404 });
     }
 
+    // Sanitize custom questions
+    const sanitizedCustomQuestions = Array.isArray(customQuestions) 
+      ? customQuestions.map((q: any) => ({
+          ...q,
+          question: sanitizeInput(q.question || ''),
+          options: Array.isArray(q.options) ? q.options.map((o: string) => sanitizeInput(o || '')) : q.options,
+        }))
+      : [];
+
+    // Sanitize team members
+    const sanitizedTeamMembers = Array.isArray(teamMembers)
+      ? teamMembers.map((member: any) => ({
+          ...member,
+          name: sanitizeText(member.name || ''),
+          email: sanitizeText(member.email || ''),
+          role: sanitizeText(member.role || ''),
+        }))
+      : [];
+
+    // Sanitize pipeline stages
+    const sanitizedPipelineStages = Array.isArray(pipelineStages)
+      ? pipelineStages.map((stage: any) => ({
+          ...stage,
+          title: sanitizeText(stage.title || ''),
+          substages: Array.isArray(stage.substages) 
+            ? stage.substages.map((s: string) => sanitizeText(s || ''))
+            : stage.substages,
+        }))
+      : [];
+
     const updateData = {
-      jobTitle,
-      description,
+      jobTitle: sanitizeInput(jobTitle),
+      description: sanitizeHtml(description),
       questions,
-      location,
-      workSetup,
-      workSetupRemarks,
+      location: sanitizeText(location),
+      workSetup: sanitizeText(workSetup),
+      workSetupRemarks: sanitizeInput(workSetupRemarks),
       updatedAt: new Date(),
       lastEditedBy,
       status: status || existingCareer.status,
-      screeningSetting,
+      screeningSetting: sanitizeText(screeningSetting),
       requireVideo,
       lastActivityAt: new Date(),
       salaryNegotiable,
       minimumSalary,
       maximumSalary,
-      minimumSalaryCurrency: minimumSalaryCurrency || "PHP",
-      maximumSalaryCurrency: maximumSalaryCurrency || "PHP",
-      country,
-      province,
-      employmentType,
-      secretPrompt: secretPrompt || "",
+      minimumSalaryCurrency: sanitizeText(minimumSalaryCurrency || "PHP"),
+      maximumSalaryCurrency: sanitizeText(maximumSalaryCurrency || "PHP"),
+      country: sanitizeText(country),
+      province: sanitizeText(province),
+      employmentType: sanitizeText(employmentType),
+      secretPrompt: sanitizeHtml(secretPrompt || ""),
       preScreeningQuestions: preScreeningQuestions || [],
-      customQuestions: customQuestions || [],
+      customQuestions: sanitizedCustomQuestions,
       askingMinSalary: askingMinSalary || "",
       askingMaxSalary: askingMaxSalary || "",
-      askingMinCurrency: askingMinCurrency || "PHP",
-      askingMaxCurrency: askingMaxCurrency || "PHP",
-      teamMembers: teamMembers || [],
-      aiInterviewSecretPrompt: aiInterviewSecretPrompt || "",
-      aiInterviewScreeningSetting: aiInterviewScreeningSetting || "Good Fit and above",
+      askingMinCurrency: sanitizeText(askingMinCurrency || "PHP"),
+      askingMaxCurrency: sanitizeText(askingMaxCurrency || "PHP"),
+      teamMembers: sanitizedTeamMembers,
+      aiInterviewSecretPrompt: sanitizeHtml(aiInterviewSecretPrompt || ""),
+      aiInterviewScreeningSetting: sanitizeText(aiInterviewScreeningSetting || "Good Fit and above"),
       aiInterviewRequireVideo: aiInterviewRequireVideo !== undefined ? aiInterviewRequireVideo : true,
       aiInterviewQuestions: aiInterviewQuestions || [],
-      pipelineStages: pipelineStages || [],
+      pipelineStages: sanitizedPipelineStages,
     };
 
     await db.collection("careers").updateOne(
