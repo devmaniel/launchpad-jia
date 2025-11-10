@@ -15,6 +15,7 @@ import Step3 from "./03AISetupInterview/Step3";
 import Step4 from "./04PipelineStages/Step4";
 import Step5 from "./05ReviewCareer/Step5";
 import { CustomQuestion } from "./02CVReview&Pre-screening/customQuestionTypes";
+import { sanitizeHtml, sanitizeText, sanitizeInput } from "@/lib/utils/sanitize";
 
 export default function CareerFormV2({
   career,
@@ -647,16 +648,36 @@ export default function CareerFormV2({
     console.log('Team Members:', teamMembers);
     console.log('Pipeline Stages:', pipelineStages);
     
+    // Sanitize all user-provided text fields before saving to database
+    const sanitizedCustomQuestions = customQuestions.map((q: CustomQuestion) => ({
+      ...q,
+      question: sanitizeInput(q.question || ''),
+      options: Array.isArray(q.options) ? q.options.map(o => sanitizeInput(o || '')) : q.options,
+    }));
+
+    const sanitizedTeamMembers = teamMembers.map((member: any) => ({
+      ...member,
+      name: sanitizeText(member.name || ''),
+      email: sanitizeText(member.email || ''),
+      role: sanitizeText(member.role || ''),
+    }));
+
+    const sanitizedPipelineStages = pipelineStages.map((stage: any) => ({
+      ...stage,
+      title: sanitizeText(stage.title || ''),
+      substages: Array.isArray(stage.substages) ? stage.substages.map((s: string) => sanitizeText(s || '')) : stage.substages,
+    }));
+    
     const updatedCareer = {
       _id: career._id,
-      jobTitle,
-      description,
-      workSetup,
-      workSetupRemarks,
+      jobTitle: sanitizeInput(jobTitle),
+      description: sanitizeHtml(description),
+      workSetup: sanitizeText(workSetup),
+      workSetupRemarks: sanitizeInput(workSetupRemarks),
       lastEditedBy: userInfoSlice,
       status,
       updatedAt: Date.now(),
-      screeningSetting,
+      screeningSetting: sanitizeText(screeningSetting),
       requireVideo,
       salaryNegotiable,
       minimumSalary: isNaN(Number(minimumSalary))
@@ -665,25 +686,25 @@ export default function CareerFormV2({
       maximumSalary: isNaN(Number(maximumSalary))
         ? null
         : Number(maximumSalary),
-      minimumSalaryCurrency,
-      maximumSalaryCurrency,
-      country,
-      province,
-      location: city,
-      employmentType,
-      secretPrompt,
+      minimumSalaryCurrency: sanitizeText(minimumSalaryCurrency),
+      maximumSalaryCurrency: sanitizeText(maximumSalaryCurrency),
+      country: sanitizeText(country),
+      province: sanitizeText(province),
+      location: sanitizeText(city),
+      employmentType: sanitizeText(employmentType),
+      secretPrompt: sanitizeHtml(secretPrompt),
       preScreeningQuestions,
-      customQuestions,
+      customQuestions: sanitizedCustomQuestions,
       askingMinSalary,
       askingMaxSalary,
-      askingMinCurrency,
-      askingMaxCurrency,
-      teamMembers,
-      aiInterviewSecretPrompt,
-      aiInterviewScreeningSetting,
+      askingMinCurrency: sanitizeText(askingMinCurrency),
+      askingMaxCurrency: sanitizeText(askingMaxCurrency),
+      teamMembers: sanitizedTeamMembers,
+      aiInterviewSecretPrompt: sanitizeHtml(aiInterviewSecretPrompt),
+      aiInterviewScreeningSetting: sanitizeText(aiInterviewScreeningSetting),
       aiInterviewRequireVideo,
       aiInterviewQuestions,
-      pipelineStages,
+      pipelineStages: sanitizedPipelineStages,
     };
     console.log('=== UPDATED CAREER OBJECT TO BE POSTED ===');
     console.log(JSON.stringify(updatedCareer, null, 2));
@@ -793,14 +814,34 @@ export default function CareerFormV2({
       console.log('Team Members:', teamMembers);
       console.log('Pipeline Stages:', pipelineStages);
       
+      // Sanitize all user-provided text fields before saving to database
+      const sanitizedCustomQuestions = customQuestions.map((q: CustomQuestion) => ({
+        ...q,
+        question: sanitizeInput(q.question || ''),
+        options: Array.isArray(q.options) ? q.options.map(o => sanitizeInput(o || '')) : q.options,
+      }));
+
+      const sanitizedTeamMembers = teamMembers.map((member: any) => ({
+        ...member,
+        name: sanitizeText(member.name || ''),
+        email: sanitizeText(member.email || ''),
+        role: sanitizeText(member.role || ''),
+      }));
+
+      const sanitizedPipelineStages = pipelineStages.map((stage: any) => ({
+        ...stage,
+        title: sanitizeText(stage.title || ''),
+        substages: Array.isArray(stage.substages) ? stage.substages.map((s: string) => sanitizeText(s || '')) : stage.substages,
+      }));
+
       const career = {
-        jobTitle,
-        description,
-        workSetup,
-        workSetupRemarks,
+        jobTitle: sanitizeInput(jobTitle),
+        description: sanitizeHtml(description),
+        workSetup: sanitizeText(workSetup),
+        workSetupRemarks: sanitizeInput(workSetupRemarks),
         lastEditedBy: userInfoSlice,
         createdBy: userInfoSlice,
-        screeningSetting,
+        screeningSetting: sanitizeText(screeningSetting),
         orgID,
         requireVideo,
         salaryNegotiable,
@@ -810,26 +851,26 @@ export default function CareerFormV2({
         maximumSalary: isNaN(Number(maximumSalary))
           ? null
           : Number(maximumSalary),
-        minimumSalaryCurrency,
-        maximumSalaryCurrency,
-        country,
-        province,
-        location: city,
+        minimumSalaryCurrency: sanitizeText(minimumSalaryCurrency),
+        maximumSalaryCurrency: sanitizeText(maximumSalaryCurrency),
+        country: sanitizeText(country),
+        province: sanitizeText(province),
+        location: sanitizeText(city),
         status,
-        employmentType,
-        secretPrompt,
+        employmentType: sanitizeText(employmentType),
+        secretPrompt: sanitizeHtml(secretPrompt),
         preScreeningQuestions,
-        customQuestions,
+        customQuestions: sanitizedCustomQuestions,
         askingMinSalary,
         askingMaxSalary,
-        askingMinCurrency,
-        askingMaxCurrency,
-        teamMembers,
-        aiInterviewSecretPrompt,
-        aiInterviewScreeningSetting,
+        askingMinCurrency: sanitizeText(askingMinCurrency),
+        askingMaxCurrency: sanitizeText(askingMaxCurrency),
+        teamMembers: sanitizedTeamMembers,
+        aiInterviewSecretPrompt: sanitizeHtml(aiInterviewSecretPrompt),
+        aiInterviewScreeningSetting: sanitizeText(aiInterviewScreeningSetting),
         aiInterviewRequireVideo,
         aiInterviewQuestions,
-        pipelineStages,
+        pipelineStages: sanitizedPipelineStages,
       };
 
       console.log('=== CAREER OBJECT TO BE POSTED ===');

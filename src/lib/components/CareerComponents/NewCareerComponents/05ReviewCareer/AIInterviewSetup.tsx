@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { sanitizeHtml, sanitizeText } from "@/lib/utils/sanitize";
 
 type AIInterviewSetupProps = {
   onEditClick?: () => void;
@@ -76,7 +77,7 @@ const AIInterviewSetup = ({
   };
   
   const hasContent = (aiInterviewSecretPrompt || "").trim().length > 0;
-  const displayHtml = hasContent ? convertParagraphsToLists(aiInterviewSecretPrompt) : '';
+  const displayHtml = hasContent ? sanitizeHtml(convertParagraphsToLists(aiInterviewSecretPrompt)) : '';
   
   const requireVideoValue = aiInterviewRequireVideo;
   const questionGroups: { title: string; items: string[] }[] = [
@@ -223,7 +224,7 @@ const AIInterviewSetup = ({
                   fontWeight: 700,
                 }}
               >
-                {ratingLabel}
+                {sanitizeText(ratingLabel)}
               </span>{" "}
               and above
             </p>

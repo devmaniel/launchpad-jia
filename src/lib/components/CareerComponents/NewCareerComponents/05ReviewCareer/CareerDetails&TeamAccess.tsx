@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { sanitizeHtml, sanitizeText } from "@/lib/utils/sanitize";
 
 type TeamMember = { name: string; email: string; avatar?: string; role?: string };
 
@@ -159,18 +160,18 @@ const CareerDetailsTeamAccess = ({
             <div style={{ borderRadius: 12, overflow: "hidden" }}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderBottom: "1px solid #EAECF5" }}>
                 <div style={{ gridColumn: "1 / span 3" }}>
-                  <InfoRow label="Job Title" value={jobTitle} />
+                  <InfoRow label="Job Title" value={sanitizeText(jobTitle)} />
                 </div>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderBottom: "1px solid #EAECF5" }}>
-                <InfoRow label="Employment Type" value={employmentType} />
-                <InfoRow label="Work Arrangement" value={workSetup} />
+                <InfoRow label="Employment Type" value={sanitizeText(employmentType)} />
+                <InfoRow label="Work Arrangement" value={sanitizeText(workSetup)} />
                 <div />
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderBottom: "1px solid #EAECF5" }}>
-                <InfoRow label="Country" value={country} />
-                <InfoRow label="State / Province" value={state} />
-                <InfoRow label="City" value={city} />
+                <InfoRow label="Country" value={sanitizeText(country)} />
+                <InfoRow label="State / Province" value={sanitizeText(state)} />
+                <InfoRow label="City" value={sanitizeText(city)} />
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
                 <InfoRow
@@ -207,7 +208,7 @@ const CareerDetailsTeamAccess = ({
               </p>
               <div
                 style={{ marginTop: 0, marginBottom: 12, fontSize: 16, color: "#414651", fontWeight: 400 }}
-                dangerouslySetInnerHTML={{ __html: descriptionHtml || "" }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(descriptionHtml || "") }}
               />
             </div>
 
@@ -230,15 +231,15 @@ const CareerDetailsTeamAccess = ({
                       <Avatar src={(member as any).avatar} alt={member.name} size={40} />
                       <div>
                         <p style={{ margin: 0, fontSize: 14, color: "#414651", fontWeight: 600 }}>
-                          {member.name.replace(' (you)', '')}
+                          {sanitizeText(member.name.replace(' (you)', ''))}
                           {member.name.includes('(you)') && (
                             <span style={{ color: "#717680", fontSize: 12, fontWeight: 400 }}> (you)</span>
                           )}
                         </p>
-                        <p style={{ margin: 0, fontSize: 14, color: "#717680", fontWeight: 400 }}>{member.email}</p>
+                        <p style={{ margin: 0, fontSize: 14, color: "#717680", fontWeight: 400 }}>{sanitizeText(member.email)}</p>
                       </div>
                     </div>
-                    <span style={{ fontSize: 14, color: "#414651" }}>{member.role || ""}</span>
+                    <span style={{ fontSize: 14, color: "#414651" }}>{sanitizeText(member.role || "")}</span>
                   </div>
                 ))}
               </div>

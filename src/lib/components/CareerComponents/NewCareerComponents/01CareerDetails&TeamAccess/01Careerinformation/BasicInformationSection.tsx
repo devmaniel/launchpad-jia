@@ -2,6 +2,7 @@
 
 import { BasicInformationProps } from "./types";
 import Image from "next/image";
+import { sanitizeInput } from "@/lib/utils/sanitize";
 
 export default function BasicInformationSection({
   jobTitle,
@@ -29,7 +30,7 @@ export default function BasicInformationSection({
             className={`form-control${errors?.jobTitle ? " error-input" : ""}`}
             placeholder="Enter job title"
             onChange={(e) => {
-              setJobTitle(e.target.value || "");
+              setJobTitle(sanitizeInput(e.target.value || ""));
             }}
             onBlur={onJobTitleBlur}
             style={{

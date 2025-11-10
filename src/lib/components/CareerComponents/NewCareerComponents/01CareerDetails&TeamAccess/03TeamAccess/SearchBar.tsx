@@ -1,4 +1,5 @@
 import React from "react";
+import { sanitizeInput } from "@/lib/utils/sanitize";
 
 interface SearchBarProps {
   value: string;
@@ -42,7 +43,7 @@ export default function SearchBar({
           type="text"
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(sanitizeInput(e.target.value))}
           style={{
             width: "100%",
             padding: "10px 12px 10px 34px",

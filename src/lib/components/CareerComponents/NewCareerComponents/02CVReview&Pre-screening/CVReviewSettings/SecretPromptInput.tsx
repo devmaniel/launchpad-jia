@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 interface SecretPromptInputProps {
   secretPrompt: string;
@@ -92,7 +93,9 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
     const el = editorRef.current;
     if (!el) return;
     const html = cleanHtml(el.innerHTML);
-    setSecretPrompt(html);
+    // Apply XSS sanitization before saving
+    const sanitized = sanitizeHtml(html);
+    setSecretPrompt(sanitized);
     const has = hasContent(el);
     el.setAttribute('data-has-content', String(has));
     setShowPlaceholder(!has);
@@ -101,7 +104,9 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     const text = e.clipboardData.getData('text/plain');
-    document.execCommand('insertText', false, text);
+    // Sanitize pasted text to prevent XSS
+    const sanitized = sanitize(text);
+    document.execCommand('insertHTML', false, sanitized);
     // after paste, recompute placeholder visibility
     const el = editorRef.current;
     if (el) {
