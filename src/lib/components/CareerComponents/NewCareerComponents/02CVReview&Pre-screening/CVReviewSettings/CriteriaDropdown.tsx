@@ -52,7 +52,7 @@ export default function CriteriaDropdown({
   return (
     <div ref={dropdownRef} className="dropdown" style={{ height: "48px" }}>
       <button
-        className="dropdown-btn fade-in-bottom"
+        className="dropdown-btn"
         style={{
           height: "48px !important",
           width: "300px",
@@ -71,8 +71,9 @@ export default function CriteriaDropdown({
         <i className="la la-angle-down"></i>
       </button>
       <div
-        className={`dropdown-menu org-dropdown-anim${internalOpen ? " show" : ""}`}
+        className="dropdown-menu"
         style={{
+          display: internalOpen ? 'block' : 'none',
           padding: "8px",
           top: "100%",
           bottom: "auto",

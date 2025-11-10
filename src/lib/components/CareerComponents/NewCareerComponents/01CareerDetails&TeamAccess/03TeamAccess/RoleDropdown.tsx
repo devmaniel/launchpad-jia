@@ -50,7 +50,7 @@ export default function RoleDropdown({
     <div ref={dropdownRef} className="dropdown" style={{ height: "48px" }}>
       <button
         disabled={roleList.length === 0}
-        className="dropdown-btn fade-in-bottom"
+        className="dropdown-btn"
         style={{
             height: "48px !important",
           width: "240px",
@@ -66,10 +66,9 @@ export default function RoleDropdown({
         <i className="la la-angle-down"></i>
       </button>
       <div
-        className={`dropdown-menu org-dropdown-anim${
-          internalOpen ? " show" : ""
-        }`}
+        className="dropdown-menu"
         style={{
+          display: internalOpen ? 'block' : 'none',
           padding: "8px",
           bottom: "100%",
           top: "auto",

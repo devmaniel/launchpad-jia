@@ -1,9 +1,27 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import CategoryRow from "./CategoryRow";
-import AddCustomQuestionButton from "../../02CVReview&Pre-screening/AddCustomQuestionButton";
+import GenerateAllBtn from "./GenerateAllBtn";
+import { useGenerateQuestion } from "../hooks/useGenerateQuestion";
+import { useGenerateAllQuestions } from "../hooks/useGenerateAllQuestions";
 
-const AIInterviewQuestions: React.FC<{ onTotalCountChange?: (n: number) => void }> = ({ onTotalCountChange }) => {
+export interface AIInterviewQuestionsProps {
+  onTotalCountChange?: (n: number) => void;
+  onQuestionsChange?: (questions: any[]) => void;
+  jobTitle?: string;
+  jobDescription?: string;
+  employmentType?: string;
+  workSetup?: string;
+}
+
+const AIInterviewQuestions: React.FC<AIInterviewQuestionsProps> = ({ 
+  onTotalCountChange,
+  onQuestionsChange,
+  jobTitle = "",
+  jobDescription = "",
+  employmentType = "",
+  workSetup = "",
+}) => {
   type Group = {
     id: number;
     title: string;
@@ -51,44 +69,31 @@ const AIInterviewQuestions: React.FC<{ onTotalCountChange?: (n: number) => void 
     {
       id: 1,
       title: "CV Validation / Experience",
-      questions: [
-        { id: "demo-cv-1", text: "Walk me through your most recent role and key responsibilities." },
-        { id: "demo-cv-2", text: "Which project are you most proud of and why?" },
-        { id: "demo-cv-3", text: "What impact did you deliver in the last 6 months?" },
-      ],
+      questions: [],
       numToAsk: null,
     },
     {
       id: 2,
       title: "Technical",
-      questions: [
-        { id: "demo-tech-1", text: "Explain a challenging technical problem you solved end‑to‑end." },
-        { id: "demo-tech-2", text: "How do you approach debugging performance issues?" },
-      ],
+      questions: [],
       numToAsk: null,
     },
     {
       id: 3,
       title: "Behavioral",
-      questions: [
-        { id: "demo-beh-1", text: "Tell me about a time you disagreed with a teammate. What did you do?" },
-      ],
+      questions: [],
       numToAsk: null,
     },
     {
       id: 4,
       title: "Analytical",
-      questions: [
-        { id: "demo-ana-1", text: "Describe how you use data to make a product or engineering decision." },
-      ],
+      questions: [],
       numToAsk: null,
     },
     {
       id: 5,
       title: "Others",
-      questions: [
-        { id: "demo-oth-1", text: "What motivates you to apply for this role?" },
-      ],
+      questions: [],
       numToAsk: null,
     },
   ]);
@@ -102,7 +107,10 @@ const AIInterviewQuestions: React.FC<{ onTotalCountChange?: (n: number) => void 
     if (typeof onTotalCountChange === 'function') {
       onTotalCountChange(totalCount);
     }
-  }, [totalCount, onTotalCountChange]);
+    if (typeof onQuestionsChange === 'function') {
+      onQuestionsChange(groups);
+    }
+  }, [totalCount, groups, onTotalCountChange, onQuestionsChange]);
 
   const reorderWithinGroup = (groupId: number, draggedId: string, overId: string) => {
     setGroups((prev) => {
@@ -140,8 +148,46 @@ const AIInterviewQuestions: React.FC<{ onTotalCountChange?: (n: number) => void 
     // placeholder: no modal wired here; keep as no-op for static UI
   };
 
-  const generateForGroup = (groupId: number) => {
-    // placeholder: no generation wiring in this UI version
+  const { generateQuestion } = useGenerateQuestion();
+  const { generateAllQuestions, loading: generateAllLoading, progress } = useGenerateAllQuestions();
+  const [loadingCategories, setLoadingCategories] = useState<Set<number>>(new Set());
+
+  const generateForGroup = async (groupId: number) => {
+    const group = groups.find(g => g.id === groupId);
+    if (!group) return;
+
+    if (!jobTitle || !jobDescription) {
+      alert("Please fill in job title and description in Step 1 before generating questions.");
+      return;
+    }
+
+    // Set this category as loading
+    setLoadingCategories(prev => new Set(prev).add(groupId));
+
+    try {
+      const question = await generateQuestion({
+        jobTitle,
+        jobDescription,
+        employmentType,
+        workSetup,
+        category: group.title,
+      });
+
+      if (question) {
+        setGroups((prev) => prev.map((g) =>
+          g.id === groupId
+            ? { ...g, questions: [...g.questions, { id: `q${Date.now()}`, text: question }] }
+            : g
+        ));
+      }
+    } finally {
+      // Remove this category from loading
+      setLoadingCategories(prev => {
+        const next = new Set(prev);
+        next.delete(groupId);
+        return next;
+      });
+    }
   };
 
   const addManually = (groupId: number) => {
@@ -172,7 +218,38 @@ const AIInterviewQuestions: React.FC<{ onTotalCountChange?: (n: number) => void 
             {totalCount}
           </span>
         </div>
-        <AddCustomQuestionButton label="Generate all questions" onClick={() => {}} style={{ background: '#111827' }} iconSrc="/icons/auto_awesome_white.svg" />
+        <GenerateAllBtn 
+          onClick={async () => {
+            if (!jobTitle || !jobDescription) {
+              alert("Please fill in job title and description in Step 1 before generating questions.");
+              return;
+            }
+
+            const categories = groups.map(g => g.title);
+            const results = await generateAllQuestions({
+              jobTitle,
+              jobDescription,
+              employmentType,
+              workSetup,
+              categories,
+            });
+
+            if (results) {
+              setGroups((prev) => prev.map((g) => {
+                const newQuestions = results[g.title];
+                if (newQuestions && newQuestions.length > 0) {
+                  return {
+                    ...g,
+                    questions: [...g.questions, ...newQuestions.map(text => ({ id: `q${Date.now()}-${Math.random()}`, text }))],
+                  };
+                }
+                return g;
+              }));
+            }
+          }}
+          loading={generateAllLoading}
+          progress={progress}
+        />
       </div>
 
       <div className="layered-card-content" style={{ gap: 8 }}>
@@ -198,6 +275,7 @@ const AIInterviewQuestions: React.FC<{ onTotalCountChange?: (n: number) => void 
                 onGenerate={generateForGroup}
                 onAddManually={addManually}
                 onUpdateQuestionText={updateQuestionText}
+                generateLoading={loadingCategories.has(g.id)}
               />
               {idx < groups.length - 1 && (
                 <hr style={{ borderColor: '#EAECF5', borderWidth: 1, width: '100%', margin: '8px 0' }} />

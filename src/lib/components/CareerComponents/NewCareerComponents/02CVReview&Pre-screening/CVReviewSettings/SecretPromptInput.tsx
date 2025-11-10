@@ -63,11 +63,36 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
     return (el.textContent || '').replace(/\u00A0/g, ' ').trim().length > 0;
   };
 
+  const cleanHtml = (html: string): string => {
+    if (typeof window === 'undefined') return html;
+    
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    
+    // Remove empty paragraphs and paragraphs with only whitespace
+    const paragraphs = container.querySelectorAll('p');
+    paragraphs.forEach((p) => {
+      const text = p.textContent?.trim() || '';
+      if (text.length === 0) {
+        p.remove();
+      }
+    });
+    
+    // Remove trailing <br> tags
+    let cleaned = container.innerHTML;
+    cleaned = cleaned.replace(/(<br\s*\/?>)+$/gi, '');
+    
+    // Remove leading/trailing whitespace from the entire HTML
+    cleaned = cleaned.trim();
+    
+    return cleaned;
+  };
+
   const handleInput = useCallback(() => {
     const el = editorRef.current;
     if (!el) return;
-    const text = el.innerText.replace(/\u00A0/g, ' ');
-    setSecretPrompt(text);
+    const html = cleanHtml(el.innerHTML);
+    setSecretPrompt(html);
     const has = hasContent(el);
     el.setAttribute('data-has-content', String(has));
     setShowPlaceholder(!has);
@@ -129,18 +154,26 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
     }
   }, []);
 
+  const looksLikeHtml = useCallback((s: string) => /<(ul|ol|li|p|br|div|strong|em|b|i|u)\b/i.test(s), []);
+
   useEffect(() => {
     const el = editorRef.current;
     if (!el) return;
-    const currentText = el.innerText.replace(/\u00A0/g, ' ');
-    if (currentText !== secretPrompt) {
-      const html = convertTextToHTML(secretPrompt || '');
-      el.innerHTML = html || '';
+    if (looksLikeHtml(secretPrompt || '')) {
+      if (el.innerHTML !== (secretPrompt || '')) {
+        el.innerHTML = secretPrompt || '';
+      }
+    } else {
+      const currentText = el.innerText.replace(/\u00A0/g, ' ');
+      if (currentText !== secretPrompt) {
+        const html = convertTextToHTML(secretPrompt || '');
+        el.innerHTML = html || '';
+      }
     }
     const has = hasContent(el);
     el.setAttribute('data-has-content', String(has));
     setShowPlaceholder(!has);
-  }, [secretPrompt, convertTextToHTML]);
+  }, [secretPrompt, convertTextToHTML, looksLikeHtml]);
 
   // Initialize placeholder visibility on mount
   useEffect(() => {
@@ -164,7 +197,7 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
           padding: 16,
           outline: "none",
           fontSize: 16,
-          lineHeight: '20px',
+          lineHeight: '24px',
           color: '#1F2937',
           backgroundColor: '#fff',
           minHeight: '120px',
@@ -214,7 +247,7 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
           color: #9CA3AF;
           pointer-events: none;
           font-size: 16px;
-          line-height: 20px;
+          line-height: 24px;
           z-index: 1;
         }
         :global(.custom-scrollbar) {

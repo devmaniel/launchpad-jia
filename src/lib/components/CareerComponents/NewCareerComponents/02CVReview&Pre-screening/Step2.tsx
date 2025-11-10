@@ -4,6 +4,7 @@ import TipsContainer from "../TipsContainer";
 import CVReviewSettings from "./CVReviewSettings";
 import PreScreeningQuestions from "./PreScreeningQuestions";
 import { Question } from "./PreScreeningQuestions/types";
+import { CustomQuestion } from "./customQuestionTypes";
 
 interface Step2Props {
   screeningSetting: string;
@@ -12,6 +13,16 @@ interface Step2Props {
   setSecretPrompt: (val: string) => void;
   preScreeningQuestions: Question[];
   setPreScreeningQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
+  customQuestions: CustomQuestion[];
+  setCustomQuestions: React.Dispatch<React.SetStateAction<CustomQuestion[]>>;
+  askingMinSalary: string;
+  askingMaxSalary: string;
+  askingMinCurrency: string;
+  askingMaxCurrency: string;
+  onAskingMinSalaryChange: (v: string) => void;
+  onAskingMaxSalaryChange: (v: string) => void;
+  onAskingMinCurrencyChange: (v: string) => void;
+  onAskingMaxCurrencyChange: (v: string) => void;
 }
 
  
@@ -23,6 +34,16 @@ const Step2 = ({
   setSecretPrompt,
   preScreeningQuestions,
   setPreScreeningQuestions,
+  customQuestions,
+  setCustomQuestions,
+  askingMinSalary,
+  askingMaxSalary,
+  askingMinCurrency,
+  askingMaxCurrency,
+  onAskingMinSalaryChange,
+  onAskingMaxSalaryChange,
+  onAskingMinCurrencyChange,
+  onAskingMaxCurrencyChange,
 }: Step2Props) => {
   const stepTips = [
     {
@@ -53,7 +74,7 @@ const Step2 = ({
           marginTop: 16,
         }}
       >
-        <div style={{ width: "80%", display: "flex", flexDirection: "column", gap: 24 }}>
+        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 24 }}>
           <CVReviewSettings
             screeningSetting={screeningSetting}
             setScreeningSetting={setScreeningSetting}
@@ -63,6 +84,16 @@ const Step2 = ({
           <PreScreeningQuestions
             preScreeningQuestions={preScreeningQuestions}
             setPreScreeningQuestions={setPreScreeningQuestions}
+            customQuestions={customQuestions}
+            setCustomQuestions={setCustomQuestions}
+            askingMinSalary={askingMinSalary}
+            askingMaxSalary={askingMaxSalary}
+            askingMinCurrency={askingMinCurrency}
+            askingMaxCurrency={askingMaxCurrency}
+            onAskingMinSalaryChange={onAskingMinSalaryChange}
+            onAskingMaxSalaryChange={onAskingMaxSalaryChange}
+            onAskingMinCurrencyChange={onAskingMinCurrencyChange}
+            onAskingMaxCurrencyChange={onAskingMaxCurrencyChange}
           />
         </div>
 

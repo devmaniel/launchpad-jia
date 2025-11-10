@@ -218,7 +218,7 @@ export default function CareersV2Table() {
       const canCreate = canCreateNewCareer(planInfo.totalJobSlots, totalActiveCareers, planInfo.hasValidPlan);
       return (
         <a 
-        href={canCreate.canCreate ? "/recruiter-dashboard/careers/new-career" : "#"}
+        href={canCreate.canCreate ? "/recruiter-dashboard/careers/new-career?prefill=1" : "#"}
         data-tooltip-id="add-career-tooltip"
         data-tooltip-html={canCreate.reason || planStatusMessage}
         style={{ pointerEvents: canCreate.canCreate ? "auto" : "none" }}

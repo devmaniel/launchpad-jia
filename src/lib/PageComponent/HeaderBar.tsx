@@ -7,23 +7,23 @@ import { useEffect, useState } from "react";
 import useDateTimer from "../hooks/useDateTimerHook";
 import { clearUserSession } from "../Utils";
 
-const ChevronLeftIcon = () => (
+const ChevronLeftIcon = ({ isActive }: { isActive?: boolean }) => (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 5L8 10L12 15" stroke="#A4A7AE" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 5L8 10L12 15" stroke={isActive ? "#535862" : "#D5D7DA"} strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
   
-  const ChevronRightIcon = () => (
+  const ChevronRightIcon = ({ isActive }: { isActive?: boolean }) => (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 5L12 10L8 15" stroke="#A4A7AE" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M8 5L12 10L8 15" stroke={isActive ? "#535862" : "#D5D7DA"} strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
 
-export default function HeaderBar(props: { activeLink: string, currentPage: string, icon?: string }) {
+export default function HeaderBar(props: { activeLink: string, currentPage: string, icon?: string, iconPath?: string }) {
   const router = useRouter();
   const { user } = useAppContext();
   const [role, setRole] = useState<string>("");
-  const { activeLink, currentPage, icon } = props;
+  const { activeLink, currentPage, icon, iconPath } = props;
   const [showAuthUserOptions, setShowAuthUserOptions] = useState(false);
   const date = useDateTimer();
 
@@ -49,25 +49,31 @@ export default function HeaderBar(props: { activeLink: string, currentPage: stri
                 >
                   <ol className="breadcrumb breadcrumb-links" style={{ backgroundColor: "transparent", padding: 0, marginBottom: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', marginRight: 10, cursor: 'pointer' }} onClick={() => router.back()}>
-                      <ChevronLeftIcon />
+                      <ChevronLeftIcon isActive />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginRight: 10, cursor: 'pointer' }} onClick={() => router.forward()}>
-                      <ChevronRightIcon />
+                      <ChevronRightIcon isActive />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', marginRight: 10, color: "gray" }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginRight: 10, color: "#D5D7DA" }}>
                       |
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginRight: 10 }}>
-                      <i className={icon || "la la-home"} style={{ color: "#414651", fontSize: 24 }}></i>
+                      {iconPath ? (
+                        <img src={iconPath} alt="page icon" style={{ width: 24, height: 24, color: "#414651" }} />
+                      ) : (
+                        <i className={icon || "la la-home"} style={{ color: "#414651", fontSize: 24 }}></i>
+                      )}
                     </div>
-                    <h4 className="text-gray d-inline-block mb-0" style={{ fontSize: "16px", fontWeight: 550 }}>
-                       {activeLink}
-                    </h4>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <h4 className="text-gray mb-0" style={{ fontSize: "16px", fontWeight: 400, margin: 0 }}>
+                         {activeLink}
+                      </h4>
+                    </div>
                     <div style={{ display: 'flex', alignItems: 'center', margin: "0 10px", cursor: 'pointer' }} onClick={() => router.forward()}>
-                      <ChevronRightIcon />
+                      <ChevronRightIcon isActive />
                     </div>
-                    <li className="breadcrumb-item">
-                      <h4 className="text-black d-inline-block mb-0" style={{ fontSize: "16px", fontWeight: 550 }}>
+                    <li className="breadcrumb-item" style={{background: "#F8F9FC", padding: "4px 8px", borderRadius: 8, display: 'flex', alignItems: 'center'}}>
+                      <h4 className="d-inline-block mb-0" style={{ fontSize: "16px", fontWeight: 400, color: "#181D27" }}>
                         {currentPage}
                       </h4>
                     </li> 
@@ -90,8 +96,8 @@ export default function HeaderBar(props: { activeLink: string, currentPage: stri
                     >
                     <AvatarImage src={user?.image} alt="Avatar" />
                     <div style={{ display: "flex", flexDirection: "column",alignItems: "flex-start" }}>
-                      <span style={{ fontWeight: 700, fontSize: 14, color: '#414651' }}>{user?.name}</span>
-                      <span style={{ fontWeight: 500, fontSize: 14, color: '#717680', textTransform: "capitalize" }}>{role?.replace("_", " ")}</span>
+                      <span style={{ fontWeight: 600, fontSize: 14, color: '#414651' }}>{user?.name}</span>
+                      <span style={{ fontWeight: 400, fontSize: 14, color: '#717680', textTransform: "capitalize" }}>{role?.replace("_", " ")}</span>
                     </div>
                     </div>}
                     

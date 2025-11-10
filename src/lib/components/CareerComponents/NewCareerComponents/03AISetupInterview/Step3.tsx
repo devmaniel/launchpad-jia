@@ -4,7 +4,36 @@ import AIInterviewSettings from "./AIInterviewSettings";
 import AIInterviewQuestions from "./AIInterviewQuestions";
 import TipsContainer from "../TipsContainer";
 
-const AISetupInterviewPage: React.FC<{ onQuestionsCountChange?: (n: number) => void }> = ({ onQuestionsCountChange }) => {
+type AISetupInterviewPageProps = {
+  onQuestionsCountChange?: (n: number) => void;
+  onQuestionsChange?: (questions: any[]) => void;
+  aiInterviewSecretPrompt: string;
+  setAiInterviewSecretPrompt: (value: string) => void;
+  aiInterviewScreeningSetting: string;
+  setAiInterviewScreeningSetting: (value: string) => void;
+  aiInterviewRequireVideo: boolean;
+  setAiInterviewRequireVideo: (value: boolean) => void;
+  // Career data for AI question generation
+  jobTitle?: string;
+  jobDescription?: string;
+  employmentType?: string;
+  workSetup?: string;
+};
+
+const AISetupInterviewPage: React.FC<AISetupInterviewPageProps> = ({ 
+  onQuestionsCountChange,
+  onQuestionsChange,
+  aiInterviewSecretPrompt,
+  setAiInterviewSecretPrompt,
+  aiInterviewScreeningSetting,
+  setAiInterviewScreeningSetting,
+  aiInterviewRequireVideo,
+  setAiInterviewRequireVideo,
+  jobTitle,
+  jobDescription,
+  employmentType,
+  workSetup,
+}) => {
   return (
     <div
       style={{
@@ -24,9 +53,23 @@ const AISetupInterviewPage: React.FC<{ onQuestionsCountChange?: (n: number) => v
           marginTop: 16,
         }}
       >
-        <div style={{ width: "80%", display: "flex", flexDirection: "column", gap: 24 }}>
-          <AIInterviewSettings />
-          <AIInterviewQuestions onTotalCountChange={onQuestionsCountChange} />
+        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 24 }}>
+          <AIInterviewSettings 
+            secretPrompt={aiInterviewSecretPrompt}
+            setSecretPrompt={setAiInterviewSecretPrompt}
+            screeningSetting={aiInterviewScreeningSetting}
+            setScreeningSetting={setAiInterviewScreeningSetting}
+            requireVideo={aiInterviewRequireVideo}
+            setRequireVideo={setAiInterviewRequireVideo}
+          />
+          <AIInterviewQuestions 
+            onTotalCountChange={onQuestionsCountChange}
+            onQuestionsChange={onQuestionsChange}
+            jobTitle={jobTitle}
+            jobDescription={jobDescription}
+            employmentType={employmentType}
+            workSetup={workSetup}
+          />
         </div>
 
         <TipsContainer

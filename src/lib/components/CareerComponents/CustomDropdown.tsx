@@ -9,7 +9,7 @@ export default function CustomDropdown(props) {
         <div className="dropdown w-100" style={{ ...containerStyle, position: "relative" }}>
           <button
             disabled={settingList.length === 0}
-            className="dropdown-btn fade-in-bottom"
+            className="dropdown-btn"
             style={{ 
               width: "100%", 
               textTransform: "capitalize",
@@ -32,10 +32,9 @@ export default function CustomDropdown(props) {
             <i className="la la-angle-down"></i>
           </button>
           <div
-            className={`dropdown-menu w-100 mt-1 org-dropdown-anim${
-              dropdownOpen ? " show" : ""
-            }`}
+            className="dropdown-menu w-100 mt-1"
             style={{
+              display: dropdownOpen ? 'block' : 'none',
               padding: "10px",
               maxHeight: 200,
               overflowY: "auto",

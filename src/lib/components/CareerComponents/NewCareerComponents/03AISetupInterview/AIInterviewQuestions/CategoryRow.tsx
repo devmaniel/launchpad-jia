@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import GenerateBtn from "./GenerateBtn";
 
 const PillButton: React.FC<{
   label: string;
@@ -49,6 +50,7 @@ const CategoryRow: React.FC<
     onGenerate?: (groupId: number) => void;
     onAddManually?: (groupId: number) => void;
     onUpdateQuestionText?: (groupId: number, questionId: string, text: string) => void;
+    generateLoading?: boolean;
   } & React.HTMLAttributes<HTMLDivElement>
 > = ({
   title,
@@ -63,6 +65,7 @@ const CategoryRow: React.FC<
   onGenerate,
   onAddManually,
   onUpdateQuestionText,
+  generateLoading = false,
   ...rest
 }) => {
   const onDragStart = (id: string) => (e: React.DragEvent<HTMLDivElement>) => {
@@ -95,12 +98,10 @@ const CategoryRow: React.FC<
           const rect = target.getBoundingClientRect();
           const mid = rect.top + rect.height / 2;
           if (e.clientY > mid) {
-            target.style.borderBottom = "2px solid";
-            target.style.borderImage = "linear-gradient(90deg, #9fcaed 0%, #ceb6da 33%, #ebacc9 66%, #fccec0 100%) 1";
+            target.style.borderBottom = "2px solid #3B82F6";
             target.style.borderTop = "1px solid #EAECF5";
           } else {
-            target.style.borderTop = "2px solid";
-            target.style.borderImage = "linear-gradient(90deg, #9fcaed 0%, #ceb6da 33%, #ebacc9 66%, #fccec0 100%) 1";
+            target.style.borderTop = "2px solid #3B82F6";
             target.style.borderBottom = "1px solid #EAECF5";
           }
         }}
@@ -108,14 +109,12 @@ const CategoryRow: React.FC<
           const target = e.currentTarget as HTMLElement;
           target.style.borderTop = "1px solid #EAECF5";
           target.style.borderBottom = "1px solid #EAECF5";
-          target.style.borderImage = "unset";
         }}
         onDrop={(e) => {
           e.preventDefault();
           const target = e.currentTarget as HTMLElement;
           target.style.borderTop = "1px solid #EAECF5";
           target.style.borderBottom = "1px solid #EAECF5";
-          target.style.borderImage = "unset";
           const draggedQuestionId = e.dataTransfer.getData("questionId");
           const fromGroupId = Number(e.dataTransfer.getData("fromGroupId"));
           if (draggedQuestionId && !isNaN(fromGroupId)) {
@@ -254,7 +253,7 @@ const CategoryRow: React.FC<
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <PillButton iconSrc="/icons/auto_awesome_white.svg" label="Generate questions" onClick={() => onGenerate?.(groupId)} />
+            <GenerateBtn onClick={() => onGenerate?.(groupId)} loading={generateLoading} />
             <PillButton variant="outline" label="Manually add" iconSrc="/icons/plus-circle.svg" onClick={() => onAddManually?.(groupId)} />
           </div>
 

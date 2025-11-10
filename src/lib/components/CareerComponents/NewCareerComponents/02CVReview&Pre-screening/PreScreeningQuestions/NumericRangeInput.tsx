@@ -53,6 +53,7 @@ const NumericRangeInput: React.FC<NumericRangeInputProps> = ({
                 onMinChange(Number(v) < 0 ? "0" : v);
               }
             }}
+            onBlur={() => !disabled && onMinChange(minValue)}
             onWheel={(e) => e.currentTarget.blur()}
             onKeyDown={(e) => {
               if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault();
@@ -88,6 +89,7 @@ const NumericRangeInput: React.FC<NumericRangeInputProps> = ({
                 onMaxChange(Number(v) < 0 ? "0" : v);
               }
             }}
+            onBlur={() => !disabled && onMaxChange(maxValue)}
             onWheel={(e) => e.currentTarget.blur()}
             onKeyDown={(e) => {
               if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault();

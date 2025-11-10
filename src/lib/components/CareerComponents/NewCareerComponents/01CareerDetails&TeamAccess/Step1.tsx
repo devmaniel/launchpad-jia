@@ -109,7 +109,8 @@ const Step1 = ({
         {/* Left Column - Main Content */}
         <div
           style={{
-            width: "80%",
+            flex: 1,
+            minWidth: 0,
             display: "flex",
             flexDirection: "column",
             gap: 24,

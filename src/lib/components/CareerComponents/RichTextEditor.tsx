@@ -65,6 +65,15 @@ export default function RichTextEditor({setText, text, error = false, errorMessa
         }
       }, []);
 
+      // Keep editor content in sync when external text changes and editor isn't being actively edited
+      useEffect(() => {
+        const editor = descriptionEditorRef.current as any;
+        if (!editor) return;
+        if (!isEditorFocused && !isToolbarHovered && typeof text === 'string' && text !== editor.innerHTML) {
+          editor.innerHTML = text || '';
+        }
+      }, [text, isEditorFocused, isToolbarHovered]);
+
       // Ensure internal focus state is tracked without console noise
       useEffect(() => {}, [isEditorFocused]);
 

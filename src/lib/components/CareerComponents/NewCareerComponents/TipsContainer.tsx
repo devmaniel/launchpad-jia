@@ -46,8 +46,9 @@ export default function TipsContainer({ items }: { items?: { title: string; text
                   </h4>
                   <p
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       color: "#6B7280",
+                      fontWeight: 400,
                       lineHeight: 1.5,
                       margin: 0,
                       display: "inline",

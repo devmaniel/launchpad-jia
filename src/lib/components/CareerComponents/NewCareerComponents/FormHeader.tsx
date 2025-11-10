@@ -6,7 +6,9 @@ interface FormHeaderProps {
   isSavingCareer: boolean;
   onSaveUnpublished: () => void;
   onSavePublished: () => void;
+  onSaveAndContinue?: () => void;
   onCancel?: () => void;
+  activeStep?: number;
 }
 
 export default function FormHeader({
@@ -15,7 +17,9 @@ export default function FormHeader({
   isSavingCareer,
   onSaveUnpublished,
   onSavePublished,
+  onSaveAndContinue,
   onCancel,
+  activeStep = 5,
 }: FormHeaderProps) {
   if (formType === "add") {
     return (
@@ -48,6 +52,7 @@ export default function FormHeader({
               border: "1px solid #D5D7DA",
               padding: "8px 16px",
               borderRadius: "60px",
+              fontWeight: 500,
               cursor: !isFormValid || isSavingCareer ? "not-allowed" : "pointer",
               whiteSpace: "nowrap",
             }}
@@ -55,26 +60,55 @@ export default function FormHeader({
           >
             Save as Unpublished
           </button>
-          <button
-            disabled={!isFormValid || isSavingCareer}
-            style={{
-              width: "fit-content",
-              background: !isFormValid || isSavingCareer ? "#D5D7DA" : "black",
-              color: "#fff",
-              border: "1px solid #E9EAEB",
-              padding: "8px 16px",
-              borderRadius: "60px",
-              cursor: !isFormValid || isSavingCareer ? "not-allowed" : "pointer",
-              whiteSpace: "nowrap",
-            }}
-            onClick={onSavePublished}
-          >
-            <i
-              className="la la-check-circle"
-              style={{ color: "#fff", fontSize: 20, marginRight: 8 }}
-            ></i>
-            Save as Published
-          </button>
+          {activeStep < 5 ? (
+            <button
+              disabled={!isFormValid || isSavingCareer}
+              style={{
+                width: "fit-content",
+                background: "#181D27",
+                border: "none",
+                color: "#fff",
+                padding: "8px 16px",
+                borderRadius: "60px",
+                fontWeight: 500,
+                cursor: !isFormValid || isSavingCareer ? "not-allowed" : "pointer",
+                whiteSpace: "nowrap",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+              onClick={onSaveAndContinue}
+            >
+              Save and Continue
+              <img
+                src="/temp/arrow-right.svg"
+                alt="arrow"
+                width={20}
+                height={20}
+              />
+            </button>
+          ) : (
+            <button
+              disabled={!isFormValid || isSavingCareer}
+              style={{
+                width: "fit-content",
+                background: !isFormValid || isSavingCareer ? "#D5D7DA" : "#181D27",
+                color: "#fff",
+                padding: "8px 16px",
+                borderRadius: "60px",
+                fontWeight: 500,
+                cursor: !isFormValid || isSavingCareer ? "not-allowed" : "pointer",
+                whiteSpace: "nowrap",
+              }}
+              onClick={onSavePublished}
+            >
+              <i
+                className="la la-check-circle"
+                style={{ color: "#fff", fontSize: 20, marginRight: 8 }}
+              ></i>
+              Publish
+            </button>
+          )}
         </div>
       </div>
     );

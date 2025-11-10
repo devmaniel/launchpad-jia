@@ -34,7 +34,6 @@ export default function SearchBar({
           style={{
             position: "absolute",
             left: "25px",
-            top: "27px",
             width: "16px",
             height: "16px"
           }}

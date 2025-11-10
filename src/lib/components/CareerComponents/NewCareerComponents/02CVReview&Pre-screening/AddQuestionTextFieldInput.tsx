@@ -6,17 +6,25 @@ type Props = {
   value: string;
   onChange: (val: string) => void;
   onDelete: () => void;
+  isCheckbox?: boolean;
 };
 
-const AddQuestionTextFieldInput: React.FC<Props> = ({ index, value, onChange, onDelete }) => {
+const AddQuestionTextFieldInput: React.FC<Props> = ({ index, value, onChange, onDelete, isCheckbox = false }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
       <div style={{ flex: 1, display: 'flex', border: '1px solid #E5E7EB', borderRadius: 10, overflow: 'hidden', background: '#fff' }}>
-        <div style={{ width: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6B7280', fontWeight: 600, borderRight: '1px solid #E5E7EB' }}>{index}</div>
+        {isCheckbox ? (
+          <div style={{ width: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6B7280', fontWeight: 600, borderRight: '1px solid #E5E7EB' }}>
+            <img src="/temp/checkbox-svgrepo-com.svg" alt="checkbox" width={20} height={20} />
+          </div>
+        ) : (
+          <div style={{ width: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6B7280', fontWeight: 600, borderRight: '1px solid #E5E7EB' }}>{index}</div>
+        )}
         <input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder={`Option ${index}`}
+          onBlur={() => onChange(value)}
+          placeholder={isCheckbox ? `Checkbox option ${index}` : `Option ${index}`}
           style={{ flex: 1, padding: '10px 12px', color: '#111827', fontWeight: 500, outline: 'none', border: 'none' }}
         />
       </div>

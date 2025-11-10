@@ -4,10 +4,23 @@ import AIInterviewScreeningDropdown from "./AIInterviewScreeningDropdown";
 import ToolTip from "../../02CVReview&Pre-screening/CVReviewSettings/ToolTip";
 import SecretPromptInput from "../../02CVReview&Pre-screening/CVReviewSettings/SecretPromptInput";
 
-const AIInterviewSettings: React.FC = () => {
-  const [screeningSetting, setScreeningSetting] = React.useState<string>("Good Fit and above");
-  const [requireVideo, setRequireVideo] = React.useState<boolean>(true);
-  const [secretPrompt, setSecretPrompt] = React.useState<string>("");
+type AIInterviewSettingsProps = {
+  secretPrompt: string;
+  setSecretPrompt: (value: string) => void;
+  screeningSetting: string;
+  setScreeningSetting: (value: string) => void;
+  requireVideo: boolean;
+  setRequireVideo: (value: boolean) => void;
+};
+
+const AIInterviewSettings: React.FC<AIInterviewSettingsProps> = ({
+  secretPrompt,
+  setSecretPrompt,
+  screeningSetting,
+  setScreeningSetting,
+  requireVideo,
+  setRequireVideo,
+}) => {
   const [showHelp, setShowHelp] = React.useState(false);
   const helpRef = React.useRef<HTMLDivElement | null>(null);
 

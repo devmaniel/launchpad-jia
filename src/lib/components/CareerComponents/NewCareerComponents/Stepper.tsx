@@ -4,7 +4,6 @@ interface StepperProps {
   currentStep: number;
   errorsByStep?: Record<number, { hasError: boolean; messages?: string[] }>; 
   progressByStep?: Record<number, number>; // 0..1 per step
-  onStepClick?: (stepId: number) => void;
 }
 
 const steps = [
@@ -15,7 +14,7 @@ const steps = [
   { id: 5, label: "Review Career" },
 ];
 
-const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: StepperProps) => {
+const Stepper = ({ currentStep, errorsByStep, progressByStep }: StepperProps) => {
   const stepsOrder = steps.map((s) => s.id);
   let furthestUnlocked = stepsOrder[stepsOrder.length - 1];
   for (const s of steps) {
@@ -28,7 +27,7 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
   }
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", maxWidth: "1560px", margin: "0 auto" }}>
       <div
         style={{
           display: "flex",
@@ -74,9 +73,10 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
                       borderRadius: "50%",
                       boxSizing: "border-box",
                       backgroundColor: "transparent",
-                      border: hasError
+                      border: "none",
+                      boxShadow: hasError
                         ? "none"
-                        : (showBorder ? `2px solid ${step.id === currentStep ? "#181D27" : "#D5D7DA"}` : "none"),
+                        : (showBorder ? `inset 0 0 0 2px ${step.id === currentStep ? "#181D27" : "#D5D7DA"}` : "none"),
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -113,13 +113,13 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
                         />
                       )
                     )}
-                    {!hasError && !isComplete && isInProgress && step.id === currentStep && (
+                    {!hasError && !isComplete && (
                       <div
                         style={{
                           width: 6,
                           height: 6,
                           borderRadius: "50%",
-                          backgroundColor: "#181D27",
+                          backgroundColor: step.id === currentStep ? "#181D27" : "#D5D7DA",
                         }}
                       />
                     )}
@@ -145,6 +145,10 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
                     const p = isAllowed ? Math.max(0, Math.min(1, (progressByStep?.[step.id] ?? 0))) : 0;
                     const hasError = !!errorsByStep?.[step.id]?.hasError;
                     const isComplete = p >= 1 && !hasError;
+                    // Don't show gradient if there's an error
+                    if (hasError) {
+                      return null;
+                    }
                     if (isComplete) {
                       return (
                         <div
@@ -181,8 +185,6 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
 
             {/* Labels Row */}
             <span
-              role={onStepClick ? "button" : undefined}
-              tabIndex={onStepClick ? 0 : undefined}
               style={{
                 marginTop: 6,
                 fontSize: 13,
@@ -194,10 +196,7 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick }: Ste
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 maxWidth: "100%",
-                cursor: onStepClick ? (step.id <= furthestUnlocked ? "pointer" : "not-allowed") : "default",
-              }}
-              onClick={() => {
-                if (onStepClick && step.id <= furthestUnlocked) onStepClick(step.id);
+                cursor: "default",
               }}
             >
               {step.label}

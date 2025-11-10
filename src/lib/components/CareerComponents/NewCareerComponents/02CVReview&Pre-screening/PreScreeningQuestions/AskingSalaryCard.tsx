@@ -4,13 +4,30 @@ import DropDownOption from '../DropDownOption';
 import AskingSalaryInput from './AskingSalaryInput';
 import DeleteQuestionButton from '../DeleteQuestionButton';
 
-const AskingSalaryCard: React.FC<{ onDelete?: () => void }> = ({ onDelete }) => {
-  const [answerType, setAnswerType] = React.useState<string>('range');
+type AskingSalaryCardProps = {
+  onDelete?: () => void;
+  minSalary: string;
+  maxSalary: string;
+  minCurrency: string;
+  maxCurrency: string;
+  onMinSalaryChange: (v: string) => void;
+  onMaxSalaryChange: (v: string) => void;
+  onMinCurrencyChange: (v: string) => void;
+  onMaxCurrencyChange: (v: string) => void;
+};
 
-  const [minSalary, setMinSalary] = React.useState<string>('');
-  const [maxSalary, setMaxSalary] = React.useState<string>('');
-  const [minCurrency, setMinCurrency] = React.useState<string>('PHP');
-  const [maxCurrency, setMaxCurrency] = React.useState<string>('PHP');
+const AskingSalaryCard: React.FC<AskingSalaryCardProps> = ({
+  onDelete,
+  minSalary,
+  maxSalary,
+  minCurrency,
+  maxCurrency,
+  onMinSalaryChange,
+  onMaxSalaryChange,
+  onMinCurrencyChange,
+  onMaxCurrencyChange,
+}) => {
+  const [answerType, setAnswerType] = React.useState<string>('range');
 
   return (
     <div style={{ position: 'relative', overflow: 'hidden', border: '1px solid #E5E7EB', borderRadius: 12, background: '#fff', display: 'flex', flexDirection: 'column' }}>
@@ -36,18 +53,18 @@ const AskingSalaryCard: React.FC<{ onDelete?: () => void }> = ({ onDelete }) => 
             <AskingSalaryInput
               label="Minimum"
               value={minSalary}
-              onChange={setMinSalary}
+              onChange={onMinSalaryChange}
               currency={minCurrency}
-              onCurrencyChange={setMinCurrency}
+              onCurrencyChange={onMinCurrencyChange}
             />
           </div>
           <div>
             <AskingSalaryInput
               label="Maximum"
               value={maxSalary}
-              onChange={setMaxSalary}
+              onChange={onMaxSalaryChange}
               currency={maxCurrency}
-              onCurrencyChange={setMaxCurrency}
+              onCurrencyChange={onMaxCurrencyChange}
             />
           </div>
         </div>
@@ -61,3 +78,4 @@ const AskingSalaryCard: React.FC<{ onDelete?: () => void }> = ({ onDelete }) => 
 };
 
 export default AskingSalaryCard;
+

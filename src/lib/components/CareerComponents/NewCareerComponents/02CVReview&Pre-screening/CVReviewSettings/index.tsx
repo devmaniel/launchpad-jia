@@ -60,7 +60,7 @@ const CVReviewSettings = ({
         </span>
       </div>
       <div className="layered-card-content" style={{ gap: 0 }}>
-        <div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           <span
             style={{
               fontWeight: 600,
@@ -71,7 +71,7 @@ const CVReviewSettings = ({
           >
             CV Screening
           </span>
-          <p style={{ fontSize: 16, fontWeight: 400, color: "#6B7280", marginTop: 6 }}>
+          <p style={{ fontSize: 16, fontWeight: 400, color: "#414651" ,marginBottom: 0}}>
             Jia automatically endorses candidates who meet the chosen criteria.
           </p>
         </div>
@@ -86,8 +86,8 @@ const CVReviewSettings = ({
 
         <hr style={{ borderColor: "#EAECF5", borderWidth: 2, width: "100%", margin: "8px 0" }} />
 
-        <div style={{ marginTop: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 12 }}>
+        <div style={{ marginTop: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
               <img 
                 src="/icons/sparkle-prompt-gradient-icon.svg" 
@@ -118,7 +118,7 @@ const CVReviewSettings = ({
               )}
             </div>
           </div>
-          <p style={{ fontSize: 16, fontWeight: 400, color: "#6B7280", marginBottom: 12, lineHeight: '20px' }}>
+          <p style={{ fontSize: 16, fontWeight: 400, color: "#414651", marginBottom: 12, lineHeight: '20px' }}>
             Secret Prompts give you extra control over Jia's evaluation style, complementing her accurate assessment of requirements from the job description.
           </p>
           <SecretPromptInput

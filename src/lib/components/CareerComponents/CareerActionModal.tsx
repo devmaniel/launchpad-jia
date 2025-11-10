@@ -11,13 +11,13 @@ export default function CareerActionModal({ action, onAction }: { action: string
             buttonText: "Save & Publish",
         },
         "inactive": {
-            icon: "la-exclamation-circle",
+            icon: "la-save",
             color: "#181D27",
-            iconColor: "#DC6803",
-            iconBgColor: "#FEF0C7",
-            title: "Save without publishing",
-            subtext: "Are you sure you want to save this career without publishing it?",
-            buttonText: "Save",
+            iconColor: "#6B7280",
+            iconBgColor: "#F3F4F6",
+            title: "Save as Draft",
+            subtext: "This career will be saved as a draft and won't be visible to applicants. You can publish it later from the careers list.",
+            buttonText: "Save as Draft",
         }
     }
     return (

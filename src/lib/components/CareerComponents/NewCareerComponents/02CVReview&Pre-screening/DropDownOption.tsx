@@ -20,10 +20,10 @@ interface DropDownOptionProps {
 }
 
 const DEFAULT_OPTIONS: OptionItem[] = [
-  { label: "Short Answer", value: "short_answer", icon: "/icons/user_new.svg" },
+  { label: "Short Answer", value: "short_answer", icon: "/icons/list-for-dropdown.svg" },
   { label: "Long Answer", value: "long_answer", icon: "/icons/list-for-dropdown.svg" },
   { label: "Dropdown", value: "dropdown", icon: "/icons/expand_circle_down.svg" },
-  { label: "Checkboxes", value: "checkboxes", icon: "/icons/user_new.svg" },
+  { label: "Checkboxes", value: "checkboxes", icon: "/temp/checkbox-svgrepo-com.svg" },
   { label: "Range", value: "range", icon: "/icons/123-range-for-dropdown.svg" },
 ];
 
@@ -91,7 +91,7 @@ const DropDownOption: React.FC<DropDownOptionProps> = ({
     >
       <button
         type="button"
-        className={`dropdown-btn${animated ? " fade-in-bottom" : ""}`}
+        className="dropdown-btn"
         disabled={isDisabled}
         onClick={() => { if (!isDisabled) setOpen((v) => !v); }}
         style={{
@@ -125,7 +125,7 @@ const DropDownOption: React.FC<DropDownOptionProps> = ({
       {open && menuPos && createPortal(
         (
           <div
-            className={`dropdown-menu mt-1${animated ? " org-dropdown-anim" : ""}${open && animated ? " show" : ""}`}
+            className="dropdown-menu mt-1"
             style={{
               padding: 0,
               maxHeight: 240,
@@ -138,9 +138,7 @@ const DropDownOption: React.FC<DropDownOptionProps> = ({
               border: "1px solid #F5F5F5",
               boxShadow:
                 "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)",
-              ...(animated
-                ? {}
-                : ({ display: open ? 'block' : 'none' } as React.CSSProperties)),
+              display: open ? 'block' : 'none',
             }}
             onMouseDown={(e) => {
               e.stopPropagation();
