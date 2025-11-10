@@ -189,6 +189,7 @@ export default function OrgDropdownV2() {
           display: "flex",
           flexDirection: "column",
           gap: 5,
+          overflow: "auto"
         }}
       >
         {loading ? (
@@ -207,6 +208,7 @@ export default function OrgDropdownV2() {
                 key={org._id}
                 className={`dropdown-item-option ${selectedOrg._id === org._id ? "active" : ""}`}
                 onClick={() => handleSelect(org)}
+                style={{width:100}}
               >
               <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10 }}>
                 <img
