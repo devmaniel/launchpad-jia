@@ -32,7 +32,7 @@ export default function SidebarV2(props: any) {
                   style={{
                     border: "1px solid #E0E0E0",
                     borderRadius: "10px",
-                    padding: "8px 16px",
+                    padding: "8px 8px",
                     backgroundColor: "#FFFFFF",
                     color: "#181D27",
                     fontSize: 14,
@@ -65,14 +65,25 @@ export default function SidebarV2(props: any) {
                       className={`nav-item ${
                         activeLink === item.label ? "active" : ""
                       }`}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        padding: '12px 16px'
+                      }}
                     >
-                      <span>
-                        <i
-                          className={item.icon}
-                          style={{ color: "#414651", fontSize: 24 }}
-                        ></i>
-                      </span>
-                      <span>{item.label}</span>
+                      <img
+                        src={item.icon}
+                        alt={item.label}
+                        style={{ 
+                          width: 20, 
+                          height: 20,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      />
+                      <span style={{ lineHeight: '1.5', fontWeight: 400, fontSize: 16 }}>{item.label}</span>
                     </div>
                   </Link>
                 ))}
@@ -96,14 +107,25 @@ export default function SidebarV2(props: any) {
                       className={`nav-item ${
                         activeLink === item.label ? "active" : ""
                       }`}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        padding: '12px 16px'
+                      }}
                     >
-                      <span>
-                        <i
-                          className={item.icon}
-                          style={{ color: "#414651", fontSize: 24 }}
-                        ></i>
-                      </span>
-                      <span>{item.label}</span>
+                      <img
+                        src={item.icon}
+                        alt={item.label}
+                        style={{ 
+                          width: 20, 
+                          height: 20,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      />
+                      <span style={{ lineHeight: '1.5', fontWeight: 400 }}>{item.label}</span>
                     </div>
                   </Link>
                 ))}
@@ -130,10 +152,11 @@ export default function SidebarV2(props: any) {
                           }`}
                         >
                           <span>
-                            <i
-                              className={item.icon}
-                              style={{ color: "#414651", fontSize: 24 }}
-                            ></i>
+                            <img
+                              src={item.icon}
+                              alt={item.label}
+                              style={{ width: 24, height: 24 }}
+                            />
                           </span>
                           <span>{item.label}</span>
                         </div>

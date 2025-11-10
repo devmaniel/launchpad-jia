@@ -8,22 +8,22 @@ import AvatarImage from "../components/AvatarImage/AvatarImage";
 import SuperAdminFeature from "../components/SuperAdminFeature";
 
 const baseLinkSet = [
-  { name: "Dashboard", icon: "la la-chart-area", href: "/dashboard" },
+  { name: "Dashboard", icon: "/temp/sidebar/space_dashboard.svg", href: "/dashboard" },
   {
     name: "Interviews",
-    icon: "la la-file-text",
+    icon: "/temp/sidebar/double-chev.svg",
     href: "/dashboard/interviews",
   },
-  { name: "Careers", icon: "la la-briefcase", href: "/dashboard/careers" },
-  { name: "Candidates", icon: "la la-users", href: "/dashboard/candidates" },
-  { name: "Feedback", icon: "la la-comments", href: "/dashboard/feedback" },
-  { name: "Members", icon: "la la-users", href: "/dashboard/members" },
-  { name: "Settings", icon: "la la-cog", href: "/dashboard/settings" },
+  { name: "Careers", icon: "/temp/sidebar/double-chev.svg", href: "/dashboard/careers" },
+  { name: "Candidates", icon: "/temp/sidebar/candidates.svg", href: "/dashboard/candidates" },
+  { name: "Feedback", icon: "/temp/sidebar/feedbacks.svg", href: "/dashboard/feedback" },
+  { name: "Members", icon: "/temp/sidebar/members.svg", href: "/dashboard/members" },
+  { name: "Settings", icon: "/temp/sidebar/settings.svg", href: "/dashboard/settings" },
 ];
 const baseSuperAdminLinkSet = [
   {
     name: "CV Screen Test",
-    icon: "la la-cog",
+    icon: "/temp/sidebar/settings.svg",
     href: "/dashboard/cv-screen-test",
   },
 ];
@@ -144,7 +144,11 @@ export default function (props: any) {
                           }`}
                           href={link.href}
                         >
-                          <i className={`${link.icon} text-primary`}></i>
+                          <img 
+                            src={link.icon} 
+                            alt={link.name} 
+                            style={{ width: 24, height: 24, marginRight: 8 }} 
+                          />
                           <span className="nav-link-text">{link.name}</span>
                         </Link>
                       </li>
@@ -162,7 +166,11 @@ export default function (props: any) {
                     {baseSuperAdminLinkSet.map((link) => (
                       <li className="nav-item" key={link.name}>
                         <Link className="nav-link px-2" href={link.href}>
-                          <i className={`${link.icon} text-primary`}></i>
+                          <img 
+                            src={link.icon} 
+                            alt={link.name} 
+                            style={{ width: 24, height: 24, marginRight: 8 }} 
+                          />
                           <span className="nav-link-text">{link.name}</span>
                         </Link>
                       </li>
@@ -185,7 +193,11 @@ export default function (props: any) {
                     }}
                   >
                     <Link className="nav-link" href="#log-out">
-                      <i className="la la-sign-out"></i>
+                      <img 
+                        src="/temp/sidebar/double-chev.svg" 
+                        alt="Log out" 
+                        style={{ width: 24, height: 24, marginRight: 8 }} 
+                      />
                       <span className="nav-link-text">Log out</span>
                     </Link>
                   </li>

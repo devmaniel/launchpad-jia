@@ -13,23 +13,23 @@ export default function Layout({ children }) {
     {
       label: "Dashboard",
       href: "/recruiter-dashboard",
-      icon: "la la-chart-area",
+      icon: "/temp/sidebar/space_dashboard.svg",
     },
     {
       label: "Careers",
       href: "/recruiter-dashboard/careers",
-      icon: "la la-suitcase",
+      icon: "/temp/sidebar/careers-icon.svg",
     },
     {
       label: "Candidates",
       href: "/recruiter-dashboard/candidates",
-      icon: "la la-id-badge",
+      icon: "/temp/sidebar/candidates.svg",
     },
-    { label: "To Do", href: "/recruiter-dashboard/to-do", icon: "la la-cogs" },
+    { label: "To Do", href: "/recruiter-dashboard/to-do", icon: "/temp/sidebar/todo.svg" },
     // {
     //   label: "Inbox",
     //   href: "/recruiter-dashboard/inbox",
-    //   icon: "la la-envelope",
+    //   icon: "/temp/sidebar/mail_outline.svg",
     // },
   ];
 
@@ -37,17 +37,17 @@ export default function Layout({ children }) {
     {
       label: "Feedback",
       href: "/recruiter-dashboard/feedback",
-      icon: "la la-comments",
+      icon: "/temp/sidebar/feedbacks.svg",
     },
     {
       label: "Members",
       href: "/recruiter-dashboard/members",
-      icon: "la la-users",
+      icon: "/temp/sidebar/members.svg",
     },
     {
       label: "Settings",
       href: "/recruiter-dashboard/settings",
-      icon: "la la-cog",
+      icon: "/temp/sidebar/settings.svg",
     },
   ];
 
@@ -55,12 +55,12 @@ export default function Layout({ children }) {
     {
       label: "Inbox",
       href: "/recruiter-dashboard/inbox",
-      icon: "la la-envelope",
+      icon: "/temp/sidebar/mail_outline.svg",
     },
     {
       label: "Email Automation [Beta]",
       href: "/recruiter-dashboard/email-automation",
-      icon: "la la-cubes",
+      icon: "/temp/sidebar/mail_outline.svg",
     },
   ];
 

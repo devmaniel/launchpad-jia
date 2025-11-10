@@ -11,9 +11,9 @@ export default function Layout({ children }) {
   const pathname = usePathname();
   const navItems = [
     // Hide Dashboard for now
-    { label: 'Dashboard', href: '/admin-portal', icon: "la la-chart-area" },
-    { label: 'Organizations', href: '/admin-portal/organizations', icon: "la la-suitcase" },
-    // { label: 'Applicants', href: '/admin-portal/applicants', icon: "la la-id-badge" },
+    { label: 'Dashboard', href: '/admin-portal', icon: "/temp/sidebar/space_dashboard.svg" },
+    { label: 'Organizations', href: '/admin-portal/organizations', icon: "/temp/sidebar/double-chev.svg" },
+    // { label: 'Applicants', href: '/admin-portal/applicants', icon: "/temp/sidebar/candidates.svg" },
   ];
   
   const footerNavItems = [

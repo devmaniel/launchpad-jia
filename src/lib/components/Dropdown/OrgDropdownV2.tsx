@@ -92,7 +92,24 @@ export default function OrgDropdownV2() {
       }, [orgList, activeOrg]);
 
       return (
-        <div className="dropdown w-100" style={{ padding: "0 10px" }}>
+        <>
+          <style dangerouslySetInnerHTML={{__html: `
+            .custom-scrollbar {
+              scrollbar-width: thin;
+              scrollbar-color: #E9EAEB transparent;
+              border-radius: 10px !important;
+            }
+            .custom-scrollbar::-webkit-scrollbar {
+              width: 8px;
+              height: 20px;
+              border-radius: 10px !important;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+              background-color: #E9EAEB;
+              border-radius: 10px;
+            }
+          `}} />
+        <div className="dropdown w-100" style={{ padding: "8px 8px", position: "relative" }}>
           <button 
            className="btn btn-outline-primary d-flex align-items-center w-100"
            type="button"
@@ -105,7 +122,7 @@ export default function OrgDropdownV2() {
              borderRadius: "20px",
              fontWeight: 600,
              fontSize: 15,
-             margin: "10px 0 20px 0",
+             margin: "10px 0 0px 0",
            }}
            disabled={loading}
           >
@@ -121,21 +138,32 @@ export default function OrgDropdownV2() {
         ) : (
         <div style={{ display: 'flex', alignItems: 'center', flexDirection: "column", gap: 8, width: "100%" }}>
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-              <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
               <img
-                src={selectedOrg.image || "/default-org-image.png"}
+                src={selectedOrg.image || "/temp/sidebar/wc-fallback-avatar.png"}
                 alt={selectedOrg.name}
-                className="mr-2 avatar rounded"
-                style={{ border: "1px solid #E9EAEB" }}
+                className="mr-1 rounded"
+                style={{ border: "1px solid #E9EAEB", width: "32px", height: "32px", backgroundColor: "none" }}
               />
-                <span style={{ fontWeight: 600, fontSize: 16, color: '#030217' }}>
-                  {selectedOrg?.name}
-                </span>
-              </div>
-              <ChevronDownIcon />
+              <span style={{ fontWeight: 500, fontSize: 14, color: '#181D27' }}>
+                {selectedOrg?.name}
+              </span>
+            </div>
+            <div style={{ marginLeft: "auto" }}>
+              <img src="/temp/sidebar/double-chev.svg" alt="dropdown" className="h-4 w-4" />
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, width: "100%", justifyContent: "center" }}>
-            <span style={{ background: '#FFF1F3',width: "100%", color: '#C01048', borderRadius: 8, padding: '2px 10px', fontSize: 14, fontWeight: 500 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginTop: 4, width: "100%", justifyContent: "center" }}>
+            <span style={{ 
+              background: tierColorMap[selectedOrg?.tier]?.backgroundColor || '#FFF1F3',
+              width: "100%", 
+              border: tierColorMap[selectedOrg?.tier]?.border || "1px solid #FECCD6",
+              color: tierColorMap[selectedOrg?.tier]?.color || '#C01048', 
+              borderRadius: 999, 
+              padding: '4px 8px', 
+              fontSize: 14, 
+              fontWeight: 500 
+            }}>
               {selectedOrg?.tier?.charAt(0)?.toUpperCase() + selectedOrg?.tier?.slice(1) || ""}
             </span>
           </div>
@@ -143,24 +171,30 @@ export default function OrgDropdownV2() {
         </button>
           
         <div
-        className={`dropdown-menu w-100 org-dropdown-anim${
+        className={`dropdown-menu org-dropdown-anim custom-scrollbar${
           showOrgDropdown ? " show" : ""
         }`}
         style={{
-          width: "100%",
-          maxWidth: 210,
-          left: "50%",
-          transform: "translateX(-50%)",
+          position: "absolute",
+          width: "calc(100% - 16px)",
+          left: "8px",
+          right: "8px",
+          top: "100%",
+          marginTop: "8px",
           borderRadius: 10,
           boxShadow: "0 8px 32px rgba(30,32,60,0.18)",
           overflowY: "scroll",
           maxHeight: "300px",
+          zIndex: 1000,
+          display: "flex",
+          flexDirection: "column",
+          gap: 5,
         }}
       >
         {loading ? (
           <div className="d-flex justify-content-center align-items-center py-3">
             <span
-              className="spinner-border spinner-border-sm mr-2"
+              className="spinner-border spinner-border-sm"
               role="status"
               aria-hidden="true"
             ></span>
@@ -176,7 +210,7 @@ export default function OrgDropdownV2() {
               >
               <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10 }}>
                 <img
-                  src={org.image || "/default-org-image.png"}
+                  src={org.image || "/temp/sidebar/wc-fallback-avatar.png"}
                   alt={org.name}
                   style={{ border: "1px solid #E9EAEB", borderRadius: "50%", width: 24, height: 24 }}
                 />
@@ -193,21 +227,20 @@ export default function OrgDropdownV2() {
                     {org.name}
                   </span>
                 </div>
-                  <span
-                    className={`badge mt-1`}
-                    style={{ 
-                      textTransform: "capitalize", 
-                      backgroundColor: tierColorMap[org.tier]?.backgroundColor || "#FFF1F3", 
-                      color: tierColorMap[org.tier]?.color || "#C01048",
-                      border: tierColorMap[org.tier]?.border || "1px solid #E9EAEB",
-                      borderRadius: 8, 
-                      padding: "2px 10px", 
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 0, width: "100%", justifyContent: "center", marginTop: 4 }}>
+                    <span style={{ 
+                      background: tierColorMap[org.tier]?.backgroundColor || '#FFF1F3',
+                      width: "100%", 
+                      border: tierColorMap[org.tier]?.border || "1px solid #FECCD6" ,
+                      color: tierColorMap[org.tier]?.color || '#C01048', 
+                      borderRadius: 999, 
+                      padding: '4px 8px', 
                       fontSize: 14, 
                       fontWeight: 500 
-                    }}
-                  >
-                    {org.tier}
-                  </span>
+                    }}>
+                      {org.tier?.charAt(0)?.toUpperCase() + org.tier?.slice(1) || ""}
+                    </span>
+                  </div>
               </button>
             ))}
             {/* <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: 10 }}>
@@ -225,5 +258,6 @@ export default function OrgDropdownV2() {
         )}
       </div>
         </div>
+        </>
       )
 }
