@@ -19,89 +19,92 @@ import { candidateActionToast, errorToast, getStage } from "@/lib/Utils";
 import { Tooltip } from "react-tooltip";
 import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 import { mockCandidates } from "@/lib/components/CareerComponents/ApplicationTimeline/mock-data";
+
+// Helper function to create timeline stages from pipelineStages
+const createTimelineStagesFromPipeline = (pipelineStages: any[]) => {
+    if (!pipelineStages || pipelineStages.length === 0) {
+        // Default stages if no pipeline stages are defined
+        return {
+            "CV Screening": {
+                candidates: [],
+                droppedCandidates: [],
+                color: "#6941C6",
+                substages: ["Waiting Submission", "For Review"],
+                nextStage: { name: "AI Interview", step: "AI Interview", status: "For Interview" },
+                currentStage: { name: "CV Screening", step: "CV Screening", status: "For CV Screening" }
+            },
+            "AI Interview": {
+                candidates: [],
+                droppedCandidates: [],
+                color: "#D97706",
+                substages: ["Waiting Interview", "For Review"],
+                nextStage: { name: "Human Interview", step: "Human Interview", status: "For Schedule" },
+                currentStage: { name: "AI Interview", step: "AI Interview", status: "For AI Interview" }
+            },
+            "Human Interview": {
+                candidates: [],
+                droppedCandidates: [],
+                color: "#B42318",
+                substages: ["Waiting Schedule", "Waiting Interview", "For Review"],
+                nextStage: { name: "Coding Test", step: "Coding Test", status: "For Coding Test" },
+                currentStage: { name: "Human Interview", step: "Human Interview", status: "For Human Interview" }
+            },
+            "Coding Test": {
+                candidates: [],
+                droppedCandidates: [],
+                color: "#1849D5",
+                substages: ["Coding Test"],
+                nextStage: { name: "Job Offer", step: "Job Offer", status: "For Final Review" },
+                currentStage: { name: "Coding Test", step: "Coding Test", status: "For Coding Test" }
+            },
+            "Job Offer": {
+                candidates: [],
+                droppedCandidates: [],
+                color: "#059669",
+                substages: ["For Final Review", "Waiting for Acceptance", "For Contract Signing", "Hired"],
+                nextStage: { name: "Hired", step: "Hired", status: "Hired" },
+                currentStage: { name: "Job Offer", step: "Job Offer", status: "For Final Review" }
+            },
+        };
+    }
+
+    const colors = ["#6941C6", "#D97706", "#B42318", "#1849D5", "#059669", "#7F56D9", "#DC6803", "#C11574"];
+    const stages: any = {};
+
+    pipelineStages.forEach((stage, index) => {
+        const isLastStage = index === pipelineStages.length - 1;
+        const nextStage = !isLastStage ? pipelineStages[index + 1] : null;
+
+        stages[stage.title] = {
+            candidates: [],
+            droppedCandidates: [],
+            color: colors[index % colors.length],
+            substages: stage.substages || [stage.title],
+            icon: stage.icon,
+            nextStage: nextStage ? {
+                name: nextStage.title,
+                step: nextStage.title,
+                status: `For ${nextStage.title}`
+            } : null,
+            currentStage: {
+                name: stage.title,
+                step: stage.title,
+                status: `For ${stage.title}`
+            }
+        };
+    });
+
+    return stages;
+};
+
 export default function ManageCareerPage() {
     const { slug } = useParams();
     const searchParams = useSearchParams();
     const tab = searchParams.get("tab");
     const { orgID, user } = useAppContext();
     const [career, setCareer] = useState<any>(null);
-    const { timelineStages, interviewsInProgress, dropped, hired, setAndSortCandidates } = useCareerApplicants({
-        "CV Screening": {
-            candidates: [],
-            droppedCandidates: [],
-            color: "#6941C6",
-            nextStage: {
-                name: "AI Interview",
-                step: "AI Interview",
-                status: "For Interview"
-            },
-            currentStage: {
-                name: "CV Screening",
-                step: "CV Screening",
-                status: "For CV Screening"
-            }
-        },
-        "AI Interview": {
-            candidates: [],
-            droppedCandidates: [],
-            color: "#D97706",
-            nextStage: {
-                name: "Human Interview",
-                step: "Human Interview",
-                status: "For Schedule"
-            },
-            currentStage: {
-                name: "AI Interview",
-                step: "AI Interview",
-                status: "For AI Interview"
-            }
-        },
-        "Human Interview": {
-            candidates: [],
-            droppedCandidates: [],
-            color: "#B42318",
-            nextStage: {
-                name: "Coding Test",
-                step: "Coding Test",
-                status: "For Coding Test"
-            },
-            currentStage: {
-                name: "Human Interview",
-                step: "Human Interview",
-                status: "For Human Interview"
-            }
-        },
-        "Coding Test": {
-            candidates: [],
-            droppedCandidates: [],
-            color: "#1849D5",
-            nextStage: {
-                name: "Job Offer",
-                step: "Job Offer",
-                status: "For Final Review"
-            },
-            currentStage: {
-                name: "Coding Test",
-                step: "Coding Test",
-                status: "For Coding Test"
-            }
-        },
-        "Job Offer": {
-            candidates: [],
-            droppedCandidates: [],
-            color: "#059669",
-            nextStage: {
-                name: "Hired",
-                step: "Hired",
-                status: "Hired"
-            },
-            currentStage: {
-                name: "Job Offer",
-                step: "Job Offer",
-                status: "For Final Review"
-            }
-        },
-    });
+    const [initialTimelineStages, setInitialTimelineStages] = useState<any>(null);
+    const { timelineStages, interviewsInProgress, dropped, hired, setAndSortCandidates } = useCareerApplicants(initialTimelineStages || {});
     const [activeTab, setActiveTab] = useState("application-timeline");
     const [candidateMenuOpen, setCandidateMenuOpen] = useState<boolean>(false);
     const [selectedCandidate, setSelectedCandidate] = useState<any>({});
@@ -172,85 +175,87 @@ export default function ManageCareerPage() {
     ];
     
       // Load mock data on component mount for testing
+    // DISABLED: Mock data temporarily disabled to see real data
+    // useEffect(() => {
+    //   let newTimelineStages = { ...timelineStages };
+    //   
+    //   for (const candidate of mockCandidates) {
+    //     const isDropped = candidate.applicationStatus === "Dropped" || candidate.applicationStatus === "Cancelled";
+    //     
+    //     // CV Screening stage
+    //     if (candidate.currentStep === "CV Screening") {
+    //       isDropped ? newTimelineStages["CV Screening"].droppedCandidates.push(candidate) : newTimelineStages["CV Screening"].candidates.push(candidate);
+    //       continue;
+    //     }
+    //
+    //     // AI Interview stage
+    //     if (candidate.currentStep === "AI Interview") {
+    //       isDropped ? newTimelineStages["AI Interview"].droppedCandidates.push(candidate) : newTimelineStages["AI Interview"].candidates.push(candidate);
+    //       continue;
+    //     }
+    //
+    //     // Human Interview stage
+    //     if (candidate.currentStep === "Human Interview") {
+    //       isDropped ? newTimelineStages["Human Interview"].droppedCandidates.push(candidate) : newTimelineStages["Human Interview"].candidates.push(candidate);
+    //       continue;
+    //     }
+    //
+    //     // Coding Test stage
+    //     if (candidate.currentStep === "Coding Test") {
+    //       isDropped ? newTimelineStages["Coding Test"].droppedCandidates.push(candidate) : newTimelineStages["Coding Test"].candidates.push(candidate);
+    //       continue;
+    //     }
+    //
+    //     // Job Offer stage
+    //     if (candidate.currentStep === "Job Offer") {
+    //       isDropped ? newTimelineStages["Job Offer"].droppedCandidates.push(candidate) : newTimelineStages["Job Offer"].candidates.push(candidate);
+    //       continue;
+    //     }
+    //   }
+    //
+    //   setAndSortCandidates(newTimelineStages);
+    // }, []);
+
+    // Update timeline stages when initialTimelineStages changes
     useEffect(() => {
-      let newTimelineStages = { ...timelineStages };
-      
-      for (const candidate of mockCandidates) {
-        const isDropped = candidate.applicationStatus === "Dropped" || candidate.applicationStatus === "Cancelled";
-        
-        // CV Screening stage
-        if (candidate.currentStep === "CV Screening") {
-          isDropped ? newTimelineStages["CV Screening"].droppedCandidates.push(candidate) : newTimelineStages["CV Screening"].candidates.push(candidate);
-          continue;
+        if (initialTimelineStages && Object.keys(initialTimelineStages).length > 0) {
+            console.log("✅ Setting timeline stages:", Object.keys(initialTimelineStages));
+            setAndSortCandidates(initialTimelineStages);
         }
-
-        // AI Interview stage
-        if (candidate.currentStep === "AI Interview") {
-          isDropped ? newTimelineStages["AI Interview"].droppedCandidates.push(candidate) : newTimelineStages["AI Interview"].candidates.push(candidate);
-          continue;
-        }
-
-        // Human Interview stage
-        if (candidate.currentStep === "Human Interview") {
-          isDropped ? newTimelineStages["Human Interview"].droppedCandidates.push(candidate) : newTimelineStages["Human Interview"].candidates.push(candidate);
-          continue;
-        }
-
-        // Coding Test stage
-        if (candidate.currentStep === "Coding Test") {
-          isDropped ? newTimelineStages["Coding Test"].droppedCandidates.push(candidate) : newTimelineStages["Coding Test"].candidates.push(candidate);
-          continue;
-        }
-
-        // Job Offer stage
-        if (candidate.currentStep === "Job Offer") {
-          isDropped ? newTimelineStages["Job Offer"].droppedCandidates.push(candidate) : newTimelineStages["Job Offer"].candidates.push(candidate);
-          continue;
-        }
-      }
-
-      setAndSortCandidates(newTimelineStages);
-    }, []);
+    }, [initialTimelineStages, setAndSortCandidates]);
 
     useEffect(() => {
         const fetchInterviews = async () => {
-          if (!career?.id) return;
+          if (!career?.id || !timelineStages || Object.keys(timelineStages).length === 0) {
+            console.log("⏭️ Skipping fetch interviews:", { 
+              hasCareer: !!career?.id, 
+              hasStages: !!timelineStages,
+              stageCount: timelineStages ? Object.keys(timelineStages).length : 0 
+            });
+            return;
+          }
 
+          console.log("🔄 Fetching interviews for stages:", Object.keys(timelineStages));
           const response = await axios.get(`/api/get-career-interviews?careerID=${career.id}`);
+          console.log("📥 Got interviews:", response.data.length);
+          
           if (response.data.length > 0) {
             let newTimelineStages = { ...timelineStages };
+            
             for (const interview of response.data) {
-
                 const isDropped = interview.applicationStatus === "Dropped" || interview.applicationStatus === "Cancelled";
+                const currentStep = interview.currentStep;
                 
-                // CV Screening stage
-                if (interview.currentStep === "CV Screening") {
-                    isDropped ? newTimelineStages["CV Screening"].droppedCandidates.push(interview) : newTimelineStages["CV Screening"].candidates.push(interview);
-                    continue;
-                }
-
-                // AI Interview stage
-                if (interview.currentStep === "AI Interview") {
-                    isDropped ? newTimelineStages["AI Interview"].droppedCandidates.push(interview) : newTimelineStages["AI Interview"].candidates.push(interview);
-                    continue;
-                }
-
-                // Human Interview stage
-                if (interview.currentStep === "Human Interview") {
-                    isDropped ? newTimelineStages["Human Interview"].droppedCandidates.push(interview) : newTimelineStages["Human Interview"].candidates.push(interview);
-                    continue;
-                }
-
-                // Coding Test stage
-                if (interview.currentStep === "Coding Test") {
-                   isDropped ? newTimelineStages["Coding Test"].droppedCandidates.push(interview) : newTimelineStages["Coding Test"].candidates.push(interview);
-                   continue;
-                }
-
-                // Job Offer stage
-                if (interview.currentStep === "Job Offer") {
-                    isDropped ? newTimelineStages["Job Offer"].droppedCandidates.push(interview) : newTimelineStages["Job Offer"].candidates.push(interview);
-                    continue;
+                // Dynamically assign candidates to stages based on currentStep
+                if (newTimelineStages[currentStep]) {
+                    if (isDropped) {
+                        newTimelineStages[currentStep].droppedCandidates.push(interview);
+                    } else {
+                        newTimelineStages[currentStep].candidates.push(interview);
+                    }
+                    console.log(`  ➡️ Assigned ${interview.name} to ${currentStep}`);
+                } else {
+                    console.warn(`  ⚠️ Stage "${currentStep}" not found in timeline stages`);
                 }
             }
     
@@ -259,7 +264,7 @@ export default function ManageCareerPage() {
         };
         
         fetchInterviews();
-      }, [career?.id]);
+      }, [career?.id, timelineStages]);
 
     useEffect(() => {
         const fetchCareer = async () => {
@@ -271,6 +276,13 @@ export default function ManageCareerPage() {
                   });
                   
                 setCareer(response.data);
+                
+                // Initialize timeline stages from pipelineStages
+                console.log("📊 Pipeline Stages from API:", response.data?.pipelineStages);
+                const stages = createTimelineStagesFromPipeline(response.data?.pipelineStages || []);
+                console.log("📊 Created Timeline Stages:", stages);
+                setInitialTimelineStages(stages);
+                
                 const deepCopy = JSON.parse(JSON.stringify(response.data?.questions ?? []));
                 setFormData({
                     _id: response.data?._id || "",
@@ -842,6 +854,7 @@ export default function ManageCareerPage() {
             {/* Application Timeline - Full width for canvas scaling */}
             {activeTab === "application-timeline" && (
               <div style={{ width: "100%", padding: "20px 20px", marginBottom: 10 }}>
+                {console.log("🎨 Rendering with timeline stages:", timelineStages)}
                 <CareerStageColumnV2 
                   timelineStages={timelineStages} 
                   handleCandidateMenuOpen={handleCandidateMenuOpen} 

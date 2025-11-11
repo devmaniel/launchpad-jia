@@ -50,17 +50,18 @@ export default function SearchBar({
             marginLeft: "14px",
             marginRight: "14px",
             fontWeight: 500,
-            border: "1px solid #E5E7EB !important",
+            border: "1px solid #E5E7EB",
             borderRadius: "8px",
             fontSize: "14px",
             outline: "none",
+            boxSizing: "border-box",
             transition: "border-color 0.2s ease",
           }}
           onFocus={(e) => {
-            e.currentTarget.style.borderColor = "#9400FF"
+            e.currentTarget.style.border = "1px solid #9400FF"
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = "#E5E7EB";
+            e.currentTarget.style.border = "1px solid #E5E7EB"
           }}
         />
       </div>

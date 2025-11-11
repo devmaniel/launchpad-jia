@@ -16,6 +16,9 @@ export default function CareerStageColumnV2({
   const containerRef = useRef<HTMLDivElement>(null);
   const [rowHeight, setRowHeight] = useState<number>(600);
 
+  console.log("🎭 CareerStageV2 received timelineStages:", timelineStages);
+  console.log("🎭 Timeline stages keys:", Object.keys(timelineStages || {}));
+
   // Calculate dynamic height based on viewport
   useEffect(() => {
     const updateHeight = () => {
@@ -31,86 +34,58 @@ export default function CareerStageColumnV2({
   
   // Helper function to get sub-sections for each stage
   const getSubSections = (stage: string, stageData: any) => {
-    // CV Screening stage has two sub-sections
-    if (stage === "CV Screening") {
-      const waitingSubmission = stageData.candidates?.filter((c: any) => 
-        c.cvStatus === "Waiting for Submission" || !c.cvFile
-      ) || [];
-      const forReview = stageData.candidates?.filter((c: any) => 
-        c.cvStatus !== "Waiting for Submission" && c.cvFile
-      ) || [];
-
-      return [
-        { title: "Waiting Submission", candidates: waitingSubmission },
-        { title: "For Review", candidates: forReview }
-      ];
+    console.log(`  🔍 Getting substages for "${stage}":`, stageData.substages);
+    
+    // If substages are defined in the data, use them
+    if (stageData.substages && stageData.substages.length > 0) {
+      // For stages with single substage, show all candidates in one group
+      if (stageData.substages.length === 1) {
+        return [
+          { title: stageData.substages[0], candidates: stageData.candidates || [] }
+        ];
+      }
+      
+      // For stages with multiple substages, we need to filter candidates
+      // Based on their status or other properties
+      // For now, we'll distribute evenly or show all in each substage
+      return stageData.substages.map((substage: string, index: number) => {
+        // Try to intelligently filter candidates based on substage name and candidate status
+        let candidates = [];
+        
+        if (substage.toLowerCase().includes("waiting") || substage.toLowerCase().includes("pending")) {
+          // First substage usually contains waiting/pending candidates
+          if (index === 0) {
+            candidates = stageData.candidates?.filter((c: any) => 
+              !c.completed && !c.inReview
+            ) || [];
+          }
+        } else if (substage.toLowerCase().includes("review")) {
+          // Last substage usually contains candidates in review
+          candidates = stageData.candidates?.filter((c: any) => 
+            c.completed || c.inReview || c.status?.toLowerCase().includes("review")
+          ) || [];
+        } else if (index === 0) {
+          // First substage gets candidates that don't have special status
+          candidates = stageData.candidates?.filter((c: any) => 
+            !c.completed && !c.inReview
+          ) || [];
+        } else {
+          // Middle substages get remaining candidates
+          candidates = stageData.candidates?.filter((c: any) => 
+            c.status?.toLowerCase().includes(substage.toLowerCase())
+          ) || [];
+        }
+        
+        // If no filtering logic matched, distribute candidates
+        if (candidates.length === 0 && index === 0) {
+          candidates = stageData.candidates || [];
+        }
+        
+        return { title: substage, candidates };
+      });
     }
-
-    // AI Interview stage has two sub-sections
-    if (stage === "AI Interview") {
-      const waitingInterview = stageData.candidates?.filter((c: any) => 
-        c.status === "For Interview" || c.status === "For AI Interview" || !c.aiInterviewCompleted
-      ) || [];
-      const forReview = stageData.candidates?.filter((c: any) => 
-        c.status === "For AI Interview Review" || c.aiInterviewCompleted
-      ) || [];
-
-      return [
-        { title: "Waiting Interview", candidates: waitingInterview },
-        { title: "For Review", candidates: forReview }
-      ];
-    }
-
-    // Human Interview stage has three sub-sections
-    if (stage === "Human Interview") {
-      const waitingSchedule = stageData.candidates?.filter((c: any) => 
-        c.status === "For Schedule" || !c.humanInterviewScheduled
-      ) || [];
-      const waitingInterview = stageData.candidates?.filter((c: any) => 
-        c.status === "For Human Interview" || (c.humanInterviewScheduled && !c.humanInterviewCompleted)
-      ) || [];
-      const forReview = stageData.candidates?.filter((c: any) => 
-        c.status === "For Human Interview Review" || c.humanInterviewCompleted
-      ) || [];
-
-      return [
-        { title: "Waiting Schedule", candidates: waitingSchedule },
-        { title: "Waiting Interview", candidates: waitingInterview },
-        { title: "For Review", candidates: forReview }
-      ];
-    }
-
-    // Coding Test stage has one sub-section
-    if (stage === "Coding Test") {
-      return [
-        { title: "Coding Test", candidates: stageData.candidates || [] }
-      ];
-    }
-
-    // Job Offer stage has four sub-sections
-    if (stage === "Job Offer") {
-      const forFinalReview = stageData.candidates?.filter((c: any) => 
-        c.status === "For Final Review"
-      ) || [];
-      const waitingForAcceptance = stageData.candidates?.filter((c: any) => 
-        c.status === "Waiting for Acceptance" || c.status === "Offered"
-      ) || [];
-      const forContractSigning = stageData.candidates?.filter((c: any) => 
-        c.status === "For Contract Signing" || c.status === "Accepted"
-      ) || [];
-      const hired = stageData.candidates?.filter((c: any) => 
-        c.status === "Hired" || c.status === "Contract Signed"
-      ) || [];
-
-      return [
-        { title: "For Final Review", candidates: forFinalReview },
-        { title: "Waiting for Acceptance", candidates: waitingForAcceptance },
-        { title: "For Contract Signing", candidates: forContractSigning },
-        { title: "Hired", candidates: hired }
-      ];
-    }
-
-    // Default: single sub-section with all candidates
+    
+    // Fallback to default single sub-section with all candidates
     return [
       { title: stage, candidates: stageData.candidates || [] }
     ];
