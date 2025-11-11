@@ -18,9 +18,14 @@ export default function PipelineCanva({ pipelineStages, setPipelineStages }: Pip
   const [rowHeight, setRowHeight] = useState<number>(360);
   const [customStages, setCustomStages] = useState<{ id: number; animateFrom: 'left' | 'right'; icon: string; title: string; substages: string[] }[]>([]);
   const [draggedStageId, setDraggedStageId] = useState<number | null>(null);
+  const isInitializing = useRef<boolean>(false);
 
   // Initialize custom stages from pipelineStages prop
   useEffect(() => {
+    if (isInitializing.current) return;
+    
+    isInitializing.current = true;
+    
     if (pipelineStages && pipelineStages.length > 0) {
       const customOnly = pipelineStages.filter((stage: any) => !stage.isCore);
       const mapped = customOnly.map((stage: any, index: number) => ({
@@ -35,6 +40,10 @@ export default function PipelineCanva({ pipelineStages, setPipelineStages }: Pip
       // If pipelineStages has exactly 4 stages (the core stages), clear custom stages
       setCustomStages([]);
     }
+    
+    setTimeout(() => {
+      isInitializing.current = false;
+    }, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(pipelineStages)]);
 

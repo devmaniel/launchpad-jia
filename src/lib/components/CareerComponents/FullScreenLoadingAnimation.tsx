@@ -1,16 +1,30 @@
+"use client";
+
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
+
 export default function FullScreenLoadingAnimation({ title, subtext }: { title: string, subtext: string }) {
-    return (
+    
+    // Prevent body scroll when loading overlay is shown
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
+    const loadingContent = (
         <div
         className="modal show fade-in-bottom"
         style={{
           display: "block",
-          background: "rgba(0,0,0,0.45)",
+          background: "rgba(0,0,0,0.65)",
           position: "fixed",
           top: 0,
           left: 0,
           width: "100vw",
           height: "100vh",
-          zIndex: 1100,
+          zIndex: 9999,
         }}
         >
             <div
@@ -28,5 +42,8 @@ export default function FullScreenLoadingAnimation({ title, subtext }: { title: 
               </div>
             </div>
         </div>
-    )
+    );
+
+    // Render loading overlay using portal to document.body
+    return typeof document !== 'undefined' ? createPortal(loadingContent, document.body) : null;
 }

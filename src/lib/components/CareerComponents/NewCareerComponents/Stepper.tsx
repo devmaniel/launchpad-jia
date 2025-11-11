@@ -4,6 +4,8 @@ interface StepperProps {
   currentStep: number;
   errorsByStep?: Record<number, { hasError: boolean; messages?: string[] }>; 
   progressByStep?: Record<number, number>; // 0..1 per step
+  onStepClick?: (stepId: number) => void;
+  furthestStep?: number;
 }
 
 const steps = [
@@ -14,17 +16,10 @@ const steps = [
   { id: 5, label: "Review Career" },
 ];
 
-const Stepper = ({ currentStep, errorsByStep, progressByStep }: StepperProps) => {
-  const stepsOrder = steps.map((s) => s.id);
-  let furthestUnlocked = stepsOrder[stepsOrder.length - 1];
-  for (const s of steps) {
-    const p = Math.max(0, Math.min(1, (progressByStep?.[s.id] ?? 0)));
-    const hasError = !!errorsByStep?.[s.id]?.hasError;
-    if (p < 1 || hasError) {
-      furthestUnlocked = s.id;
-      break;
-    }
-  }
+const Stepper = ({ currentStep, errorsByStep, progressByStep, onStepClick, furthestStep }: StepperProps) => {
+  // Use the explicitly passed furthestStep instead of calculating it
+  // This ensures users can only navigate to steps they've unlocked via "Save and Continue"
+  const furthestUnlocked = furthestStep ?? currentStep;
 
   return (
     <div style={{ width: "100%", maxWidth: "1560px", margin: "0 auto" }}>
@@ -145,9 +140,20 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep }: StepperProps) =>
                     const p = isAllowed ? Math.max(0, Math.min(1, (progressByStep?.[step.id] ?? 0))) : 0;
                     const hasError = !!errorsByStep?.[step.id]?.hasError;
                     const isComplete = p >= 1 && !hasError;
-                    // Don't show gradient if there's an error
+                    // Show error background if there's an error
                     if (hasError) {
-                      return null;
+                      return (
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            top: 0,
+                            bottom: 0,
+                            width: "100%",
+                            background: "#FEE4E2",
+                          }}
+                        />
+                      );
                     }
                     if (isComplete) {
                       return (
@@ -185,6 +191,12 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep }: StepperProps) =>
 
             {/* Labels Row */}
             <span
+              onClick={() => {
+                // Allow clicking on unlocked steps to navigate back
+                if (step.id <= furthestUnlocked && onStepClick) {
+                  onStepClick(step.id);
+                }
+              }}
               style={{
                 marginTop: 6,
                 fontSize: 13,
@@ -196,7 +208,8 @@ const Stepper = ({ currentStep, errorsByStep, progressByStep }: StepperProps) =>
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 maxWidth: "100%",
-                cursor: "default",
+                cursor: step.id <= furthestUnlocked && onStepClick ? "pointer" : "default",
+                userSelect: "none",
               }}
             >
               {step.label}

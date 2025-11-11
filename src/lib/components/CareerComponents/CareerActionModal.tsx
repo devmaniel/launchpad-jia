@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
+
 export default function CareerActionModal({ action, onAction }: { action: string, onAction: (action: string) => void }) {
     
     const actions = {
@@ -20,18 +25,33 @@ export default function CareerActionModal({ action, onAction }: { action: string
             buttonText: "Save as Draft",
         }
     }
-    return (
+
+    // Prevent body scroll when modal is open
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
+    const modalContent = (
         <div
         className="modal show fade-in-bottom"
         style={{
           display: "block",
-          background: "rgba(0,0,0,0.45)",
+          background: "rgba(0,0,0,0.65)",
           position: "fixed",
           top: 0,
           left: 0,
           width: "100vw",
           height: "100vh",
-          zIndex: 1050,
+          zIndex: 9999,
+        }}
+        onClick={(e) => {
+            // Close modal when clicking backdrop
+            if (e.target === e.currentTarget) {
+                onAction("");
+            }
         }}
         >
             <div
@@ -72,5 +92,8 @@ export default function CareerActionModal({ action, onAction }: { action: string
             </div>
             </div>
         </div>
-    )
+    );
+
+    // Render modal using portal to document.body
+    return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null;
 }

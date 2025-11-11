@@ -33,6 +33,7 @@ export default function CareerFormV2({
   const PREFILL_ENABLED = process.env.NEXT_PUBLIC_PREFILL_CAREER_FORM === 'true';
   const storageKey = career?._id ? `careerFormV2:${career._id}` : 'careerFormV2:new';
   const [activeStep, setActiveStep] = useState<number>(currentStep);
+  const [furthestStep, setFurthestStep] = useState<number>(currentStep);
   const { user, orgID } = useAppContext();
   const [jobTitle, setJobTitle] = useState(career?.jobTitle || "");
   const [description, setDescription] = useState(career?.description || "");
@@ -156,6 +157,14 @@ export default function CareerFormV2({
 
   // Track if Step 3 has been visited
   const [step3Visited, setStep3Visited] = useState(false);
+
+  // Handle step click navigation
+  const handleStepClick = (stepId: number) => {
+    // Only allow navigation to steps that have been unlocked (at or before furthest step)
+    if (stepId <= furthestStep) {
+      setActiveStep(stepId);
+    }
+  };
 
   // Ensure current user is present as Job Owner once user context is ready
   useEffect(() => {
@@ -599,7 +608,12 @@ export default function CareerFormV2({
 
     // Move to next step
     if (activeStep < 5) {
-      setActiveStep(activeStep + 1);
+      const nextStep = activeStep + 1;
+      setActiveStep(nextStep);
+      // Update furthest step if we're progressing forward
+      if (nextStep > furthestStep) {
+        setFurthestStep(nextStep);
+      }
     }
   };
 
@@ -1127,6 +1141,7 @@ export default function CareerFormV2({
         isFormValid={isFormValid()}
         isSavingCareer={isSavingCareer}
         activeStep={activeStep}
+        isOnFurthestStep={activeStep === furthestStep}
         onSaveUnpublished={() => {
           if (formType === "add") {
             confirmSaveCareer("inactive");
@@ -1152,6 +1167,8 @@ export default function CareerFormV2({
           currentStep={activeStep}
           progressByStep={stepProgress}
           errorsByStep={stepErrors}
+          onStepClick={handleStepClick}
+          furthestStep={furthestStep}
         />
       </div>
 

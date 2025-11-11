@@ -9,6 +9,7 @@ interface FormHeaderProps {
   onSaveAndContinue?: () => void;
   onCancel?: () => void;
   activeStep?: number;
+  isOnFurthestStep?: boolean;
 }
 
 export default function FormHeader({
@@ -20,6 +21,7 @@ export default function FormHeader({
   onSaveAndContinue,
   onCancel,
   activeStep = 5,
+  isOnFurthestStep = true,
 }: FormHeaderProps) {
   if (formType === "add") {
     return (
@@ -62,16 +64,16 @@ export default function FormHeader({
           </button>
           {activeStep < 5 ? (
             <button
-              disabled={!isFormValid || isSavingCareer}
+              disabled={!isFormValid || isSavingCareer || !isOnFurthestStep}
               style={{
                 width: "fit-content",
-                background: !isFormValid || isSavingCareer ? "#D5D7DA" : "#181D27",
+                background: !isFormValid || isSavingCareer || !isOnFurthestStep ? "#D5D7DA" : "#181D27",
                 border: "none",
                 color: "#fff",
                 padding: "8px 16px",
                 borderRadius: "60px",
                 fontWeight: 500,
-                cursor: !isFormValid || isSavingCareer ? "not-allowed" : "pointer",
+                cursor: !isFormValid || isSavingCareer || !isOnFurthestStep ? "not-allowed" : "pointer",
                 whiteSpace: "nowrap",
                 display: "flex",
                 alignItems: "center",
