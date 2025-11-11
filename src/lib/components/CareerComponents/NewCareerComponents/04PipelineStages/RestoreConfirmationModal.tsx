@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
 export default function RestoreConfirmationModal({ 
   onConfirm, 
   onCancel 
@@ -5,7 +10,16 @@ export default function RestoreConfirmationModal({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <div
       className="modal show fade-in-bottom"
       style={{
@@ -97,6 +111,7 @@ export default function RestoreConfirmationModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

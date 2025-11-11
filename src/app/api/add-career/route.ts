@@ -5,6 +5,19 @@ import { ObjectId } from "mongodb";
 import { getOrganizationPlanInfo, canCreateNewCareer } from "@/lib/utils/organizationPlanUtils";
 import { sanitizeHtml, sanitizeText, sanitizeInput } from "@/lib/utils/sanitize";
 
+/**
+ * Normalize HTML entities to prevent cascading &nbsp; issues
+ * This should be called before sanitizeHtml to clean up contentEditable artifacts
+ */
+const normalizeHtmlEntities = (html: string): string => {
+  if (!html || typeof html !== 'string') return '';
+  return html
+    .replace(/&nbsp;/g, ' ')     // Replace HTML entity
+    .replace(/\u00A0/g, ' ')     // Replace Unicode non-breaking space
+    .replace(/\s+/g, ' ')        // Normalize multiple spaces
+    .trim();
+};
+
 export async function POST(request: Request) {
   try {
     const {
@@ -188,7 +201,7 @@ export async function POST(request: Request) {
       country: sanitizeText(country),
       province: sanitizeText(province),
       employmentType: sanitizeText(employmentType),
-      secretPrompt: sanitizeHtml(secretPrompt || ""),
+      secretPrompt: sanitizeHtml(normalizeHtmlEntities(secretPrompt || "")),
       preScreeningQuestions: preScreeningQuestions || [],
       customQuestions: sanitizedCustomQuestions,
       askingMinSalary: askingMinSalary || "",
@@ -196,7 +209,7 @@ export async function POST(request: Request) {
       askingMinCurrency: sanitizeText(askingMinCurrency || "PHP"),
       askingMaxCurrency: sanitizeText(askingMaxCurrency || "PHP"),
       teamMembers: sanitizedTeamMembers,
-      aiInterviewSecretPrompt: sanitizeHtml(aiInterviewSecretPrompt || ""),
+      aiInterviewSecretPrompt: sanitizeHtml(normalizeHtmlEntities(aiInterviewSecretPrompt || "")),
       aiInterviewScreeningSetting: sanitizeText(aiInterviewScreeningSetting || "Good Fit and above"),
       aiInterviewRequireVideo: aiInterviewRequireVideo !== undefined ? aiInterviewRequireVideo : true,
       aiInterviewQuestions: aiInterviewQuestions || [],

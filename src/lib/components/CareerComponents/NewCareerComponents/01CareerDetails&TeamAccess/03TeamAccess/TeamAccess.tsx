@@ -39,7 +39,7 @@ export default function TeamAccess({
   const combinedList = [...meOption, ...defaultList].filter((m, idx, arr) => arr.findIndex(x => x.email === m.email) === idx);
   return (
     <div className="">
-      <div className="layered-card-middle">
+      <div className="layered-card-middle" style={{ overflow: 'visible' }}>
         <div
           style={{
             display: "flex",
@@ -59,12 +59,13 @@ export default function TeamAccess({
             3. Team Access
           </span>
         </div>
-        <div className="layered-card-content" style={{gap: '16px !important'}}>
+        <div className="layered-card-content" style={{gap: '16px !important', overflow: 'visible'}}>
           <div
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "flex-start",
+              overflow: 'visible',
             }}
           >
             <div style={{ flex: 1 }}>
@@ -88,7 +89,7 @@ export default function TeamAccess({
                 You can add other members to collaborate on this career.
               </span>
             </div>
-            <div >
+            <div style={{ overflow: 'visible' }}>
               <AddMember
                 onSelectMember={(member) => {
                   const isMe = !!user?.email && member.email === user.email;

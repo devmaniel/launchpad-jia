@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
-import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 interface SecretPromptInputProps {
   secretPrompt: string;
@@ -11,9 +10,9 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
   const editorRef = useRef<HTMLDivElement | null>(null);
   const [showPlaceholder, setShowPlaceholder] = useState(true);
 
-  const sanitize = (html: string) => {
+  const escapeHtml = (text: string) => {
     const div = document.createElement('div');
-    div.textContent = html;
+    div.textContent = text;
     return div.innerHTML;
   };
 
@@ -24,13 +23,13 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
     while (i < lines.length) {
       const line = lines[i];
       const ulMatch = /^\s*(?:[-*•])\s+(.+)$/.exec(line);
-      const olMatch = /^\s*(\d+)[\.)]\s+(.+)$/.exec(line);
+      const olMatch = /^\s*(\d+)[\.)\s]+(.+)$/.exec(line);
       if (ulMatch) {
         htmlParts.push('<ul>');
         while (i < lines.length) {
           const m = /^\s*(?:[-*•])\s+(.+)$/.exec(lines[i]);
           if (!m) break;
-          htmlParts.push(`<li>${sanitize(m[1])}</li>`);
+          htmlParts.push(`<li>${escapeHtml(m[1])}</li>`);
           i++;
         }
         htmlParts.push('</ul>');
@@ -39,9 +38,9 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
       if (olMatch) {
         htmlParts.push('<ol>');
         while (i < lines.length) {
-          const m = /^\s*(\d+)[\.)]\s+(.+)$/.exec(lines[i]);
+          const m = /^\s*(\d+)[\.)\s]+(.+)$/.exec(lines[i]);
           if (!m) break;
-          htmlParts.push(`<li>${sanitize(m[2])}</li>`);
+          htmlParts.push(`<li>${escapeHtml(m[2])}</li>`);
           i++;
         }
         htmlParts.push('</ol>');
@@ -50,7 +49,7 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
       if (line.trim().length === 0) {
         htmlParts.push('<br>');
       } else {
-        htmlParts.push(`<p>${sanitize(line)}</p>`);
+        htmlParts.push(`<p>${escapeHtml(line)}</p>`);
       }
       i++;
     }
@@ -67,8 +66,13 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
   const cleanHtml = (html: string): string => {
     if (typeof window === 'undefined') return html;
     
+    // First normalize &nbsp; entities to regular spaces
+    let cleaned = html
+      .replace(/&nbsp;/g, ' ')     // Replace HTML entity
+      .replace(/\u00A0/g, ' ');    // Replace Unicode non-breaking space
+    
     const container = document.createElement('div');
-    container.innerHTML = html;
+    container.innerHTML = cleaned;
     
     // Remove empty paragraphs and paragraphs with only whitespace
     const paragraphs = container.querySelectorAll('p');
@@ -80,7 +84,7 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
     });
     
     // Remove trailing <br> tags
-    let cleaned = container.innerHTML;
+    cleaned = container.innerHTML;
     cleaned = cleaned.replace(/(<br\s*\/?>)+$/gi, '');
     
     // Remove leading/trailing whitespace from the entire HTML
@@ -93,9 +97,8 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
     const el = editorRef.current;
     if (!el) return;
     const html = cleanHtml(el.innerHTML);
-    // Apply XSS sanitization before saving
-    const sanitized = sanitizeHtml(html);
-    setSecretPrompt(sanitized);
+    // Pass raw HTML to parent - sanitization will happen at API layer
+    setSecretPrompt(html);
     const has = hasContent(el);
     el.setAttribute('data-has-content', String(has));
     setShowPlaceholder(!has);
@@ -104,9 +107,9 @@ const SecretPromptInput = ({ secretPrompt, setSecretPrompt, placeholder = "Enter
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     const text = e.clipboardData.getData('text/plain');
-    // Sanitize pasted text to prevent XSS
-    const sanitized = sanitize(text);
-    document.execCommand('insertHTML', false, sanitized);
+    // Insert as plain text, escaping HTML to prevent script injection
+    const escaped = escapeHtml(text);
+    document.execCommand('insertHTML', false, escaped);
     // after paste, recompute placeholder visibility
     const el = editorRef.current;
     if (el) {

@@ -295,6 +295,11 @@ export default function CareerFormV2({
         if (typeof data.careerInfoTouched === 'boolean') setCareerInfoTouched(data.careerInfoTouched);
         if (typeof data.teamAccessTouched === 'boolean') setTeamAccessTouched(data.teamAccessTouched);
         if (data.fieldTouched && typeof data.fieldTouched === 'object') setFieldTouched(data.fieldTouched);
+        if (typeof data.aiInterviewSecretPrompt === 'string') setAiInterviewSecretPrompt(data.aiInterviewSecretPrompt);
+        if (typeof data.aiInterviewScreeningSetting === 'string') setAiInterviewScreeningSetting(data.aiInterviewScreeningSetting);
+        if (typeof data.aiInterviewRequireVideo === 'boolean') setAiInterviewRequireVideo(data.aiInterviewRequireVideo);
+        if (Array.isArray(data.aiInterviewQuestions)) setAiInterviewQuestions(data.aiInterviewQuestions);
+        if (typeof data.aiQuestionsCount === 'number') setAiQuestionsCount(data.aiQuestionsCount);
 
         baselineRef.current = {
           jobTitle: data.jobTitle ?? '',
@@ -320,6 +325,11 @@ export default function CareerFormV2({
           askingMaxSalary: data.askingMaxSalary ?? (data.maximumSalary ?? ''),
           askingMinCurrency: data.askingMinCurrency ?? (data.minimumSalaryCurrency ?? 'PHP'),
           askingMaxCurrency: data.askingMaxCurrency ?? (data.maximumSalaryCurrency ?? 'PHP'),
+          aiInterviewSecretPrompt: data.aiInterviewSecretPrompt ?? '',
+          aiInterviewScreeningSetting: data.aiInterviewScreeningSetting ?? 'Good Fit and above',
+          aiInterviewRequireVideo: typeof data.aiInterviewRequireVideo === 'boolean' ? data.aiInterviewRequireVideo : false,
+          aiInterviewQuestions: Array.isArray(data.aiInterviewQuestions) ? data.aiInterviewQuestions : [],
+          aiQuestionsCount: typeof data.aiQuestionsCount === 'number' ? data.aiQuestionsCount : 0,
         };
       }
       else {
@@ -347,6 +357,11 @@ export default function CareerFormV2({
           askingMaxSalary,
           askingMinCurrency,
           askingMaxCurrency,
+          aiInterviewSecretPrompt,
+          aiInterviewScreeningSetting,
+          aiInterviewRequireVideo,
+          aiInterviewQuestions,
+          aiQuestionsCount,
         };
       }
     } catch {}
@@ -663,11 +678,11 @@ export default function CareerFormV2({
     console.log('Team Members:', teamMembers);
     console.log('Pipeline Stages:', pipelineStages);
     
-    // Sanitize all user-provided text fields before saving to database
+    // Pass custom questions as-is - API will sanitize
     const sanitizedCustomQuestions = customQuestions.map((q: CustomQuestion) => ({
       ...q,
-      question: sanitizeInput(q.question || ''),
-      options: Array.isArray(q.options) ? q.options.map(o => sanitizeInput(o || '')) : q.options,
+      question: q.question || '',
+      options: Array.isArray(q.options) ? q.options.map(o => o || '') : q.options,
     }));
 
     const sanitizedTeamMembers = teamMembers.map((member: any) => ({
@@ -707,7 +722,7 @@ export default function CareerFormV2({
       province: sanitizeText(province),
       location: sanitizeText(city),
       employmentType: sanitizeText(employmentType),
-      secretPrompt: sanitizeHtml(secretPrompt),
+      secretPrompt: secretPrompt,
       preScreeningQuestions,
       customQuestions: sanitizedCustomQuestions,
       askingMinSalary,
@@ -715,7 +730,7 @@ export default function CareerFormV2({
       askingMinCurrency: sanitizeText(askingMinCurrency),
       askingMaxCurrency: sanitizeText(askingMaxCurrency),
       teamMembers: sanitizedTeamMembers,
-      aiInterviewSecretPrompt: sanitizeHtml(aiInterviewSecretPrompt),
+      aiInterviewSecretPrompt: aiInterviewSecretPrompt,
       aiInterviewScreeningSetting: sanitizeText(aiInterviewScreeningSetting),
       aiInterviewRequireVideo,
       aiInterviewQuestions,
@@ -829,11 +844,11 @@ export default function CareerFormV2({
       console.log('Team Members:', teamMembers);
       console.log('Pipeline Stages:', pipelineStages);
       
-      // Sanitize all user-provided text fields before saving to database
+      // Pass custom questions as-is - API will sanitize
       const sanitizedCustomQuestions = customQuestions.map((q: CustomQuestion) => ({
         ...q,
-        question: sanitizeInput(q.question || ''),
-        options: Array.isArray(q.options) ? q.options.map(o => sanitizeInput(o || '')) : q.options,
+        question: q.question || '',
+        options: Array.isArray(q.options) ? q.options.map(o => o || '') : q.options,
       }));
 
       const sanitizedTeamMembers = teamMembers.map((member: any) => ({
@@ -873,7 +888,7 @@ export default function CareerFormV2({
         location: sanitizeText(city),
         status,
         employmentType: sanitizeText(employmentType),
-        secretPrompt: sanitizeHtml(secretPrompt),
+        secretPrompt: secretPrompt,
         preScreeningQuestions,
         customQuestions: sanitizedCustomQuestions,
         askingMinSalary,
@@ -881,7 +896,7 @@ export default function CareerFormV2({
         askingMinCurrency: sanitizeText(askingMinCurrency),
         askingMaxCurrency: sanitizeText(askingMaxCurrency),
         teamMembers: sanitizedTeamMembers,
-        aiInterviewSecretPrompt: sanitizeHtml(aiInterviewSecretPrompt),
+        aiInterviewSecretPrompt: aiInterviewSecretPrompt,
         aiInterviewScreeningSetting: sanitizeText(aiInterviewScreeningSetting),
         aiInterviewRequireVideo,
         aiInterviewQuestions,
@@ -1129,10 +1144,15 @@ export default function CareerFormV2({
         askingMaxSalary,
         askingMinCurrency,
         askingMaxCurrency,
+        aiInterviewSecretPrompt,
+        aiInterviewScreeningSetting,
+        aiInterviewRequireVideo,
+        aiInterviewQuestions,
+        aiQuestionsCount,
       } as any;
       sessionStorage.setItem(storageKey, JSON.stringify(data));
     } catch {}
-  }, [jobTitle, description, workSetup, workSetupRemarks, screeningSetting, employmentType, requireVideo, salaryNegotiable, minimumSalary, maximumSalary, minimumSalaryCurrency, maximumSalaryCurrency, country, province, city, teamMembers, secretPrompt, preScreeningQuestions, customQuestions, descriptionTouched, careerInfoTouched, teamAccessTouched, fieldTouched, activeStep, storageKey, askingMinSalary, askingMaxSalary, askingMinCurrency, askingMaxCurrency]);
+  }, [jobTitle, description, workSetup, workSetupRemarks, screeningSetting, employmentType, requireVideo, salaryNegotiable, minimumSalary, maximumSalary, minimumSalaryCurrency, maximumSalaryCurrency, country, province, city, teamMembers, secretPrompt, preScreeningQuestions, customQuestions, descriptionTouched, careerInfoTouched, teamAccessTouched, fieldTouched, activeStep, storageKey, askingMinSalary, askingMaxSalary, askingMinCurrency, askingMaxCurrency, aiInterviewSecretPrompt, aiInterviewScreeningSetting, aiInterviewRequireVideo, aiInterviewQuestions, aiQuestionsCount]);
 
   return (
     <div className="col" style={{ marginBottom: "35px" }}>
@@ -1330,6 +1350,7 @@ export default function CareerFormV2({
           jobDescription={description}
           employmentType={employmentType}
           workSetup={workSetup}
+          initialQuestions={aiInterviewQuestions}
         />
       )}
 

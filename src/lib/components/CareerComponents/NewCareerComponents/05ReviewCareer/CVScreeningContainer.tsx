@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import { Question } from "../02CVReview&Pre-screening/PreScreeningQuestions/types";
 import { CustomQuestion } from "../02CVReview&Pre-screening/customQuestionTypes";
-import { sanitizeHtml, sanitizeText } from "@/lib/utils/sanitize";
 
 type CVScreeningContainerProps = {
   screeningSetting: string;
@@ -88,7 +87,7 @@ const CVScreeningContainer = ({
   };
   
   const hasContent = (secretPrompt || "").trim().length > 0;
-  const displayHtml = hasContent ? sanitizeHtml(convertParagraphsToLists(secretPrompt)) : '';
+  const displayHtml = hasContent ? convertParagraphsToLists(secretPrompt) : '';
 
   const fmtMoney = (val: string) => {
     const empty = val === undefined || val === null || (typeof val === 'string' && val.trim() === '');
@@ -220,7 +219,7 @@ const CVScreeningContainer = ({
                   fontWeight: 700,
                 }}
               >
-                {sanitizeText(ratingLabel)}
+                {ratingLabel}
               </span>{" "}
               and above
             </p>
@@ -286,7 +285,7 @@ const CVScreeningContainer = ({
                   return (
                     <div key={q.id || i}>
                       <p style={{ marginBottom: 4, fontSize: 16, fontWeight: 400, color: "#414651" }}>
-                        {i + 1}. {sanitizeText(questionText)}
+                        {i + 1}. {questionText}
                         {answerTypeLabel && <span style={{ color: "#6B7280", fontSize: 14 }}> ({answerTypeLabel})</span>}
                       </p>
                       {q.answerType === 'dropdown' ? (
@@ -294,7 +293,7 @@ const CVScreeningContainer = ({
                           <ul style={{ marginBottom: 0, paddingLeft: 18 }}>
                             {q.options.map((o, j) => (
                               <li key={j} style={{ fontSize: 16, color: "#414651", marginBottom: 4, fontWeight: 400 }}>
-                                {sanitizeText(o || `Option ${j + 1}`)}
+                                {o || `Option ${j + 1}`}
                               </li>
                             ))}
                           </ul>
@@ -306,7 +305,7 @@ const CVScreeningContainer = ({
                               <div key={j} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                 <Image src="/temp/checkbox-svgrepo-com.svg" alt="checkbox" width={16} height={16} />
                                 <span style={{ fontSize: 16, color: "#414651", fontWeight: 400 }}>
-                                  {sanitizeText(o || `Option ${j + 1}`)}
+                                  {o || `Option ${j + 1}`}
                                 </span>
                               </div>
                             ))}
@@ -328,7 +327,7 @@ const CVScreeningContainer = ({
                   return (
                     <div key={q.id || i}>
                       <p style={{ marginBottom: 4, fontSize: 16, fontWeight: 400, color: "#414651" }}>
-                        {offset + i + 1}. {sanitizeText(questionText)}
+                        {offset + i + 1}. {questionText}
                       </p>
                       {opts.length > 0 && (
                         <ul style={{ marginBottom: 0, paddingLeft: 18 }}>

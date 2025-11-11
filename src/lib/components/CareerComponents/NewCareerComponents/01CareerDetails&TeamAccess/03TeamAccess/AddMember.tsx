@@ -92,10 +92,11 @@ export default function AddMember({
           width: "360px",
           position: "absolute",
           maxHeight: "320px",
-          display: "flex",
+          display: dropdownOpen ? "flex" : "none",
           flexDirection: "column",
           border: "1px solid #D5D7DA",
           borderTop: "none",
+          zIndex: 1000,
         }}
       >
         {/* Search Input */}

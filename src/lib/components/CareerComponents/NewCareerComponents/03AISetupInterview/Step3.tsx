@@ -18,6 +18,7 @@ type AISetupInterviewPageProps = {
   jobDescription?: string;
   employmentType?: string;
   workSetup?: string;
+  initialQuestions?: any[];
 };
 
 const AISetupInterviewPage: React.FC<AISetupInterviewPageProps> = ({ 
@@ -33,6 +34,7 @@ const AISetupInterviewPage: React.FC<AISetupInterviewPageProps> = ({
   jobDescription,
   employmentType,
   workSetup,
+  initialQuestions,
 }) => {
   return (
     <div
@@ -69,6 +71,7 @@ const AISetupInterviewPage: React.FC<AISetupInterviewPageProps> = ({
             jobDescription={jobDescription}
             employmentType={employmentType}
             workSetup={workSetup}
+            initialQuestions={initialQuestions}
           />
         </div>
 

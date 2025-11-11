@@ -12,6 +12,7 @@ export interface AIInterviewQuestionsProps {
   jobDescription?: string;
   employmentType?: string;
   workSetup?: string;
+  initialQuestions?: any[];
 }
 
 const AIInterviewQuestions: React.FC<AIInterviewQuestionsProps> = ({ 
@@ -21,6 +22,7 @@ const AIInterviewQuestions: React.FC<AIInterviewQuestionsProps> = ({
   jobDescription = "",
   employmentType = "",
   workSetup = "",
+  initialQuestions = [],
 }) => {
   type Group = {
     id: number;
@@ -65,38 +67,46 @@ const AIInterviewQuestions: React.FC<AIInterviewQuestionsProps> = ({
     });
   };
 
-  const [groups, setGroups] = useState<Group[]>([
-    {
-      id: 1,
-      title: "CV Validation / Experience",
-      questions: [],
-      numToAsk: null,
-    },
-    {
-      id: 2,
-      title: "Technical",
-      questions: [],
-      numToAsk: null,
-    },
-    {
-      id: 3,
-      title: "Behavioral",
-      questions: [],
-      numToAsk: null,
-    },
-    {
-      id: 4,
-      title: "Analytical",
-      questions: [],
-      numToAsk: null,
-    },
-    {
-      id: 5,
-      title: "Others",
-      questions: [],
-      numToAsk: null,
-    },
-  ]);
+  // Initialize groups from initialQuestions if available, otherwise use empty groups
+  const getInitialGroups = (): Group[] => {
+    if (initialQuestions && initialQuestions.length > 0) {
+      return initialQuestions as Group[];
+    }
+    return [
+      {
+        id: 1,
+        title: "CV Validation / Experience",
+        questions: [],
+        numToAsk: null,
+      },
+      {
+        id: 2,
+        title: "Technical",
+        questions: [],
+        numToAsk: null,
+      },
+      {
+        id: 3,
+        title: "Behavioral",
+        questions: [],
+        numToAsk: null,
+      },
+      {
+        id: 4,
+        title: "Analytical",
+        questions: [],
+        numToAsk: null,
+      },
+      {
+        id: 5,
+        title: "Others",
+        questions: [],
+        numToAsk: null,
+      },
+    ];
+  };
+
+  const [groups, setGroups] = useState<Group[]>(getInitialGroups());
 
   const totalCount = useMemo(
     () => groups.reduce((sum, g) => sum + g.questions.length, 0),
