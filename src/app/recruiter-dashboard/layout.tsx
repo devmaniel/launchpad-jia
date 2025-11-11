@@ -26,11 +26,11 @@ export default function Layout({ children }) {
       icon: "/temp/sidebar/candidates.svg",
     },
     { label: "To Do", href: "/recruiter-dashboard/to-do", icon: "/temp/sidebar/todo.svg" },
-    // {
-    //   label: "Inbox",
-    //   href: "/recruiter-dashboard/inbox",
-    //   icon: "/temp/sidebar/mail_outline.svg",
-    // },
+    {
+      label: "Inbox",
+      href: "/recruiter-dashboard/inbox",
+      icon: "/temp/sidebar/mail_outline.svg",
+    },
   ];
 
   const footerNavItems = [
