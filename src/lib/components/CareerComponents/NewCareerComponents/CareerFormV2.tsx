@@ -237,10 +237,11 @@ export default function CareerFormV2({
         setStepProgress(prev => ({ ...prev, 1: progress }));
       }
     } else if (activeStep === 2) {
-      // Step 2 auto-completes if screeningSetting has initial value
-      const step2HasInitial = (screeningSetting || '').trim().length > 0;
-      const progress = step2HasInitial ? 1 : 0;
-      setStepProgress(prev => ({ ...prev, 2: progress }));
+      // Step 2 is optional - don't auto-complete, only mark complete after Save and Continue
+      // Keep progress at 0 unless already marked complete (via Save and Continue)
+      if (stepProgress[2] < 1) {
+        setStepProgress(prev => ({ ...prev, 2: 0 }));
+      }
     } else if (activeStep === 3) {
       const progress = calculateStep3Progress();
       // Only update if not already complete (< 1)
@@ -978,6 +979,18 @@ export default function CareerFormV2({
     setErrors((prev) => ({ ...prev, jobTitle: (jobTitle || "").trim().length === 0 }));
   };
 
+  const handleProvinceBlur = () => {
+    setCareerInfoTouched(true);
+    setFieldTouched((prev) => ({ ...prev, province: true }));
+    setErrors((prev) => ({ ...prev, province: (province || "").trim().length === 0 }));
+  };
+
+  const handleCityBlur = () => {
+    setCareerInfoTouched(true);
+    setFieldTouched((prev) => ({ ...prev, city: true }));
+    setErrors((prev) => ({ ...prev, city: (city || "").trim().length === 0 }));
+  };
+
   const descriptionStripped = (description || "")
     .replace(/<br\s*\/?>/gi, "")
     .replace(/&nbsp;/g, " ")
@@ -1174,6 +1187,8 @@ export default function CareerFormV2({
           provinceList={provinceList}
           cityList={cityList}
           setCityList={setCityList}
+          onProvinceBlur={handleProvinceBlur}
+          onCityBlur={handleCityBlur}
           salaryNegotiable={salaryNegotiable}
           setSalaryNegotiable={(val: boolean) => {
             setSalaryNegotiable(val);

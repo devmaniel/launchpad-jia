@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 /**
  * API to generate AI interview questions based on job details
+ * Uses GPT-3.5-turbo with fallback to Gemini if it fails
  */
 export async function POST(request: Request) {
   try {
@@ -55,22 +57,58 @@ ${count === 1 ? '["Question text here"]' : '["Question 1 text", "Question 2 text
 
 DO NOT include any markdown formatting, explanations, or additional text. Return only the JSON array.`;
 
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    let result: string | null = null;
+    let usedModel = "";
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      temperature: 0.7,
-    });
+    // Try OpenAI GPT-3.5-turbo first
+    if (process.env.OPENAI_API_KEY) {
+      try {
+        console.log("Attempting to use OpenAI GPT-3.5-turbo...");
+        const openai = new OpenAI({
+          apiKey: process.env.OPENAI_API_KEY,
+        });
 
-    let result = completion.choices[0].message.content;
+        const completion = await openai.chat.completions.create({
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+          temperature: 0.7,
+        });
+
+        result = completion.choices[0].message.content;
+        usedModel = "gpt-3.5-turbo";
+        console.log("Successfully generated with OpenAI");
+      } catch (openaiError) {
+        console.error("OpenAI failed:", openaiError);
+        console.log("Falling back to Gemini...");
+      }
+    }
+
+    // Fallback to Gemini if OpenAI failed or no API key
+    if (!result && process.env.GEMINI_API_KEY) {
+      try {
+        console.log("Attempting to use Gemini...");
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const geminiResult = await model.generateContent(prompt);
+        const response = await geminiResult.response;
+        result = response.text();
+        usedModel = "gemini-2.5-flash";
+        console.log("Successfully generated with Gemini");
+      } catch (geminiError) {
+        console.error("Gemini failed:", geminiError);
+        throw new Error("Both OpenAI and Gemini failed to generate questions");
+      }
+    }
+
+    if (!result) {
+      throw new Error("No AI API keys configured. Please set OPENAI_API_KEY or GEMINI_API_KEY");
+    }
 
     // Clean up the response
     result = result.replace(/```json/g, '').replace(/```/g, '').trim();
@@ -86,6 +124,7 @@ DO NOT include any markdown formatting, explanations, or additional text. Return
         success: true,
         questions,
         category,
+        usedModel, // Include which model was used
       });
     } catch (parseError) {
       console.error("Failed to parse AI response:", parseError);

@@ -52,6 +52,7 @@ export function sanitizeText(text: string): string {
 
 /**
  * Sanitize user input fields to prevent XSS in form inputs
+ * Preserves whitespace as it's needed for normal text input
  * @param input - The input string to sanitize
  * @returns Sanitized input string
  */
@@ -66,9 +67,6 @@ export function sanitizeInput(input: string): string {
   // Remove script-related content
   sanitized = sanitized.replace(/javascript:/gi, '');
   sanitized = sanitized.replace(/on\w+\s*=/gi, '');
-  
-  // Trim whitespace
-  sanitized = sanitized.trim();
   
   return sanitized;
 }

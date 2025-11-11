@@ -1,12 +1,41 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function CustomDropdown(props) {
-    const { onSelectSetting, screeningSetting, settingList, placeholder, containerStyle, hasError } = props;
+    const { onSelectSetting, screeningSetting, settingList, placeholder, containerStyle, hasError, onBlur } = props;
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [wasTouched, setWasTouched] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Handle click outside to close dropdown and trigger blur
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        if (dropdownOpen) {
+          setDropdownOpen(false);
+          // Trigger blur validation if dropdown was opened but no value selected
+          if (wasTouched && !screeningSetting && onBlur) {
+            onBlur();
+          }
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen, wasTouched, screeningSetting, onBlur]);
+
+  const handleDropdownToggle = () => {
+    setDropdownOpen((v) => !v);
+    if (!dropdownOpen) {
+      setWasTouched(true);
+    }
+  };
 
   return (
-        <div className="dropdown w-100" style={{ ...containerStyle, position: "relative" }}>
+        <div ref={dropdownRef} className="dropdown w-100" style={{ ...containerStyle, position: "relative" }}>
           <button
             disabled={settingList.length === 0}
             className="dropdown-btn"
@@ -17,7 +46,7 @@ export default function CustomDropdown(props) {
               borderColor: hasError ? "#FDA29B !important" : undefined,
             } as React.CSSProperties}
             type="button"
-            onClick={() => setDropdownOpen((v) => !v)}
+            onClick={handleDropdownToggle}
           >
             <span style={{ color: screeningSetting ? "#333" : "#717680" }}>
               <i

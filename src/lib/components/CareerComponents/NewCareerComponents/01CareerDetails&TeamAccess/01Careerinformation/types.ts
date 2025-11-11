@@ -15,6 +15,8 @@ export interface CareerInformationProps {
   provinceList: any[];
   cityList: any[];
   setCityList: (value: any[]) => void;
+  onProvinceBlur?: () => void;
+  onCityBlur?: () => void;
   salaryNegotiable: boolean;
   setSalaryNegotiable: (value: boolean) => void;
   minimumSalary: string;
@@ -68,6 +70,8 @@ export interface LocationProps {
   provinceList: any[];
   cityList: any[];
   setCityList: (value: any[]) => void;
+  onProvinceBlur?: () => void;
+  onCityBlur?: () => void;
   errors?: {
     province?: boolean;
     city?: boolean;

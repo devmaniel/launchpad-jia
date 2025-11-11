@@ -23,6 +23,8 @@ export default function CareerInformation({
   provinceList,
   cityList,
   setCityList,
+  onProvinceBlur,
+  onCityBlur,
   salaryNegotiable,
   setSalaryNegotiable,
   minimumSalary,
@@ -85,6 +87,8 @@ export default function CareerInformation({
             provinceList={provinceList}
             cityList={cityList}
             setCityList={setCityList}
+            onProvinceBlur={onProvinceBlur}
+            onCityBlur={onCityBlur}
             errors={errors}
           />
 

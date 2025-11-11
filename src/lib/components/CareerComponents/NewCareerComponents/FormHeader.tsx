@@ -65,7 +65,7 @@ export default function FormHeader({
               disabled={!isFormValid || isSavingCareer}
               style={{
                 width: "fit-content",
-                background: "#181D27",
+                background: !isFormValid || isSavingCareer ? "#D5D7DA" : "#181D27",
                 border: "none",
                 color: "#fff",
                 padding: "8px 16px",

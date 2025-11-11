@@ -14,6 +14,8 @@ export default function LocationSection({
   provinceList,
   cityList,
   setCityList,
+  onProvinceBlur,
+  onCityBlur,
   errors,
 }: LocationProps) {
   const handleProvinceChange = (selectedProvince: string) => {
@@ -71,6 +73,7 @@ export default function LocationSection({
             placeholder="Choose state / province"
             containerStyle={{ marginTop: 6 }}
             hasError={errors?.province}
+            onBlur={onProvinceBlur}
           />
           {errors?.province && (
             <span style={{ color: "#F04438", fontSize: "14px", marginTop: "6px", display: "block" }}>
@@ -90,6 +93,7 @@ export default function LocationSection({
             placeholder="Choose city"
             containerStyle={{ marginTop: 6 }}
             hasError={errors?.city}
+            onBlur={onCityBlur}
           />
           {errors?.city && (
             <span style={{ color: "#F04438", fontSize: "14px", marginTop: "6px", display: "block" }}>

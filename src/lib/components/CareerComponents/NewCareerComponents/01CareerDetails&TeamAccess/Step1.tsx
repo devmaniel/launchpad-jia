@@ -35,6 +35,8 @@ interface Step1Props {
   description: string;
   setDescription: (value: string) => void;
   onJobTitleBlur?: () => void;
+  onProvinceBlur?: () => void;
+  onCityBlur?: () => void;
   descriptionError?: boolean;
   onDescriptionBlur?: () => void;
   onMinimumSalaryBlur?: () => void;
@@ -82,6 +84,8 @@ const Step1 = ({
   description,
   setDescription,
   onJobTitleBlur,
+  onProvinceBlur,
+  onCityBlur,
   descriptionError,
   onDescriptionBlur,
   onMinimumSalaryBlur,
@@ -132,6 +136,8 @@ const Step1 = ({
             provinceList={provinceList}
             cityList={cityList}
             setCityList={setCityList}
+            onProvinceBlur={onProvinceBlur}
+            onCityBlur={onCityBlur}
             salaryNegotiable={salaryNegotiable}
             setSalaryNegotiable={setSalaryNegotiable}
             minimumSalary={minimumSalary}
