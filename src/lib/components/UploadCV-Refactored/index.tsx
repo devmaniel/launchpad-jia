@@ -23,3 +23,7 @@ export type {
 
 // Export constants
 export { CV_SECTIONS, STEPS, STEP_STATUS } from "./constants";
+
+// Export mock utilities
+export { getMockDataByFileName } from "./mock/mockData";
+export type { MockCVData } from "./mock/mockData";

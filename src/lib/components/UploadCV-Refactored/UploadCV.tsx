@@ -21,6 +21,7 @@ import { CVScreeningLoader } from "./components/CVScreeningLoader";
 import { CVResultDisplay } from "./components/CVResultDisplay";
 import { PreScreeningQuestionsForm } from "./components/PreScreeningQuestionsForm";
 import { JobDescriptionModal } from "./components/JobDescriptionModal";
+import { getMockDataByFileName } from "./mock/mockData";
 import styles from "./styles/UploadCV.module.scss";
 
 export default function UploadCV() {
@@ -28,6 +29,7 @@ export default function UploadCV() {
   const [preScreeningAnswers, setPreScreeningAnswers] = React.useState<Record<string, string>>({});
   const [isSubmittingPreScreening, setIsSubmittingPreScreening] = React.useState(false);
   const [showJobDescriptionModal, setShowJobDescriptionModal] = React.useState(false);
+  const uploadedFileNameRef = React.useRef<string>("");
 
   // Mockup checkbox question for testing
   const mockupCheckboxQuestion = {
@@ -92,22 +94,13 @@ export default function UploadCV() {
 
   const handleFileSelected = (selectedFile: File) => {
     setFile(selectedFile);
+    uploadedFileNameRef.current = selectedFile.name; // Store file name for later use
     startBuildingCV();
     
-    // Mock: Wait 5 seconds then build CV with mock data
+    // Mock: Wait 5 seconds then build CV with mock data based on file name
     setTimeout(() => {
-      const mockUserCV = {
-        Introduction: "**Senior Software Engineer** with 6+ years of experience specializing in **Java** and **Spring Boot** backend development.",
-        "Current Position": "**Senior Backend Engineer** at TechCorp Solutions (2021 - Present)",
-        "Contact Info": "alex.chen@email.com | +1 (555) 123-4567 | San Francisco, CA",
-        Skills: "Java, Spring Boot, Spring Security, Microservices, RESTful APIs, OAuth2, AWS, Docker, Kubernetes",
-        Experience: "6+ years in backend development, microservices architecture, and cloud-native applications",
-        Education: "Bachelor of Science in Computer Science - University of California, Berkeley (2014-2018)",
-        Projects: "Open Source API Gateway, E-Commerce Microservices Platform, Healthcare API Integration System",
-        Certifications: "AWS Certified Solutions Architect, Oracle Java SE 11 Developer, Spring Professional, CKAD",
-        Awards: "Excellence in Engineering Award (2023), Best API Design (2022)",
-      };
-      handleCVBuilt("", mockUserCV);
+      const mockData = getMockDataByFileName(selectedFile.name);
+      handleCVBuilt("", mockData.userCV);
     }, 5000);
   };
 
@@ -130,15 +123,88 @@ export default function UploadCV() {
   const handlePreScreeningSubmit = async (answers: Record<string, string>) => {
     setPreScreeningAnswers(answers);
     setIsSubmittingPreScreening(true);
-    // Mock: Wait 5 seconds then show Good Fit result
-    setTimeout(() => {
-      const mockScreeningResult = {
-        status: "For AI Interview",
-        applicationStatus: "Ongoing" as const,
+    
+    try {
+      // Step 3: Post the complete application data to create timeline entry
+      const mockData = getMockDataByFileName(uploadedFileNameRef.current);
+      
+      // Determine jobFit based on mock data screening result
+      let jobFit = "Maybe Fit"; // Default for "For Review" status
+      if (mockData.screeningResult.status === "For AI Interview") {
+        jobFit = "Strong Fit";
+      } else if (mockData.screeningResult.applicationStatus === "Dropped") {
+        jobFit = "Bad Fit";
+      }
+      
+      // Create application entry for timeline
+      const applicationData = {
+        interviewData: {
+          _id: interview?.interviewID,
+          interviewID: interview?.interviewID,
+          name: user?.name || "Test User",
+          email: user?.email || "test@example.com",
+          id: interview?.interviewID, // Career ID for timeline grouping
+        },
+        email: user?.email || "test@example.com",
+        body: {
+          currentStep: "CV Screening",
+          status: mockData.screeningResult.status === "For AI Interview" ? "For AI Interview" : "For CV Screening", 
+          cvStatus: jobFit,
+          jobFit: jobFit,
+          cvFile: true,
+          cvScreeningReason: `AI assessment based on uploaded CV: ${uploadedFileNameRef.current}`,
+          applicationStatus: mockData.screeningResult.applicationStatus,
+          preScreeningAnswers: answers,
+          createdAt: new Date().toISOString(),
+          updatedAt: Date.now(),
+          applicationMetadata: {
+            updatedAt: Date.now(),
+            updatedBy: {
+              image: "/jia-avatar.png",
+              name: "JIA",
+              email: "jia@system.com"
+            },
+            action: "Assessed"
+          }
+        },
+        interviewTransaction: {
+          interviewUID: interview?.interviewID,
+          fromStage: "Application Submitted",
+          toStage: "CV Screening",
+          action: "Assessed",
+          updatedBy: {
+            image: "/jia-avatar.png",
+            name: "JIA",
+            email: "jia@system.com"
+          }
+        }
       };
-      handleScreeningComplete(mockScreeningResult);
-      setIsSubmittingPreScreening(false);
-    }, 5000);
+
+      console.log("📤 Posting application data to timeline:", applicationData);
+      
+      // Post to manage-application API to create timeline entry
+      await fetch("/api/whitecloak/manage-application", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(applicationData),
+      });
+
+      // Mock: Wait 5 seconds then show result
+      setTimeout(() => {
+        handleScreeningComplete(mockData.screeningResult);
+        setIsSubmittingPreScreening(false);
+      }, 5000);
+    } catch (error) {
+      console.error("Error posting application data:", error);
+      // Fallback to mock behavior
+      setTimeout(() => {
+        const mockData = getMockDataByFileName(uploadedFileNameRef.current);
+        handleScreeningComplete(mockData.screeningResult);
+        setIsSubmittingPreScreening(false);
+      }, 5000);
+    }
   };
 
   const handleContinueFromStep2 = async () => {

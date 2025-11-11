@@ -36,6 +36,34 @@ export default function CareerStageColumnV2({
   const getSubSections = (stage: string, stageData: any) => {
     console.log(`  🔍 Getting substages for "${stage}":`, stageData.substages);
     
+    // Special handling for CV Screening to properly split Waiting Submission vs For Review
+    if (stage === "CV Screening" && stageData.substages && stageData.substages.length >= 2) {
+      const candidates = stageData.candidates || [];
+      const waitingCandidates = candidates.filter((c: any) => {
+        const cvStatus = (c?.cvStatus || "").toLowerCase();
+        const hasCVFile = !!c?.cvFile || !!c?.fileInfo;
+        return cvStatus === "waiting for submission".toLowerCase() || (!cvStatus && !hasCVFile);
+      });
+      const reviewCandidates = candidates.filter((c: any) => {
+        const status = (c?.status || "").toLowerCase();
+        const cvStatus = (c?.cvStatus || "").toLowerCase();
+        const appStatus = (c?.applicationStatus || "").toLowerCase();
+        const hasAssessment = cvStatus && cvStatus !== "waiting for submission".toLowerCase() && cvStatus !== "n/a";
+        const inReview = !!c?.inReview || !!c?.completed || status.includes("review") || status.includes("cv screening") || status.includes("ai interview");
+        return appStatus !== "dropped" && (hasAssessment || inReview);
+      });
+      return stageData.substages.map((substage: string) => {
+        const key = substage.toLowerCase();
+        if (key.includes("waiting") || key.includes("pending")) {
+          return { title: substage, candidates: waitingCandidates };
+        }
+        if (key.includes("review")) {
+          return { title: substage, candidates: reviewCandidates };
+        }
+        return { title: substage, candidates: [] };
+      });
+    }
+    
     // If substages are defined in the data, use them
     if (stageData.substages && stageData.substages.length > 0) {
       // For stages with single substage, show all candidates in one group

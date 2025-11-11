@@ -683,6 +683,17 @@ export default function CareerFormV2({
       ...q,
       question: q.question || '',
       options: Array.isArray(q.options) ? q.options.map(o => o || '') : q.options,
+      minValue: q.minValue || undefined,
+      maxValue: q.maxValue || undefined,
+    }));
+
+    // Ensure pre-screening questions include their options and answerType
+    const sanitizedPreScreeningQuestions = preScreeningQuestions.map((q: any) => ({
+      ...q,
+      options: Array.isArray(q.options) ? q.options.map((o: string) => o || '') : q.options,
+      answerType: q.answerType || undefined,
+      minValue: q.minValue || undefined,
+      maxValue: q.maxValue || undefined,
     }));
 
     const sanitizedTeamMembers = teamMembers.map((member: any) => ({
@@ -723,7 +734,7 @@ export default function CareerFormV2({
       location: sanitizeText(city),
       employmentType: sanitizeText(employmentType),
       secretPrompt: secretPrompt,
-      preScreeningQuestions,
+      preScreeningQuestions: sanitizedPreScreeningQuestions,
       customQuestions: sanitizedCustomQuestions,
       askingMinSalary,
       askingMaxSalary,
@@ -849,6 +860,17 @@ export default function CareerFormV2({
         ...q,
         question: q.question || '',
         options: Array.isArray(q.options) ? q.options.map(o => o || '') : q.options,
+        minValue: q.minValue || undefined,
+        maxValue: q.maxValue || undefined,
+      }));
+
+      // Ensure pre-screening questions include their options and answerType
+      const sanitizedPreScreeningQuestions = preScreeningQuestions.map((q: any) => ({
+        ...q,
+        options: Array.isArray(q.options) ? q.options.map((o: string) => o || '') : q.options,
+        answerType: q.answerType || undefined,
+        minValue: q.minValue || undefined,
+        maxValue: q.maxValue || undefined,
       }));
 
       const sanitizedTeamMembers = teamMembers.map((member: any) => ({
@@ -889,7 +911,7 @@ export default function CareerFormV2({
         status,
         employmentType: sanitizeText(employmentType),
         secretPrompt: secretPrompt,
-        preScreeningQuestions,
+        preScreeningQuestions: sanitizedPreScreeningQuestions,
         customQuestions: sanitizedCustomQuestions,
         askingMinSalary,
         askingMaxSalary,

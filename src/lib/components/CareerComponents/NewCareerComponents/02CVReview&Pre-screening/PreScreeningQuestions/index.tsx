@@ -82,10 +82,26 @@ const PreScreeningQuestions = ({
   const addSuggestion = (q: Question) => {
     setPreScreeningQuestions((prev) => {
       if (prev.some((x) => x.id === q.id)) return prev;
-      return [...prev, q];
+      // Initialize with default options and answerType for dropdown questions
+      const questionWithDefaults: Question = {
+        ...q,
+        answerType: q.id === 'notice-period' || q.id === 'work-setup' ? 'dropdown' : q.answerType,
+        options: q.options || (q.id === 'notice-period' 
+          ? ['Immediately', '< 30 days', '> 30 days']
+          : q.id === 'work-setup'
+          ? ['At most 1-2x a week', 'At most 3-4x a week', 'Open to fully onsite work', 'Only open to fully remote work']
+          : []),
+      };
+      return [...prev, questionWithDefaults];
     });
     // Add to top of order
     setQuestionOrder(prev => [q.id, ...prev.filter(id => id !== q.id)]);
+  };
+
+  const updateQuestionOptions = (id: string, options: string[]) => {
+    setPreScreeningQuestions((prev) => 
+      prev.map((q) => q.id === id ? { ...q, options } : q)
+    );
   };
 
   const addCustom = () => {
@@ -249,10 +265,18 @@ const PreScreeningQuestions = ({
                   ) : (
                     <>
                       {item.data.id === 'notice-period' && (
-                        <NoticePeriodCard onDelete={() => setPreScreeningQuestions((prev) => prev.filter((x) => x.id !== 'notice-period'))} />
+                        <NoticePeriodCard 
+                          onDelete={() => setPreScreeningQuestions((prev) => prev.filter((x) => x.id !== 'notice-period'))}
+                          options={item.data.options}
+                          onOptionsChange={(options) => updateQuestionOptions('notice-period', options)}
+                        />
                       )}
                       {item.data.id === 'work-setup' && (
-                        <WorkSetupCard onDelete={() => setPreScreeningQuestions((prev) => prev.filter((x) => x.id !== 'work-setup'))} />
+                        <WorkSetupCard 
+                          onDelete={() => setPreScreeningQuestions((prev) => prev.filter((x) => x.id !== 'work-setup'))}
+                          options={item.data.options}
+                          onOptionsChange={(options) => updateQuestionOptions('work-setup', options)}
+                        />
                       )}
                       {item.data.id === 'asking-salary' && (
                         <AskingSalaryCard

@@ -75,8 +75,10 @@ export async function signInWithGoogle(type) {
 
       const host = window.location.host;
 
+      // Only block applicants from accessing the admin/employer portal (admin.hirejia.ai)
+      // Allow applicants to access localhost and regular hirejia.ai for job seeking
       if (
-        (host.includes("localhost") || host.includes("hirejia.ai")) &&
+        host.startsWith("admin.hirejia.ai") &&
         res.data.role == "applicant"
       ) {
         Swal.fire({
@@ -99,9 +101,7 @@ export async function signInWithGoogle(type) {
           if (result.isConfirmed) {
             Swal.close();
           } else if (result.dismiss === Swal.DismissReason.cancel) {
-            window.location.href = host.includes("localhost")
-              ? "/job-portal"
-              : "https://www.hellojia.ai";
+            window.location.href = "https://www.hellojia.ai";
           }
         });
 

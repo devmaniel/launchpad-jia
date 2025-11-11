@@ -5,25 +5,48 @@ import AddQuestionTextFieldInput from '../AddQuestionTextFieldInput';
 import AddOptionButton from '../AddOptionButton';
 import DeleteQuestionButton from '../DeleteQuestionButton';
 
-const WorkSetupCard: React.FC<{ onDelete?: () => void }> = ({ onDelete }) => {
+interface WorkSetupCardProps {
+  onDelete?: () => void;
+  options?: string[];
+  onOptionsChange?: (options: string[]) => void;
+}
+
+const WorkSetupCard: React.FC<WorkSetupCardProps> = ({ 
+  onDelete,
+  options: externalOptions,
+  onOptionsChange
+}) => {
   const [selectedType, setSelectedType] = React.useState<string>('dropdown');
-  const [options, setOptions] = React.useState<string[]>([
+  const defaultOptions = [
     'At most 1-2x a week',
     'At most 3-4x a week',
     'Open to fully onsite work',
     'Only open to fully remote work',
-  ]);
+  ];
+  const [localOptions, setLocalOptions] = React.useState<string[]>(externalOptions || defaultOptions);
+
+  // Sync with external options when they change
+  React.useEffect(() => {
+    if (externalOptions) {
+      setLocalOptions(externalOptions);
+    }
+  }, [externalOptions]);
+
+  const updateOptions = (newOptions: string[]) => {
+    setLocalOptions(newOptions);
+    onOptionsChange?.(newOptions);
+  };
 
   const addOption = () => {
-    setOptions((prev) => [...prev, ``]);
+    updateOptions([...localOptions, '']);
   };
 
   const updateOption = (idx: number, val: string) => {
-    setOptions((prev) => prev.map((o, i) => (i === idx ? val : o)));
+    updateOptions(localOptions.map((o, i) => (i === idx ? val : o)));
   };
 
   const deleteOption = (idx: number) => {
-    setOptions((prev) => prev.filter((_, i) => i !== idx));
+    updateOptions(localOptions.filter((_, i) => i !== idx));
   };
   return (
     <div style={{ position: 'relative',overflow: 'hidden', border: '1px solid #E5E7EB', borderRadius: 12, background: '#fff', display: 'flex', flexDirection: 'column' }}>
@@ -46,7 +69,7 @@ const WorkSetupCard: React.FC<{ onDelete?: () => void }> = ({ onDelete }) => {
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', columnGap: 8 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {options.map((opt, idx) => (
+            {localOptions.map((opt, idx) => (
               <AddQuestionTextFieldInput
                 key={idx}
                 index={idx + 1}

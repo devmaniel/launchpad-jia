@@ -55,6 +55,7 @@ export interface UserCV {
 export interface ScreeningResult {
   applicationStatus: "Dropped" | "Ongoing" | "Accepted";
   status: "For AI Interview" | "For Review" | string;
+  jobFit?: "Strong Fit" | "Good Fit" | "Maybe Fit" | "Bad Fit" | "No Fit";
 }
 
 export interface CVData {
