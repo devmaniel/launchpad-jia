@@ -854,7 +854,6 @@ export default function ManageCareerPage() {
             {/* Application Timeline - Full width for canvas scaling */}
             {activeTab === "application-timeline" && (
               <div style={{ width: "100%", padding: "20px 20px", marginBottom: 10 }}>
-                {console.log("🎨 Rendering with timeline stages:", timelineStages)}
                 <CareerStageColumnV2 
                   timelineStages={timelineStages} 
                   handleCandidateMenuOpen={handleCandidateMenuOpen} 
