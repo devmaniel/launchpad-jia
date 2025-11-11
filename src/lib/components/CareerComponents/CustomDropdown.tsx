@@ -38,12 +38,10 @@ export default function CustomDropdown(props) {
         <div ref={dropdownRef} className="dropdown w-100" style={{ ...containerStyle, position: "relative" }}>
           <button
             disabled={settingList.length === 0}
-            className="dropdown-btn"
+            className={`dropdown-btn${hasError ? ' error-dropdown' : ''}`}
             style={{ 
               width: "100%", 
               textTransform: "capitalize",
-              border: hasError ? "1px solid #FDA29B !important" : undefined,
-              borderColor: hasError ? "#FDA29B !important" : undefined,
             } as React.CSSProperties}
             type="button"
             onClick={handleDropdownToggle}
@@ -114,6 +112,14 @@ export default function CustomDropdown(props) {
               </div>
             ))}
           </div>
+          <style jsx>{`
+            .error-dropdown,
+            .error-dropdown:focus,
+            .error-dropdown:hover {
+              border: 1px solid #FDA29B !important;
+              box-shadow: none !important;
+            }
+          `}</style>
         </div>
   );
 }

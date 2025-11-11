@@ -7,8 +7,10 @@ import { workSetupOptions, employmentTypeOptions } from "./constants";
 export default function WorkSettingSection({
   employmentType,
   setEmploymentType,
+  onEmploymentTypeBlur,
   workSetup,
   setWorkSetup,
+  onWorkSetupBlur,
   errors,
 }: WorkSettingProps) {
   return (
@@ -41,6 +43,7 @@ export default function WorkSettingSection({
             placeholder="Choose employment type"
             containerStyle={{ marginTop: 6 }}
             hasError={errors?.employmentType}
+            onBlur={onEmploymentTypeBlur}
           />
           {errors?.employmentType && (
             <span style={{ color: "#F04438", fontSize: "14px", marginTop: "6px", display: "block" }}>
@@ -60,6 +63,7 @@ export default function WorkSettingSection({
             placeholder="Choose work arrangement"
             containerStyle={{ marginTop: 6 }}
             hasError={errors?.workSetup}
+            onBlur={onWorkSetupBlur}
           />
           {errors?.workSetup && (
             <span style={{ color: "#F04438", fontSize: "14px", marginTop: "6px", display: "block" }}>

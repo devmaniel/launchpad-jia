@@ -991,6 +991,18 @@ export default function CareerFormV2({
     setErrors((prev) => ({ ...prev, city: (city || "").trim().length === 0 }));
   };
 
+  const handleEmploymentTypeBlur = () => {
+    setCareerInfoTouched(true);
+    setFieldTouched((prev) => ({ ...prev, employmentType: true }));
+    setErrors((prev) => ({ ...prev, employmentType: (employmentType || "").trim().length === 0 }));
+  };
+
+  const handleWorkSetupBlur = () => {
+    setCareerInfoTouched(true);
+    setFieldTouched((prev) => ({ ...prev, workSetup: true }));
+    setErrors((prev) => ({ ...prev, workSetup: (workSetup || "").trim().length === 0 }));
+  };
+
   const descriptionStripped = (description || "")
     .replace(/<br\s*\/?>/gi, "")
     .replace(/&nbsp;/g, " ")
@@ -1161,15 +1173,23 @@ export default function CareerFormV2({
             setEmploymentType(val);
             setCareerInfoTouched(true);
             setFieldTouched((prev) => ({ ...prev, employmentType: true }));
-            setErrors((prev) => ({ ...prev, employmentType: !(val && val.trim().length > 0) }));
+            // Clear error if value is provided, set error if empty
+            if (val && val.trim().length > 0) {
+              setErrors((prev) => ({ ...prev, employmentType: false }));
+            }
           }}
+          onEmploymentTypeBlur={handleEmploymentTypeBlur}
           workSetup={workSetup}
           setWorkSetup={(val: string) => {
             setWorkSetup(val);
             setCareerInfoTouched(true);
             setFieldTouched((prev) => ({ ...prev, workSetup: true }));
-            setErrors((prev) => ({ ...prev, workSetup: !(val && val.trim().length > 0) }));
+            // Clear error if value is provided, set error if empty
+            if (val && val.trim().length > 0) {
+              setErrors((prev) => ({ ...prev, workSetup: false }));
+            }
           }}
+          onWorkSetupBlur={handleWorkSetupBlur}
           country={country}
           setCountry={setCountry}
           province={province}
@@ -1177,12 +1197,20 @@ export default function CareerFormV2({
             setProvince(val);
             setCareerInfoTouched(true);
             setFieldTouched((prev) => ({ ...prev, province: true }));
+            // Clear error if value is provided
+            if (val && val.trim().length > 0) {
+              setErrors((prev) => ({ ...prev, province: false }));
+            }
           }}
           city={city}
           setCity={(val: string) => {
             setCity(val);
             setCareerInfoTouched(true);
             setFieldTouched((prev) => ({ ...prev, city: true }));
+            // Clear error if value is provided
+            if (val && val.trim().length > 0) {
+              setErrors((prev) => ({ ...prev, city: false }));
+            }
           }}
           provinceList={provinceList}
           cityList={cityList}

@@ -12,8 +12,10 @@ export default function CareerInformation({
   onJobTitleBlur,
   employmentType,
   setEmploymentType,
+  onEmploymentTypeBlur,
   workSetup,
   setWorkSetup,
+  onWorkSetupBlur,
   country,
   setCountry,
   province,
@@ -72,8 +74,10 @@ export default function CareerInformation({
           <WorkSettingSection
             employmentType={employmentType}
             setEmploymentType={setEmploymentType}
+            onEmploymentTypeBlur={onEmploymentTypeBlur}
             workSetup={workSetup}
             setWorkSetup={setWorkSetup}
+            onWorkSetupBlur={onWorkSetupBlur}
             errors={errors}
           />
 

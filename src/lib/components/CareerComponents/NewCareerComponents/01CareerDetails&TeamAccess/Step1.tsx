@@ -11,8 +11,10 @@ interface Step1Props {
   setJobTitle: (value: string) => void;
   employmentType: string;
   setEmploymentType: (value: string) => void;
+  onEmploymentTypeBlur?: () => void;
   workSetup: string;
   setWorkSetup: (value: string) => void;
+  onWorkSetupBlur?: () => void;
   country: string;
   setCountry: (value: string) => void;
   province: string;
@@ -60,8 +62,10 @@ const Step1 = ({
   setJobTitle,
   employmentType,
   setEmploymentType,
+  onEmploymentTypeBlur,
   workSetup,
   setWorkSetup,
+  onWorkSetupBlur,
   country,
   setCountry,
   province,
@@ -125,8 +129,10 @@ const Step1 = ({
             setJobTitle={setJobTitle}
             employmentType={employmentType}
             setEmploymentType={setEmploymentType}
+            onEmploymentTypeBlur={onEmploymentTypeBlur}
             workSetup={workSetup}
             setWorkSetup={setWorkSetup}
+            onWorkSetupBlur={onWorkSetupBlur}
             country={country}
             setCountry={setCountry}
             province={province}

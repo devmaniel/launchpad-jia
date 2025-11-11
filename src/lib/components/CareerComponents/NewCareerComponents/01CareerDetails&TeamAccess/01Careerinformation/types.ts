@@ -4,8 +4,10 @@ export interface CareerInformationProps {
   onJobTitleBlur?: () => void;
   employmentType: string;
   setEmploymentType: (value: string) => void;
+  onEmploymentTypeBlur?: () => void;
   workSetup: string;
   setWorkSetup: (value: string) => void;
+  onWorkSetupBlur?: () => void;
   country: string;
   setCountry: (value: string) => void;
   province: string;
@@ -52,8 +54,10 @@ export interface BasicInformationProps {
 export interface WorkSettingProps {
   employmentType: string;
   setEmploymentType: (value: string) => void;
+  onEmploymentTypeBlur?: () => void;
   workSetup: string;
   setWorkSetup: (value: string) => void;
+  onWorkSetupBlur?: () => void;
   errors?: {
     employmentType?: boolean;
     workSetup?: boolean;

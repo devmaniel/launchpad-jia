@@ -12,7 +12,6 @@ interface GenerateQuestionResponse {
   success: boolean;
   questions: string[];
   category: string;
-  usedModel?: string;
   error?: string;
 }
 
