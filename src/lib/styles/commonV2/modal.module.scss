@@ -8,6 +8,10 @@
   position: fixed;
   top: 0;
   z-index: 4;
+  &:has(.jobDescription) {
+    justify-content: flex-end;
+    align-items: stretch;
+  }
   .modalContent {
     width: 100%;
     max-width: 420px;
@@ -84,9 +88,16 @@
       }
     }
     &.jobDescription {
-      height: 50%;
+      height: 100%;
       max-width: 620px;
+      width: 100%;
       padding: 0;
+      position: fixed;
+      right: 0;
+      top: 0;
+      border-radius: 24px 0 0 0;
+      animation: slideInRight 0.3s ease-out;
+      overflow-x: hidden;
       .gradientContainer {
         height: 100%;
         width: 100%;
@@ -97,7 +108,7 @@
           #ebacc9 65.85%,
           #fccec0 100%
         );
-        border-radius: 24px;
+        border-radius: 24px 0 0 0;
         box-sizing: border-box;
         padding: 8px 0 0 0;
         .jobDetailsContainer {
@@ -105,23 +116,36 @@
           width: 100%;
           background: #ffffff;
           border: 1px solid var(--Neutral-200, #ebebf5);
-          border-radius: 24px;
+          border-radius: 24px 0 0 0;
           box-sizing: border-box;
           display: flex;
           flex-direction: column;
-          overflow-y: scroll;
+          overflow-y: auto;
+          overflow-x: hidden;
           padding: 32px;
           position: relative;
+          word-wrap: break-word;
+          word-break: break-word;
+          .xIcon {
+            cursor: pointer;
+            position: absolute;
+            right: 32px;
+            top: 32px;
+            z-index: 10;
+          }
           .titleContainer {
             align-items: center;
             display: flex;
             gap: 12px;
+            max-width: 100%;
             span {
               margin: 0 auto 0 0;
               font-weight: 700;
               font-size: 24px;
               line-height: 32px;
               color: #181d27;
+              word-wrap: break-word;
+              word-break: break-word;
             }
           }
           .companyName {
@@ -130,6 +154,8 @@
             font-size: 14px;
             line-height: 100%;
             color: var(--Colors-Neutral-Gray-600, #474b69);
+            max-width: 100%;
+            word-wrap: break-word;
           }
           .details {
             align-items: center;
@@ -140,12 +166,15 @@
             font-size: 14px;
             line-height: 20px;
             color: var(--Text-text-tertiary, #717680);
+            max-width: 100%;
+            word-wrap: break-word;
             &.withMargin {
               margin: 12px 0 0 0;
             }
           }
           .tagContainer {
             margin: 16px 0 0 0;
+            max-width: 100%;
             span {
               background: #f4f4f5;
               border-radius: 24px;
@@ -164,6 +193,10 @@
           }
           p {
             white-space: pre-wrap;
+            word-wrap: break-word;
+            word-break: break-word;
+            max-width: 100%;
+            overflow-wrap: break-word;
           }
           button {
             width: fit-content;
@@ -397,4 +430,13 @@
   box-sizing: border-box;
   border-radius: 24px;
   padding: 24px;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }

@@ -1,0 +1,364 @@
+.modalOverlay {
+  position: fixed;
+  top: 80px; // Start below header
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;
+}
+
+.modalSidebar {
+  width: 100%;
+  max-width: 620px;
+  height: 100%;
+  background: transparent;
+  border-radius: 24px 0 0 0;
+  overflow-x: hidden;
+  animation: slideInRight 0.3s ease-out;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+}
+
+.gradientContainer {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    270deg,
+    #9fcaed -0.44%,
+    #ceb6da 32.7%,
+    #ebacc9 65.85%,
+    #fccec0 100%
+  );
+  border-radius: 24px 0 0 0;
+  box-sizing: border-box;
+  padding: 8px 0 0 0;
+}
+
+.jobDetailsContainer {
+  height: 100%;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--Neutral-200, #ebebf5);
+  border-radius: 24px 0 0 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 32px;
+  position: relative;
+  word-wrap: break-word;
+  word-break: break-word;
+
+  .titleContainer {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    max-width: 100%;
+    position: relative;
+
+    span {
+      margin: 0 auto 0 0;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 32px;
+      color: #181d27;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+
+    img {
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+  }
+
+  .dropdownContainer {
+    background: #ffffff;
+    border: 1px solid #e9eaeb;
+    border-radius: 12px;
+    box-shadow: 0px 4px 6px -2px #0a0d1208, 0px 12px 16px -4px #0a0d1214;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    outline: none;
+    position: absolute;
+    right: 32px;
+    top: 70px;
+    z-index: 20;
+
+    span {
+      box-sizing: border-box;
+      cursor: pointer;
+      padding: 10px 24px;
+      transition: 0.3s;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--Schemes-Secondary, #625b71);
+      white-space: nowrap;
+
+      &:hover {
+        background: var(--BG---gray, #f9fbfc);
+      }
+
+      &:active {
+        background: #ffffff;
+      }
+    }
+  }
+
+  .companyName {
+    margin: 4px 0 0 0;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
+    color: var(--Colors-Neutral-Gray-600, #474b69);
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+
+  .details {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    margin: 8px 0 0 0;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--Text-text-tertiary, #717680);
+    max-width: 100%;
+    word-wrap: break-word;
+
+    img {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    &.withMargin {
+      margin: 12px 0 0 0;
+    }
+  }
+
+  .tagContainer {
+    margin: 16px 0 0 0;
+    max-width: 100%;
+
+    span {
+      background: #f4f4f5;
+      border-radius: 24px;
+      box-sizing: border-box;
+      padding: 6px 9px;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 16px;
+      color: #6a6a6a;
+    }
+  }
+
+  hr {
+    width: 100%;
+    border: 1px solid var(--Neutral-200, #ebebf5);
+    margin: 20px 0;
+  }
+
+  .jobDescription {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #414651;
+    font-weight: 400;
+    line-height: 1.6;
+    word-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
+    overflow-wrap: break-word;
+
+    // Reset unwanted spacing from HTML content
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    p {
+      margin-bottom: 12px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ul, ol {
+      margin-bottom: 12px;
+      padding-left: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: #181D27;
+    }
+
+    strong, b {
+      font-weight: 600;
+    }
+  }
+
+  .aboutCompanySection {
+    margin-top: 0;
+  }
+
+  .aboutCompanyTitle {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    color: #1a1a1a;
+    margin: 0 0 24px 0;
+  }
+
+  .companyInfoContainer {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .companyLogoLarge {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    box-sizing: border-box;
+    object-fit: contain;
+    flex-shrink: 0;
+    background: #ffffff;
+    padding: 8px;
+  }
+
+  .companyLogoFallback {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    box-sizing: border-box;
+    background: #f3f4f6;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      font-weight: 600;
+      font-size: 24px;
+      color: #9ca3af;
+    }
+  }
+
+  .companyInfoDetails {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .companyName {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    color: #1a1a1a;
+    margin: 0;
+  }
+
+  .companyLocation {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .companyDescription {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: #4b5563;
+    margin: 8px 0 0 0;
+  }
+
+  .learnMorePillButton {
+    width: fit-content;
+    margin-top: 16px;
+    padding: 10px 20px;
+    background: transparent;
+    border: 1.5px solid #d1d5db;
+    border-radius: 60px;
+    color: #1a1a1a;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+
+    &:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+    }
+
+    &:active {
+      background: #f3f4f6;
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .closeButton {
+    width: fit-content;
+    align-self: flex-end;
+    margin: 24px 0 0 0;
+    padding: 10px 27.5px;
+    background: var(--Button-bg-primary, #181d27);
+    border: 1px solid var(--Button-border-primary, #d5d7da);
+    border-radius: 8px;
+    color: var(--Button-text-primary, #ffffff);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:active {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

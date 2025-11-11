@@ -418,6 +418,53 @@
         p {
           white-space: pre-wrap;
         }
+        .jobDescription {
+          margin-top: 0;
+          margin-bottom: 12px;
+          font-size: 16px;
+          color: #414651;
+          font-weight: 400;
+          line-height: 1.6;
+          word-wrap: break-word;
+          word-break: break-word;
+          max-width: 100%;
+          overflow-wrap: break-word;
+
+          // Reset unwanted spacing from HTML content
+          * {
+            margin: 0;
+            padding: 0;
+          }
+
+          p {
+            margin-bottom: 12px;
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          ul, ol {
+            margin-bottom: 12px;
+            padding-left: 24px;
+          }
+
+          li {
+            margin-bottom: 8px;
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          h1, h2, h3, h4, h5, h6 {
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #181D27;
+          }
+
+          strong, b {
+            font-weight: 600;
+          }
+        }
         .footerTitle {
           font-weight: 700;
           font-size: 20px;

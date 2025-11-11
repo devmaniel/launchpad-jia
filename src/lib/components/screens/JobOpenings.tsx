@@ -7,6 +7,7 @@ import styles from "@/lib/styles/screens/jobOpenings.module.scss";
 import { useAppContext } from "@/lib/context/ContextV2";
 import { assetConstants, pathConstants } from "@/lib/utils/constantsV2";
 import { processDate } from "@/lib/utils/helpersV2";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 import axios from "axios";
 import Fuse from "fuse.js";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -888,9 +889,9 @@ export default function () {
 
               <hr />
 
-              <p
+              <div
                 className={styles.jobDescription}
-                dangerouslySetInnerHTML={{ __html: selectedCareer.description }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(selectedCareer.description || "") }}
               />
 
               {selectedCareer.organization && (
@@ -922,7 +923,7 @@ export default function () {
                       )}
 
                       {selectedCareer.organization.name.includes(
-                        "White Cloak"
+                        "Acme"
                       ) && (
                         <>
                           <span

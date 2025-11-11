@@ -526,6 +526,12 @@ export default function ({ modalType, setModalType }) {
         <div className={`${styles.modalContent} ${styles[modalType]}`}>
           <div className={styles.gradientContainer}>
             <div className={styles.jobDetailsContainer}>
+              <img
+                alt="x"
+                className={styles.xIcon}
+                src={assetConstants.x}
+                onClick={handleClose}
+              />
               {applicationData.jobTitle && (
                 <div className={styles.titleContainer}>
                   <span>{applicationData.jobTitle}</span>

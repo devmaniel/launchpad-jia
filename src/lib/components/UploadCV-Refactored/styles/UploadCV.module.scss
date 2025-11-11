@@ -1,0 +1,50 @@
+.uploadCVContainer {
+  width: 100%;
+  max-width: 855px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  justify-self: center;
+  padding: 48px 16px 40px 16px;
+  margin: 0 auto;
+
+  .buttonGroup {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 8px;
+
+    .continueButton {
+      padding: 14px 40px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      color: var(--Button-text-primary, #ffffff);
+      background: var(--Button-bg-primary, #181D27);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .buttonIcon {
+        width: 20px;
+        height: 20px;
+      }
+
+      &:disabled {
+        background: var(--Button-bg-disabled, #d5d7da);
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .uploadCVContainer {
+    max-width: unset;
+    padding: 48px 16px;
+  }
+}

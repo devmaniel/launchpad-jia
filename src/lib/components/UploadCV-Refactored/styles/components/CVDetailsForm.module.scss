@@ -1,0 +1,114 @@
+.cvDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .gradient {
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(159, 202, 237, 0.5) 0%,
+      rgba(206, 182, 218, 0.5) 34%,
+      rgba(235, 172, 201, 0.5) 67%,
+      rgba(252, 206, 192, 0.5) 100%
+    );
+    border-radius: 24px;
+    box-sizing: border-box;
+    padding: 8px 0 0 0;
+
+    .cvDetailsCard {
+      background: var(--Surface-dashboard-bg_light, #f8f9fc);
+      border-radius: 24px;
+      box-shadow: 0px 4px 6px -2px #0a0d1208, 0px 12px 16px -4px #0a0d1214;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px 8px 8px 8px;
+
+      .sectionTitle {
+        align-items: center;
+        display: flex;
+        gap: 12px;
+        margin: 0 12px;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 28px;
+        color: var(--Text-text-primary, #181d27);
+
+        img {
+          width: 24px;
+          height: 24px;
+        }
+
+        .editIcon {
+          $size: 36px;
+          height: $size;
+          width: $size;
+          align-items: center;
+          background: var(--Button-bg-secondary, #ffffff);
+          border: 1px solid var(--Button-border-primary, #d5d7da);
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          margin: 0 0 0 auto;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: var(--Button-bg-secondary-hover, #f8f9fc);
+            border-color: var(--Button-border-secondary, #a4a7ae);
+          }
+
+          &:active {
+            transform: scale(0.95);
+          }
+
+          img {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+
+      .detailsContainer {
+        background: var(--Surface-white, #ffffff);
+        border-radius: 16px;
+        box-shadow: 0px 0px 2px 0px #00103529 inset;
+        box-sizing: border-box;
+        padding: 24px;
+
+        .fileTitle {
+          align-items: center;
+          display: flex;
+          gap: 12px;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          color: var(--Text-text-secondary, #414651);
+
+          img {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+    }
+  }
+
+  .submitButton {
+    align-self: flex-end;
+    margin: 32px 0 0 0;
+    padding: 10px 48.5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cvDetailsContainer {
+    .submitButton {
+      width: 100%;
+      align-self: unset;
+      padding: 10px 0;
+    }
+  }
+}

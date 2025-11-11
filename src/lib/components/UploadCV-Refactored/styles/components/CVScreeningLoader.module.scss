@@ -1,0 +1,29 @@
+.cvScreeningContainer {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 0;
+
+  img {
+    height: 89.6px;
+    width: 114px;
+    object-fit: cover;
+  }
+
+  .title {
+    margin: 12px 0 4px 0;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    color: var(--Text-text-secondary, #414651);
+  }
+
+  .description {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: var(--Text-text-tertiary, #717680);
+  }
+}

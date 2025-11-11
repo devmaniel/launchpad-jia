@@ -1,0 +1,69 @@
+.uploadCVHeader {
+  display: flex;
+  gap: 32px;
+
+  img {
+    $size: 116px;
+    height: $size;
+    width: $size;
+    border-radius: 10px;
+    border: 1px solid #6a6a6a80;
+    object-fit: cover;
+  }
+
+  .textContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .tag,
+    .name {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .tag {
+      color: var(--Text-text-secondary, #414651);
+    }
+
+    .title {
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 32px;
+      color: var(--Text-text-primary, #181d27);
+    }
+
+    .name {
+      color: var(--Text-text-tertiary, #717680);
+    }
+
+    .description {
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+      text-decoration: underline;
+      color: var(--Text-text-tertiary, #717680);
+
+      &:hover {
+        color: var(--Text-text-secondary, #414651);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .uploadCVHeader {
+    box-sizing: border-box;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 8px;
+
+    img {
+      $size: 48px;
+      height: $size;
+      width: $size;
+    }
+  }
+}

@@ -355,7 +355,7 @@ export default function () {
       {loading && <Loader loaderData={""} loaderType={""} />}
 
       {interview && (
-        <div className={styles.uploadCVContainer}>
+        <div className={styles.uploadCVContainer} style={{margin: "0 auto"}}>
           <div className={styles.uploadCVHeader}>
             {interview.organization && interview.organization.image && (
               <img alt="" src={interview.organization.image} />
