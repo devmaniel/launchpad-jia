@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import HeaderBar from "@/lib/PageComponent/HeaderBar";
-import CareerFormV2 from "@/lib/components/CareerComponents/NewCareerComponents/CareerFormV2";
+import CareerFormV2 from "@/lib/components/CareerComponents/NewCareerComponents/CareerFormV2_REFACTORED";
 import { useSearchParams } from "next/navigation";
 import { headerConfig } from "@/app/recruiter-dashboard/headerConfig";
 
