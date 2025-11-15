@@ -19,10 +19,16 @@ export default function PipelineCanva({ pipelineStages, setPipelineStages }: Pip
   const [customStages, setCustomStages] = useState<{ id: number; animateFrom: 'left' | 'right'; icon: string; title: string; substages: string[] }[]>([]);
   const [draggedStageId, setDraggedStageId] = useState<number | null>(null);
   const isInitializing = useRef<boolean>(false);
+  const lastSyncedPipelineRef = useRef<string>('');
 
   // Initialize custom stages from pipelineStages prop
   useEffect(() => {
     if (isInitializing.current) return;
+    
+    const pipelineStr = JSON.stringify(pipelineStages);
+    
+    // Skip if this is the same pipeline we just synced
+    if (pipelineStr === lastSyncedPipelineRef.current) return;
     
     isInitializing.current = true;
     
@@ -61,7 +67,7 @@ export default function PipelineCanva({ pipelineStages, setPipelineStages }: Pip
 
   // Sync custom stages back to pipelineStages
   useEffect(() => {
-    if (!setPipelineStages) return;
+    if (!setPipelineStages || isInitializing.current) return;
 
     const coreStages = [
       {
@@ -103,7 +109,13 @@ export default function PipelineCanva({ pipelineStages, setPipelineStages }: Pip
     ];
 
     const allStages = [...coreStages, ...customStagesData, ...endStages];
-    setPipelineStages(allStages);
+    const allStagesStr = JSON.stringify(allStages);
+    
+    // Only update if the pipeline has actually changed
+    if (allStagesStr !== lastSyncedPipelineRef.current) {
+      lastSyncedPipelineRef.current = allStagesStr;
+      setPipelineStages(allStages);
+    }
   }, [customStages, setPipelineStages]);
 
   const handleAddCustomStage = (position: 'left' | 'right') => {

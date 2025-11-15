@@ -81,6 +81,53 @@ export function useCareerFormEffects(
     formState.aiQuestionsCount,
   ]);
 
+  // Validate Step 1 and update stepErrors dynamically
+  useEffect(() => {
+    const step1Validation = validation.validateStep1({
+      jobTitle: formState.jobTitle,
+      description: formState.description,
+      employmentType: formState.employmentType,
+      workSetup: formState.workSetup,
+      province: formState.province,
+      city: formState.city,
+      salaryNegotiable: formState.salaryNegotiable,
+      minimumSalary: formState.minimumSalary,
+      maximumSalary: formState.maximumSalary,
+      teamMembers: formState.teamMembers,
+    });
+
+    // Only show errors if any field has been touched
+    const anyFieldTouched = 
+      validation.fieldTouched.jobTitle ||
+      validation.fieldTouched.description ||
+      validation.fieldTouched.employmentType ||
+      validation.fieldTouched.workSetup ||
+      validation.fieldTouched.province ||
+      validation.fieldTouched.city ||
+      validation.fieldTouched.minimumSalary ||
+      validation.fieldTouched.maximumSalary;
+
+    validation.setStepErrors((prev: any) => ({
+      ...prev,
+      1: {
+        hasError: anyFieldTouched && !step1Validation.isValid,
+        messages: step1Validation.errors,
+      }
+    }));
+  }, [
+    formState.jobTitle,
+    formState.description,
+    formState.employmentType,
+    formState.workSetup,
+    formState.province,
+    formState.city,
+    formState.salaryNegotiable,
+    formState.minimumSalary,
+    formState.maximumSalary,
+    formState.teamMembers,
+    validation.fieldTouched,
+  ]);
+
   // Validate Step 3 and update stepErrors (only after Step 3 has been visited)
   useEffect(() => {
     // Only show errors if user has visited Step 3
@@ -95,4 +142,13 @@ export function useCareerFormEffects(
       }));
     }
   }, [formState.aiQuestionsCount, formState.step3Visited]);
+
+  // Validate Step 2 and Step 4 (always valid - optional steps)
+  useEffect(() => {
+    validation.setStepErrors((prev: any) => ({
+      ...prev,
+      2: { hasError: false, messages: [] },
+      4: { hasError: false, messages: [] },
+    }));
+  }, []);
 }

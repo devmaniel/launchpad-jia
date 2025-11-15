@@ -57,11 +57,11 @@ export default function RestoreConfirmationModal({
         >
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, textAlign: "center" }}>
             <i className="la la-exclamation-triangle" style={{ fontSize: 48, color: "#F79009" }}></i>
-            <h3 className="modal-title">Restore to Default Pipeline?</h3>
-            <span style={{ fontSize: 14, color: "#717680", maxWidth: "352px" }}>
+            <h3 className="modal-title" style={{ margin: 0 }}>Restore to Default Pipeline?</h3>
+            <span style={{ fontSize: 14, color: "#717680", maxWidth: "400px", lineHeight: 1.5 }}>
               This will remove all custom stages you've added. This action cannot be undone.
             </span>
-            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: 16, width: "100%" }}>
+            <div style={{ display: "flex", flexDirection: "row", gap: 12, width: "100%" }}>
               <button 
                 onClick={(e) => {
                   e.preventDefault();
@@ -69,7 +69,7 @@ export default function RestoreConfirmationModal({
                 }}
                 style={{ 
                   display: "flex", 
-                  width: "50%", 
+                  flex: 1, 
                   flexDirection: "row", 
                   alignItems: "center", 
                   justifyContent: "center", 
@@ -79,7 +79,9 @@ export default function RestoreConfirmationModal({
                   borderRadius: "60px", 
                   border: "1px solid #D5D7DA", 
                   cursor: "pointer", 
-                  padding: "10px 0px" 
+                  padding: "12px 24px",
+                  fontSize: 14,
+                  fontWeight: 500
                 }}
               >
                 Cancel
@@ -91,7 +93,7 @@ export default function RestoreConfirmationModal({
                 }}
                 style={{ 
                   display: "flex", 
-                  width: "50%", 
+                  flex: 1, 
                   flexDirection: "row", 
                   alignItems: "center", 
                   justifyContent: "center", 
@@ -102,7 +104,9 @@ export default function RestoreConfirmationModal({
                   borderRadius: "60px", 
                   border: "1px solid #DC6803", 
                   cursor: "pointer", 
-                  padding: "10px 0px" 
+                  padding: "12px 24px",
+                  fontSize: 14,
+                  fontWeight: 500
                 }}
               >
                 Restore to Default
